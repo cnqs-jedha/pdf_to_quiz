@@ -1,9 +1,0 @@
-@import "tailwindcss";
-
-#root {
-  max-width: 1440px;
-  margin: 0 auto;
-  display: block;
-  width: 80%;
-  margin-top: 32px;
-}
