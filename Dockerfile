@@ -1,30 +1,35 @@
 FROM python:3.11-slim
 
-# Env variables 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+# Environnement python plus propre
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
 
-# Install usefull dependecies
+# Dépendances système
 RUN apt-get update && apt-get install -y \
-    build-essential \
     curl \
     git \
-    # To clean
-    && rm -rf /var/lib/apt/lists/* 
+    build-essential \
+    && curl -fsSL https://ollama.com/install.sh | sh \
+    #&& curl -fsSL https://ollama.com/install.sh -o install.sh \
+    #&& chmod +x install.sh \
+    #&& ./install.sh \
+    #&& rm install.sh \
+    #&& ollama pull mistral \
+    && rm -rf /var/lib/apt/lists/*
 
-# Work folder
+# Installer les dépendances Python
 WORKDIR /project
 
-# Copy and run dependencies
-COPY requirements.txt ./
-RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# Copy all file in container
+# Copier le code
 COPY . .
 
-# Choose the local port
-EXPOSE 8888
+# Exposer les ports
+EXPOSE 8888 11434    
 
-# Lauch jupyterlab
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser"]
+# Démarrage automatique
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+CMD ["/start.sh"]

@@ -16,3 +16,6 @@ seaborn
 sentence-transformers
 spacy
 tiktoken
+ollama
+openai
+requests
