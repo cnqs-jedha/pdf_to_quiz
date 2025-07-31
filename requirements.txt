@@ -5,6 +5,8 @@ google-auth-oauthlib
 langchain
 langchain_chroma
 langchain-community
+langchain-openai
+langchain-groq
 jupyterlab
 matplotlib
 notebook
@@ -19,3 +21,4 @@ tiktoken
 ollama
 openai
 requests
+python-dotenv
