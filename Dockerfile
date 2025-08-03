@@ -9,7 +9,6 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
     git \
-    # To clean
     && rm -rf /var/lib/apt/lists/* 
 
 # Work folder
