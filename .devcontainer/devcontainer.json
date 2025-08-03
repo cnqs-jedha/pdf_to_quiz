@@ -1,0 +1,20 @@
+{
+  "name": "final-jedha-project-app",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/project",
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "jupyter.jupyterServerType": "local"
+  },
+  "extensions": [
+    "ms-python.python",
+    "ms-toolsai.jupyter"
+  ],
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/project,type=bind"
+  ],
+  "remoteUser": "root"
+}
