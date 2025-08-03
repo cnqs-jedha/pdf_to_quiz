@@ -1,10 +1,10 @@
 {
-  "name": "final-project",
+  "name": "exploration-final-jedha-project",
   "build": {
     "dockerfile": "../Dockerfile",
     "context": ".."
   },
-  "workspaceFolder": "/project",
+  "workspaceFolder": "/exploration",
   "settings": {
     "terminal.integrated.defaultProfile.linux": "bash",
     "jupyter.jupyterServerType": "local"
@@ -14,7 +14,7 @@
     "ms-toolsai.jupyter"
   ],
   "mounts": [
-    "source=${localWorkspaceFolder},target=/project,type=bind"
+    "source=${localWorkspaceFolder},target=/exploration,type=bind"
   ],
   "remoteUser": "root"
 }
