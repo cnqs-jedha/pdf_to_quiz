@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* 
 
 # Work folder
-WORKDIR /project
+WORKDIR /exploration
 
 # Copy and run dependencies
 COPY requirements.txt ./
