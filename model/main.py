@@ -34,9 +34,9 @@ def main(difficulty="standard"):
     response = requests.post(POST_TARGET_URL, json={"quiz":quiz})
 
     if response.status_code == 200:
-        print("✅ Quiz envoyé avec succès !")
+        print("Quiz envoyé avec succès !")
     else:
-        print(f"❌ Échec de l'envoi : {response.status_code} - {response.text}")
+        print(f"Échec de l'envoi : {response.status_code} - {response.text}")
 
 if __name__ == "__main__":
     main()

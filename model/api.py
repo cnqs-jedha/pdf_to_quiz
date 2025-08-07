@@ -11,7 +11,7 @@ async def receive_quiz(request: Request):
     global last_received_quiz
     data = await request.json()
     last_received_quiz = data
-    print("📥 Quiz reçu :", data)
+    print("Quiz reçu :", data)
     return {"message": "Quiz bien reçu"}
 
 @app.get("/api/quiz")
