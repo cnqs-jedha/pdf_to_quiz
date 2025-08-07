@@ -1,5 +1,5 @@
 {
-  "name": "final-project",
+  "name": "final-jedha-project-app",
   "build": {
     "dockerfile": "../Dockerfile",
     "context": ".."

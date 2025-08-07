@@ -9,7 +9,6 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
     git \
-    # To clean
     && rm -rf /var/lib/apt/lists/* 
 
 # Work folder
@@ -24,7 +23,7 @@ RUN pip install --upgrade pip \
 COPY . .
 
 # Choose the local port
-EXPOSE 8888
+EXPOSE 4000
 
 # Lauch jupyterlab
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser"]
