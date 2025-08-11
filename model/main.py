@@ -28,15 +28,24 @@ def main(difficulty="standard"):
     
     # 6. Récupération de la vector db
     vector_data = chroma_db.get()
-    quiz = generate_quiz_from_chunks(vector_data, difficulty)
+    query = "Qui est Napoléon ?"
+    
+    retriever = chroma_db.as_retriever(
+        search_type = "similarity_score_threshold",
+        search_kwargs = {"k": 3, "score_threshold": 0.2},
+    )
+
+    elevant_docs = retriever.invoke(query)
+    print(elevant_docs)
+    #quiz = generate_quiz_from_chunks(vector_data, difficulty)
 
     # 7. Envoie à l'API
-    response = requests.post(POST_TARGET_URL, json={"quiz":quiz})
+    #response = requests.post(POST_TARGET_URL, json={"quiz":quiz})
 
-    if response.status_code == 200:
-        print("Quiz envoyé avec succès !")
-    else:
-        print(f"Échec de l'envoi : {response.status_code} - {response.text}")
+    #if response.status_code == 200:
+        #print("Quiz envoyé avec succès !")
+    #else:
+        #print(f"Échec de l'envoi : {response.status_code} - {response.text}")
 
 if __name__ == "__main__":
     main()
