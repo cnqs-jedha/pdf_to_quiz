@@ -5,6 +5,7 @@ from tokenizer import chunk_text, count_tokens
 from embedder import get_embeddings
 from chroma_handler import save_to_chroma
 from clustering_theme import hdbscan_clustering
+from collect_best_chunks_to_prompt import find_best_chunk_to_prompt
 from quiz_generator import generate_quiz_from_chunks
 import requests
 
@@ -30,19 +31,16 @@ def main(difficulty="standard"):
 
     # 5. Stockage Chroma
     chroma_db = save_to_chroma(chunks, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH)
+
+    # Obtenir les meilleurs chunks pour le prompt
+    chunks_by_theme = find_best_chunk_to_prompt(chroma_db, themes)
+    #print(chunks_by_theme)
     
     # 6. Récupération de la vector db
     vector_data = chroma_db.get()
-    #query = "Qui est Napoléon ?"
-    
-    #retriever = chroma_db.as_retriever(
-    #    search_type = "similarity_score_threshold",
-    #    search_kwargs = {"k": 3, "score_threshold": 0.2},
-    #)
 
-    #elevant_docs = retriever.invoke(query)
-    #print(elevant_docs)
     #quiz = generate_quiz_from_chunks(vector_data, difficulty)
+    #print(quiz)
 
     # 7. Envoie à l'API
     #response = requests.post(POST_TARGET_URL, json={"quiz":quiz})

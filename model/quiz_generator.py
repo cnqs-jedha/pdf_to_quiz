@@ -22,6 +22,7 @@ def generate_quiz_from_chunks(vector_db_data, difficulty="standard"):
     total_duration = 0
 
     for i, doc in enumerate(vector_db_data["documents"]):
+        print(doc)
         start = time.time()
         prompt = build_prompt(doc, difficulty)
 
