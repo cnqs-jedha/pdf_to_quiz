@@ -20,12 +20,4 @@ def find_best_chunk_to_prompt(vector_db, themes):
 
         strings_chunks_themes.append(string)
 
-################################
-        ## TU as tous les paragraphe par thème, maintenant il faut les prendre en compte dans le prompt et qu'il génère 3 questions de QCM par thème
-################################
-    print(strings_chunks_themes)
-
-    #print(full_chunks_themes[1])
-    
-
-    #return elevant_docs
+    return strings_chunks_themes

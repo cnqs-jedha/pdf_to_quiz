@@ -27,7 +27,7 @@ def main(difficulty="standard"):
 
     # Clustering
     themes = hdbscan_clustering(chunks)
-    print("thèmes trouvé:", themes)
+    #print("thèmes trouvé:", themes)
 
     # 5. Stockage Chroma
     chroma_db = save_to_chroma(chunks, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH)
@@ -37,18 +37,18 @@ def main(difficulty="standard"):
     #print(chunks_by_theme)
     
     # 6. Récupération de la vector db
-    vector_data = chroma_db.get()
+    #vector_data = chroma_db.get()
 
-    #quiz = generate_quiz_from_chunks(vector_data, difficulty)
+    quiz = generate_quiz_from_chunks(chunks_by_theme, themes, difficulty)
     #print(quiz)
 
     # 7. Envoie à l'API
-    #response = requests.post(POST_TARGET_URL, json={"quiz":quiz})
+    response = requests.post(POST_TARGET_URL, json={"quiz":quiz})
 
-    #if response.status_code == 200:
-        #print("Quiz envoyé avec succès !")
-    #else:
-        #print(f"Échec de l'envoi : {response.status_code} - {response.text}")
+    if response.status_code == 200:
+        print("Quiz envoyé avec succès !")
+    else:
+        print(f"Échec de l'envoi : {response.status_code} - {response.text}")
 
 if __name__ == "__main__":
     main()
