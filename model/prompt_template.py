@@ -1,4 +1,4 @@
-def build_prompt(doc: str, difficulty: str = "standard") -> str:
+def build_prompt(doc: str, theme: str, difficulty: str = "standard") -> str:
     niveau_instruction = {
         "facile": "La question doit être simple, accessible à un élève de collège.",
         "moyen": "La question doit correspondre à un niveau lycée ou début d’université.",
@@ -7,7 +7,8 @@ def build_prompt(doc: str, difficulty: str = "standard") -> str:
     }[difficulty]
 
     return f"""
-    Tu es un expert en pédagogie et tu dois créer une question de quiz à choix multiples (QCM) à partir du texte ci-dessous.
+    Tu es un expert en pédagogie et tu dois créer 3 questions QCM à partir du texte ci-dessous.
+    Poses les question comme le ferai un professeur.
 
     {niveau_instruction}
 
@@ -21,21 +22,31 @@ def build_prompt(doc: str, difficulty: str = "standard") -> str:
     - Une seule bonne réponse.
     - Le niveau de difficulté de la question doit correspondre à celui demandé.
     - Tu ne dois pas inventer d'information : toute la question et ses réponses doivent découler directement du texte.
+    - Les 3 questions doivent être différentes.
+    - Utilise uniquement des guillemets doubles `"` pour les clés et les valeurs.
+    - Pas de guillemets simples `'`.
     - **Réponds uniquement avec un objet JSON valide**, sans aucune explication, ni phrase introductive, ni conclusion.
 
     {{
-        "question": "...",
-        "choices": {{
-            "a": "...",
-            "b": "...",
-            "c": "...",
-            "d": "..."
+        "Thème" : "{theme}",
+        "questions: {{
+            "question": "...",
+            "choices": {{"a": "...", "b": "...", "c": "...", "d": "..."}},
+            "correct_answer": {{"lettre": "...", "answer": "..."}},
+            "difficulty_level": "..."
+        }}, 
+        {{
+            "question": "...",
+            "choices": {{"a": "...", "b": "...", "c": "...", "d": "..."}},
+            "correct_answer": {{"lettre": "...", "answer": "..."}},
+            "difficulty_level": "..."
         }},
-        "correct_answer": {{
-            "lettre": "...",
-            "answer": "..."
-        }},
-        "difficulty_level": "..."
+        {{
+            "question": "...",
+            "choices": {{"a": "...", "b": "...", "c": "...", "d": "..."}},
+            "correct_answer": {{"lettre": "...", "answer": "..."}},
+            "difficulty_level": "..."
+        }}
     }}
 
     ## Exemples de chunks et résultats de QCM attendu
