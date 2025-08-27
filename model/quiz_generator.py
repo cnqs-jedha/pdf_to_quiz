@@ -16,14 +16,13 @@ def create_llm():
         max_retries=2
     )
 
-def generate_quiz_from_chunks(vector_db_data, difficulty="standard"):
+def generate_quiz_from_chunks(strings_by_theme, themes, difficulty="standard"):
     llm = create_llm()
     quiz = []
-    total_duration = 0
 
-    for i, doc in enumerate(vector_db_data["documents"]):
-        start = time.time()
-        prompt = build_prompt(doc, difficulty)
+    for i, (context_text, theme) in enumerate(zip(strings_by_theme, themes)):
+        #print(string)
+        prompt = build_prompt(context_text, theme, difficulty)
 
         try:
             response = llm.invoke(prompt)
@@ -33,10 +32,5 @@ def generate_quiz_from_chunks(vector_db_data, difficulty="standard"):
             print(f"Erreur chunk {i+1}: {e}")
             print(response.content[:200])
             continue
-
-        end = time.time()
-        print(f"{i+1}: {round(end - start, 2)}s")
-        total_duration += (end - start)
-
-    print("Durée totale :", round(total_duration, 2), "s")
+    
     return quiz
