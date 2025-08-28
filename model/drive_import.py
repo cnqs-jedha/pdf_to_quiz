@@ -16,19 +16,26 @@ def authenticate_google():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file("credentials3.json", SCOPES)
-            creds = flow.run_local_server(port=0)
+            creds = flow.run_console() # à la place de flow.run_local_server(port=0)
         with open("token", "wb") as token:
             pickle.dump(creds, token)
 
     return build("drive", "v3", credentials=creds)
 
 def download_pdf_from_drive(file_id: str, output_path: str):
+    """Télécharge un PDF depuis Google Drive et enregistre le dans le dossier /data"""
+
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
     service = authenticate_google()
     request = service.files().get_media(fileId=file_id)
-    fh = io.FileIO(output_path, "wb")
-    downloader = MediaIoBaseDownload(fh, request)
-    done = False
-    while not done:
-        status, done = downloader.next_chunk()
-        print(f"Téléchargement : {int(status.progress() * 100)}%")
+    #fh = io.FileIO(output_path, "wb")
+     # Créer le fichier en mode binaire
+    with io.FileIO(output_path, "wb") as fh:
+        downloader = MediaIoBaseDownload(fh, request)
+        done = False
+        while not done:
+            status, done = downloader.next_chunk()
+            print(f"Téléchargement : {int(status.progress() * 100)}%")
+
     print(f"PDF téléchargé à : {output_path}")
