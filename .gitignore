@@ -4,3 +4,4 @@ token
 credentials3.json
 .env
 data/
+*.pdf
