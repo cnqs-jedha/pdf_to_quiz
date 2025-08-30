@@ -21,7 +21,6 @@ def generate_quiz_from_chunks(strings_by_theme, themes, difficulty="standard"):
     quiz = []
 
     for i, (context_text, theme) in enumerate(zip(strings_by_theme, themes)):
-        #print(string)
         prompt = build_prompt(context_text, theme, difficulty)
 
         try:

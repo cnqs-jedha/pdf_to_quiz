@@ -17,6 +17,7 @@ def main(difficulty="standard"):
     for file_id, pdf_path in zip(DRIVE_FILE_ID, PDF_PATH):
         download_pdf_from_drive(file_id, pdf_path)
         local_pdfs.append(pdf_path)
+    print('FULL PDF: OK')
 
     # 2. Extraction du texte de tous les PDFs
     all_texts = []
@@ -24,14 +25,17 @@ def main(difficulty="standard"):
         text = extract_text_from_pdf(pdf)
         all_texts.append(text)
     full_text = "\n".join(all_texts)
+    print('FULL EXTRACT PDF: OK')
 
     # 3. Normalisation du texte
     full_text = normalize_text(full_text)
+    print('FULL TEXT: OK')
 
     # 4. Chunker
     chunks = chunk_text(full_text)
     token_counts = [count_tokens(c) for c in chunks]
     #print(f"{len(chunks)} chunks. Moy tokens: {round(sum(token_counts)/len(token_counts))}")
+    print('CHUNKS: OK')
 
     # 5. Embeddings
     embeddings = get_embeddings(chunks, EMBEDDING_MODEL_NAME)
@@ -39,10 +43,12 @@ def main(difficulty="standard"):
 
     # Clustering
     themes = hdbscan_clustering(chunks)
-    #print("thèmes trouvé:", themes)
+    print("thèmes trouvé:", themes)
+    print('THEMES: OK')
 
     # 5. Stockage Chroma
     chroma_db = save_to_chroma(chunks, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH)
+    print('SAVED TO CHROMA: OK')
 
     # Obtenir les meilleurs chunks pour le prompt
     chunks_by_theme = find_best_chunk_to_prompt(chroma_db, themes)

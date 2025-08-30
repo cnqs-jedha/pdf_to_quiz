@@ -35,7 +35,7 @@ def download_pdf_from_drive(file_id: str, output_path: str):
     service = authenticate_google()
     request = service.files().get_media(fileId=file_id)
     #fh = io.FileIO(output_path, "wb")
-     # Créer le fichier en mode binaire
+    # Créer le fichier en mode binaire
     with io.FileIO(output_path, "wb") as fh:
         downloader = MediaIoBaseDownload(fh, request)
         done = False

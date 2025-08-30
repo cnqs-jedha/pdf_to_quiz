@@ -15,4 +15,4 @@ PDF_PATH = [
 ]
 CHROMA_DB_PATH = "chroma_db"
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
-POST_TARGET_URL = "http://localhost:8000/api/send_quiz" #If local -> replace api by localhost
+POST_TARGET_URL = "http://api:8000/api/send_quiz" #If local -> replace api by localhost else replace localhost by api
