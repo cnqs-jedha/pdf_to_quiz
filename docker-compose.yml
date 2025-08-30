@@ -1,0 +1,44 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    ports:
+      - "8000:8000"
+    volumes:
+    - ./api:/app/api:rw
+    - ./src:/app/src:rw
+    env_file:
+      - .env
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]  
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pipeline:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.pipeline
+    depends_on:
+      - api
+    env_file:
+      - .env
+    volumes:
+      - ./token:/app/token
+      - ./data:/app/data
+
+  devlab:
+    profiles: ["notebooks"]
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.devlab
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/app/notebooks
+      - ./src:/app/src
+      - ./data:/app/data
+    env_file:
+      - .env
