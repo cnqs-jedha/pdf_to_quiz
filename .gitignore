@@ -1,6 +1,6 @@
-# Fichiers temporaires d'OS
 .DS_Store
 Thumbs.db
 token
 credentials3.json
 .env
+data/
