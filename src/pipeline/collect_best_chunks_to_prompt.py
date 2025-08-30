@@ -3,7 +3,6 @@ def find_best_chunk_to_prompt(vector_db, themes):
     strings_chunks_themes = []
 
     for chunk in themes:
-        #print(i)
         query = chunk
     
         retriever = vector_db.as_retriever(
@@ -12,7 +11,6 @@ def find_best_chunk_to_prompt(vector_db, themes):
         )
 
         elevant_docs = retriever.invoke(query)
-        #print(elevant_docs)
         full_chunks_themes.append(elevant_docs)
 
     for i, chunk in enumerate(full_chunks_themes):

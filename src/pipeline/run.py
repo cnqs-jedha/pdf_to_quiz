@@ -7,40 +7,58 @@ from src.pipeline.chroma_handler import save_to_chroma
 from src.pipeline.clustering_theme import hdbscan_clustering
 from src.pipeline.collect_best_chunks_to_prompt import find_best_chunk_to_prompt
 from src.pipeline.quiz_generator import generate_quiz_from_chunks
+from src.utils.normalizer import normalize_text
 import requests
 
 def main(difficulty="standard"):
+
     # 1. Télécharger le PDF depuis Google Drive
-    download_pdf_from_drive(DRIVE_FILE_ID, PDF_PATH)
+    local_pdfs = []
+    for file_id, pdf_path in zip(DRIVE_FILE_ID, PDF_PATH):
+        download_pdf_from_drive(file_id, pdf_path)
+        local_pdfs.append(pdf_path)
+    print('FULL PDF: OK')
 
-    # 2. Extraction du texte
-    text = extract_text_from_pdf(PDF_PATH)
+    # 2. Extraction du texte de tous les PDFs
+    all_texts = []
+    for pdf in local_pdfs:
+        text = extract_text_from_pdf(pdf)
+        all_texts.append(text)
+    full_text = "\n".join(all_texts)
+    print('FULL EXTRACT PDF: OK')
 
-    # 3. Chunker
-    chunks = chunk_text(text)
+    # 3. Normalisation du texte
+    full_text = normalize_text(full_text)
+    print('FULL TEXT: OK')
+
+    # 4. Chunker
+    chunks = chunk_text(full_text)
     token_counts = [count_tokens(c) for c in chunks]
     #print(f"{len(chunks)} chunks. Moy tokens: {round(sum(token_counts)/len(token_counts))}")
+    print('CHUNKS: OK')
 
-    # 4. Embeddings
+    # 5. Embeddings
     embeddings = get_embeddings(chunks, EMBEDDING_MODEL_NAME)
     #print(f"Embeddings shape: {embeddings.shape}")
 
     # Clustering
     themes = hdbscan_clustering(chunks)
-    #print("thèmes trouvé:", themes)
+    print("thèmes trouvé:", themes)
+    print('THEMES: OK')
 
     # 5. Stockage Chroma
     chroma_db = save_to_chroma(chunks, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH)
+    print('SAVED TO CHROMA: OK')
 
     # Obtenir les meilleurs chunks pour le prompt
     chunks_by_theme = find_best_chunk_to_prompt(chroma_db, themes)
-    #print(chunks_by_theme)
+    print(chunks_by_theme)
     
     # 6. Récupération de la vector db
-    #vector_data = chroma_db.get()
+    vector_data = chroma_db.get()
 
     quiz = generate_quiz_from_chunks(chunks_by_theme, themes, difficulty)
-    #print(quiz)
+    print(quiz)
 
     # 7. Envoie à l'API
     response = requests.post(POST_TARGET_URL, json={"quiz":quiz})
