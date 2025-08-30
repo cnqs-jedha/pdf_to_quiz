@@ -17,7 +17,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import hdbscan
 from sklearn.preprocessing import normalize
 
-from normalizer import normalize_text  # on réutilise le normalize.py
+from src.utils.normalizer import normalize_text  # on réutilise le normalize.py
 
 def clean_chunks_strings(chunks):
     """
