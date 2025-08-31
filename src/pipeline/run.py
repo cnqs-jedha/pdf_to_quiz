@@ -11,32 +11,20 @@ from src.utils.normalizer import normalize_text
 import requests
 
 def main(difficulty="standard"):
-    """all_texts = ""
+    # 1. S'identifier au drive
     service = authenticate_google()
-    for num, id in enumerate(DRIVE_FILE_ID):
-        print(((num+1)/len(DRIVE_FILE_ID)) * 100, '%')
-        text = extract_text_pypdf_in_memory(service, id)
-        print(text)
-        #all_texts = "\n".join(text)
-    #print(all_texts)"""
-    # S'identifier au drive
-    service = authenticate_google()
+    print("Identifié à Google")
 
-    # Récupère tous les textes de tous les pdfs en un seul texte
+    # 2. Récupère tous les textes de tous les pdfs en un seul texte
     full_text = "\n\n".join(iter_texts_with_progress(service, DRIVE_FILE_ID))
+    print("Textes Récupéré")
 
-    # Normalise le texte
+    # 3. Normalise le texte
     text_normalize = normalize_text(full_text)
-    print(text_normalize)
-
-"""
-
-    # 3. Normalisation du texte
-    full_text = normalize_text(full_text)
-    print('FULL TEXT: OK')
+    print("Textes Normalisé")
 
     # 4. Chunker
-    chunks = chunk_text(full_text)
+    chunks = chunk_text(text_normalize)
     token_counts = [count_tokens(c) for c in chunks]
     #print(f"{len(chunks)} chunks. Moy tokens: {round(sum(token_counts)/len(token_counts))}")
     print('CHUNKS: OK')
@@ -59,18 +47,18 @@ def main(difficulty="standard"):
     print(chunks_by_theme)
     
     # 6. Récupération de la vector db
-    vector_data = chroma_db.get()
-
+    #vector_data = chroma_db.get()
+    # 6. Création du quizz avec les chunks par thèmes
     quiz = generate_quiz_from_chunks(chunks_by_theme, themes, difficulty)
     print(quiz)
 
-    # 7. Envoie à l'API
+    # 7. Envoie à l'API 
     response = requests.post(POST_TARGET_URL, json={"quiz":quiz})
 
     if response.status_code == 200:
         print("Quiz envoyé avec succès !")
     else:
         print(f"Échec de l'envoi : {response.status_code} - {response.text}")
-"""
+
 if __name__ == "__main__":
     main()
