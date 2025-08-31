@@ -1,4 +1,3 @@
-# normalize.py
 import re
 import unicodedata
 import spacy
