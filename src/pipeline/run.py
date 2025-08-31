@@ -1,6 +1,6 @@
 from src.pipeline.config import PDF_PATH, DRIVE_FILE_ID, CHROMA_DB_PATH, EMBEDDING_MODEL_NAME, POST_TARGET_URL
-from src.utils.drive_import import download_pdf_from_drive
-from src.utils.extractor import extract_text_from_pdf
+from src.utils.drive_import import download_pdf_from_drive, authenticate_google
+from src.utils.extractor import iter_texts_with_progress
 from src.pipeline.tokenizer import chunk_text, count_tokens
 from src.pipeline.embedder import get_embeddings
 from src.pipeline.chroma_handler import save_to_chroma
@@ -11,21 +11,25 @@ from src.utils.normalizer import normalize_text
 import requests
 
 def main(difficulty="standard"):
+    """all_texts = ""
+    service = authenticate_google()
+    for num, id in enumerate(DRIVE_FILE_ID):
+        print(((num+1)/len(DRIVE_FILE_ID)) * 100, '%')
+        text = extract_text_pypdf_in_memory(service, id)
+        print(text)
+        #all_texts = "\n".join(text)
+    #print(all_texts)"""
+    # S'identifier au drive
+    service = authenticate_google()
 
-    # 1. Télécharger le PDF depuis Google Drive
-    local_pdfs = []
-    for file_id, pdf_path in zip(DRIVE_FILE_ID, PDF_PATH):
-        download_pdf_from_drive(file_id, pdf_path)
-        local_pdfs.append(pdf_path)
-    print('FULL PDF: OK')
+    # Récupère tous les textes de tous les pdfs en un seul texte
+    full_text = "\n\n".join(iter_texts_with_progress(service, DRIVE_FILE_ID))
 
-    # 2. Extraction du texte de tous les PDFs
-    all_texts = []
-    for pdf in local_pdfs:
-        text = extract_text_from_pdf(pdf)
-        all_texts.append(text)
-    full_text = "\n".join(all_texts)
-    print('FULL EXTRACT PDF: OK')
+    # Normalise le texte
+    text_normalize = normalize_text(full_text)
+    print(text_normalize)
+
+"""
 
     # 3. Normalisation du texte
     full_text = normalize_text(full_text)
@@ -67,6 +71,6 @@ def main(difficulty="standard"):
         print("Quiz envoyé avec succès !")
     else:
         print(f"Échec de l'envoi : {response.status_code} - {response.text}")
-
+"""
 if __name__ == "__main__":
     main()
