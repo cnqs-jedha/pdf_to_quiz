@@ -41,6 +41,6 @@ def download_pdf_from_drive(file_id: str, output_path: str):
         done = False
         while not done:
             status, done = downloader.next_chunk()
-            print(f"Téléchargement : {int(status.progress() * 100)}%")
+            #print(f"Téléchargement : {int(status.progress() * 100)}%")
 
-    print(f"PDF téléchargé à : {output_path}")
+    print("PDF download:", output_path)

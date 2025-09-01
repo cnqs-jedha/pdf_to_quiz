@@ -28,6 +28,8 @@ services:
     volumes:
       - ./token:/app/token
       - ./data:/app/data
+      - ./src:/app/src:rw
+      - ./api:/app/api:rw
 
   devlab:
     profiles: ["notebooks"]

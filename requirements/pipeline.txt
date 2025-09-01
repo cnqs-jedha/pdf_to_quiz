@@ -27,3 +27,4 @@ python-dotenv
 fastapi 
 uvicorn
 hdbscan
+pypdf
