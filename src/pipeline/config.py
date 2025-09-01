@@ -1,4 +1,7 @@
 SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
+DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1P_v9V_eVLRps3nxCO4Fn-ui0-WdY-mmz?usp=sharing"
+FOLDER_MIME   = "application/vnd.google-apps.folder"
+SHORTCUT_MIME = "application/vnd.google-apps.shortcut"
 DRIVE_FILE_ID = [
     "1AHE1lXi_kyrtRw31qEGJ7OYE9EO8kfGe",
     "1lad6YB8RPnyPWZ1n2Swl-uQNAAurlpe7",
