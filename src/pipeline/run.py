@@ -38,7 +38,7 @@ def main(difficulty="standard"):
     print('CHUNKS: OK')
 
     # 5. Embeddings
-    embeddings = get_embeddings(chunks, EMBEDDING_MODEL_NAME)
+    #embeddings = get_embeddings(chunks, EMBEDDING_MODEL_NAME)
     #print(f"Embeddings shape: {embeddings.shape}")
 
     # Clustering
