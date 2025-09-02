@@ -31,6 +31,20 @@ services:
       - ./src:/app/src:rw
       - ./api:/app/api:rw
 
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    depends_on:
+      - api
+    env_file:
+      - .env
+    #volumes:
+    #  - ./token:/app/token
+    #  - ./data:/app/data
+    #  - ./src:/app/src:rw
+    #  - ./api:/app/api:rw
+
   devlab:
     profiles: ["notebooks"]
     build:
