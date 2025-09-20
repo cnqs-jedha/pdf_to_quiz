@@ -1,0 +1,37 @@
+﻿id,question,generated,best_reference,cosine_score,correct_pred
+1,Que s'est il passé au moment des Grandes Invasions ?,"Bonjour les élèves ! Les Grandes Invasions se sont produites entre les années 406 et 410 après Jésus-Christ. C'est une période importante de l'histoire de l'Empire romain.
+
+Au moment des Grandes Invasions, des tribus barbares comme les Vandales, les Alains et les Suèves ont traversé le Rhin et l'Empire romain a été envahi. Les Romains n'ont pas pu les arrêter et les barbares ont occupé une grande partie de l'Empire.
+
+Cela a marqué la fin de la Pax Romana, une période de paix et de stabilité qui avait duré depuis longtemps. Les Grandes Invasions ont également marqué le début de la fin de l'Empire romain d'Occident.
+
+Voilà, c'est donc une période importante de l'histoire qui a eu des conséquences importantes pour l'Empire romain.","Les Barbares, ont envahi la Gaule",0.461,0
+2, Quel peuple s'installe en Gaule ?,"C'est une excellente question ! Le peuple qui s'installe en Gaule est les Gaulois. Ils sont un peuple celtique qui arrive en Gaule il y a environ 500 ans avant Jésus-Christ. Les Gaulois sont connus pour leur culture riche et leur savoir-faire en métallurgie, en particulier en orfévrerie. Ils ont également développé une société complexe avec des chefs et des guerriers.",Les Francs s'installet et font disparaître l'Empire-Romain,0.484,0
+3,Qui était Clovis ?,"Bonjour les élèves ! Aujourd'hui, nous allons parler d'un roi très important de l'histoire de la France : Clovis.
+
+Clovis, également appelé Clovis Ier, était un roi des Francs qui a vécu au Ve siècle. Il est considéré comme l'un des plus grands rois de l'histoire de la France. Il a régné de 481 à 511.
+
+Clovis était un roi courageux et intelligent qui a unifié les Francs et a créé un royaume puissant. Il a également converti au christianisme et a été baptisé en 496.
+
+Clovis est célèbre pour sa victoire contre les Alamans en 496, qui a permis aux Francs de s'étendre en Gaule. Il a également fondé la ville de Paris, qui est devenue la capitale de la France.
+
+En résumé, Clovis était un roi important qui a joué un rôle crucial dans l'histoire de la France. Il a unifié les Francs, a créé un royaume puissant et a contribué à la formation de la France telle que nous la connaissons aujourd'hui.","Clovis, premier roi de tous les Francs",0.709,0
+4,Comment s'apellent la dynastie que forment ses successeurs ?,La dynastie que forment les successeurs de Charlemagne s'appelle la dynastie carolingienne.,La dynastie des Mérovingiens,0.604,0
+5, Qu'est ce qu'une dynastie ?,"Une dynastie est une famille qui règne sur un pays pendant une longue période de temps, souvent plusieurs générations. Les membres de la dynastie se succèdent au pouvoir, mais ils sont tous liés par des liens de parenté.
+
+Par exemple, la dynastie des pharaons d'Égypte ou la dynastie des rois de France. Chaque pharaon ou roi est le successeur de son père ou de son frère, et il règne sur le pays jusqu'à sa mort.
+
+La dynastie est comme une grande famille qui gouverne un pays, et cela peut durer des siècles.",Suite de rois qui appartiennent à la même famille,0.52,0
+6,Quelle dynastie succède au Mérovingiens?,"La dynastie qui succède aux Mérovingiens est la dynastie carolingienne. Elle est fondée par Charlemagne, qui règne de 768 à 814. Charlemagne est considéré comme l'un des plus grands empereurs de l'histoire de l'Europe.",Les Carolingiens succèdent aux Mérovingiens,0.65,0
+7,Qui était le premier roi des Caroligiens ?,"C'est une excellente question ! Le premier roi des Caroligiens était Charlemagne, également connu sous le nom de Charles le Grand. Il a régné de 768 à 814 et a joué un rôle important dans l'unification de la France et de l'Europe.",Charlemagne était le premier roi des Carolingiens,0.831,1
+8, Quelle est la capitale de la France sous Charlemagne?,"La capitale de la France sous Charlemagne était Aix-la-Chapelle, mais il est plus précis de dire qu'il a établi son palais à Aix-la-Chapelle, qui est actuellement en Allemagne. Cependant, la capitale de la Francie médiane, l'un des royaumes créés par Charlemagne, était Aix-la-Chapelle, mais la capitale de la Francie occidentale, l'autre royaume, était Paris.",La capitale de la France sous Charlemagne est Aix-la-Chapelle,0.885,1
+9,Que fait Charlemagne pour encourager le développement des arts et du savoir ?,"Charlemagne encourage le développement des arts et du savoir en créant des écoles et des universités dans son empire. Il invite des savants et des artistes de toute l'Europe à venir étudier et enseigner à la cour impériale. Il soutient également la traduction des textes classiques en latin, ce qui permet de diffuser les connaissances et les idées de l'Antiquité.
+
+Il crée également des ateliers d'artisans et des écoles de musique, où les jeunes gens peuvent apprendre les métiers manuels et les arts musicaux. Enfin, il encourage la construction de bibliothèques et de monastères, qui deviennent des centres de savoir et de culture.
+
+Ces actions permettent de revitaliser la culture et les arts en Europe, après une période de déclin.",Charlemenagne ouvre des écoles,0.607,0
+10,Que se passe t-il à la mort de Charlemagne ?,"Bonjour les élèves ! Lorsque Charlemagne meurt en 814, il laisse derrière lui un empire vaste et puissant. Son fils Louis le Pieux, qui est le plus âgé de ses trois fils, est désigné comme son successeur. Louis le Pieux doit partager l'empire avec ses deux frères, Charles le Chauve et Louis le Germanique, ce qui va créer des tensions et des conflits entre eux.
+
+En effet, Louis le Pieux décide de diviser l'empire en trois parties : la Francie occidentale pour Charles le Chauve, la Francie orientale pour Louis le Germanique et l'Italie pour Bérenger, un autre frère. Mais cela va créer des problèmes de succession et de pouvoir, ce qui va affaiblir l'empire de Charlemagne.
+
+C'est ainsi que l'empire de Charlemagne va se diviser en plusieurs royaumes, ce qui va marquer la fin de l'unité de l'empire carolingien.",L'empire est divisé entre ses trois fils,0.597,0

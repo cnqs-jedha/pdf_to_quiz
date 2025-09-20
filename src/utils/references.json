@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "question": "Que s'est il passé au moment des Grandes Invasions ?",
+    "references": [
+      "Les Barbares",
+      "Les Barbares, ont envahi la Gaule"
+    ],
+    "label": 1
+  },
+  {
+    "id": 2,
+    "question": " Quel peuple s'installe en Gaule ?",
+    "references": [
+      "Les Francs",
+      "Les Francs s'installet et font disparaître l'Empire-Romain"
+    ],
+    "label": 1
+  },
+  {
+    "id": 3,
+    "question": "Qui était Clovis ?",
+    "references": [
+      "Clovis, roi des Francs",
+      "Clovis, premier roi de tous les Francs"
+    ],
+    "label": 1
+  },
+  {
+    "id": 4,
+    "question": "Comment s'apellent la dynastie que forment ses successeurs ?",
+    "references": [
+      "Les Mérovingiens",
+      "La dynastie des Mérovingiens"
+    ],
+    "label": 1
+  },
+  {
+    "id": 5,
+    "question": " Qu'est ce qu'une dynastie ?",
+    "references": [
+      "Rois",
+      "Suite de rois qui appartiennent à la même famille"
+    ],
+    "label": 1
+  },
+  {
+    "id": 6,
+    "question": "Quelle dynastie succède au Mérovingiens?",
+    "references": [
+      "Les Carolingiens",
+      "Les Carolingiens succèdent aux Mérovingiens"
+    ],
+    "label": 1
+  },
+    {
+    "id": 7,
+    "question": "Qui était le premier roi des Caroligiens ?",
+    "references": [
+      "Charlemagne",
+      "Charlemagne était le premier roi des Carolingiens"
+    ],
+    "label": 1
+  },
+  {
+    "id": 8,
+    "question": " Quelle est la capitale de la France sous Charlemagne?",
+    "references": [
+      "Aix-la-Chapelle",
+      "La capitale de la France sous Charlemagne est Aix-la-Chapelle"
+    ],
+    "label": 1
+  },
+  {
+    "id": 9,
+    "question": "Que fait Charlemagne pour encourager le développement des arts et du savoir ?",
+    "references": [
+      "écoles",
+      "Charlemenagne ouvre des écoles"
+    ],
+    "label": 1
+  },
+  {
+    "id": 10,
+    "question": "Que se passe t-il à la mort de Charlemagne ?",
+    "references": [
+      "Division de l'Empire",
+      "L'empire est divisé entre ses trois fils"
+    ],
+    "label": 1
+  }
+]

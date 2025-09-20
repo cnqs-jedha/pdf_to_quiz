@@ -65,14 +65,14 @@ def main(difficulty="standard"):
     quiz = generate_quiz_from_chunks(chunks_by_theme, themes, difficulty)
     print(quiz)
 
-    # 10. Envoie à l'API 
+    """# 10. Envoie à l'API 
     response = requests.post(POST_TARGET_URL, json={"quiz":quiz})
     print((10/10)*100, '%')
 
     if response.status_code == 200:
         print("Quiz envoyé avec succès !")
     else:
-        print(f"Échec de l'envoi : {response.status_code} - {response.text}")
+        print(f"Échec de l'envoi : {response.status_code} - {response.text}")"""
 
 if __name__ == "__main__":
     main()
