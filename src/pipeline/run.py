@@ -1,6 +1,6 @@
 from src.pipeline.config import PDF_PATH, DRIVE_FILE_ID, CHROMA_DB_PATH, EMBEDDING_MODEL_NAME, POST_TARGET_URL, DRIVE_FOLDER_URL
 from src.utils.drive_import import authenticate_google, get_pdfs_ids
-from src.utils.extractor import iter_texts_with_progress
+from src.utils.extractor import iter_texts_with_progress, extract_text_pypdf_in_memory, get_all_pdfs_data
 from src.pipeline.tokenizer import chunk_text, count_tokens
 from src.pipeline.embedder import get_embeddings
 from src.pipeline.chroma_handler import save_to_chroma
@@ -21,6 +21,11 @@ def main(difficulty="standard"):
     print(drive_ids)
     print((2/10)*100, '%')
 
+
+    full_data = get_all_pdfs_data(service, drive_ids)
+    print(full_data)
+
+    """
     # 3. Récupère tous les textes de tous les pdfs en un seul texte
     full_text = "\n\n".join(iter_texts_with_progress(service, drive_ids))
     print("Textes Récupéré")
@@ -59,7 +64,7 @@ def main(difficulty="standard"):
     print((8/10)*100, '%')
     
     # 6. Récupération de la vector db
-    #vector_data = chroma_db.get()
+    vector_data = chroma_db.get()
 
     # 9. Création du quizz avec les chunks par thèmes
     quiz = generate_quiz_from_chunks(chunks_by_theme, themes, difficulty)
@@ -72,7 +77,7 @@ def main(difficulty="standard"):
     if response.status_code == 200:
         print("Quiz envoyé avec succès !")
     else:
-        print(f"Échec de l'envoi : {response.status_code} - {response.text}")
+        print(f"Échec de l'envoi : {response.status_code} - {response.text}")"""
 
 if __name__ == "__main__":
     main()
