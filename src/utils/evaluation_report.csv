@@ -1,37 +1,85 @@
-﻿id,question,generated,best_reference,cosine_score,correct_pred
+﻿id,question,generated,best_chunk,cosine_score,correct_pred
 1,Que s'est il passé au moment des Grandes Invasions ?,"Bonjour les élèves ! Les Grandes Invasions se sont produites entre les années 406 et 410 après Jésus-Christ. C'est une période importante de l'histoire de l'Empire romain.
 
 Au moment des Grandes Invasions, des tribus barbares comme les Vandales, les Alains et les Suèves ont traversé le Rhin et l'Empire romain a été envahi. Les Romains n'ont pas pu les arrêter et les barbares ont occupé une grande partie de l'Empire.
 
 Cela a marqué la fin de la Pax Romana, une période de paix et de stabilité qui avait duré depuis longtemps. Les Grandes Invasions ont également marqué le début de la fin de l'Empire romain d'Occident.
 
-Voilà, c'est donc une période importante de l'histoire qui a eu des conséquences importantes pour l'Empire romain.","Les Barbares, ont envahi la Gaule",0.461,0
-2, Quel peuple s'installe en Gaule ?,"C'est une excellente question ! Le peuple qui s'installe en Gaule est les Gaulois. Ils sont un peuple celtique qui arrive en Gaule il y a environ 500 ans avant Jésus-Christ. Les Gaulois sont connus pour leur culture riche et leur savoir-faire en métallurgie, en particulier en orfévrerie. Ils ont également développé une société complexe avec des chefs et des guerriers.",Les Francs s'installet et font disparaître l'Empire-Romain,0.484,0
-3,Qui était Clovis ?,"Bonjour les élèves ! Aujourd'hui, nous allons parler d'un roi très important de l'histoire de la France : Clovis.
+Voilà, c'est donc une période importante de l'histoire qui a eu des conséquences importantes pour l'Empire romain.",Les Romains n'ont pas pu les arrêter et les barbares ont occupé une grande partie de l'Empire.,0.701,1
+2, Qui était Clovis ?,"Bonjour les élèves ! Aujourd'hui, nous allons parler d'un roi très important de l'histoire de la France : Clovis.
 
-Clovis, également appelé Clovis Ier, était un roi des Francs qui a vécu au Ve siècle. Il est considéré comme l'un des plus grands rois de l'histoire de la France. Il a régné de 481 à 511.
+Clovis, qui a vécu au Ve siècle, était le roi des Francs. Il est considéré comme l'un des plus grands rois de l'histoire de la France. Il a unifié les Francs et a créé un royaume puissant qui allait devenir la base de l'Empire carolingien.
 
-Clovis était un roi courageux et intelligent qui a unifié les Francs et a créé un royaume puissant. Il a également converti au christianisme et a été baptisé en 496.
+Clovis est célèbre pour avoir converti au christianisme en 496, ce qui a eu un impact important sur l'histoire de la France. Il a également mené de nombreuses batailles victorieuses, notamment la bataille de Tolbiac en 496, qui a permis aux Francs de s'installer en Gaule.
 
-Clovis est célèbre pour sa victoire contre les Alamans en 496, qui a permis aux Francs de s'étendre en Gaule. Il a également fondé la ville de Paris, qui est devenue la capitale de la France.
+Clovis est considéré comme un héros national en France et son nom est souvent associé à la naissance de la nation française.","Clovis est célèbre pour avoir converti au christianisme en 496, ce qui a eu un impact important sur l'histoire de la France.",0.797,1
+3,Qui est Pépin le Bref et que fait-il ?,"Bonjour les élèves ! Aujourd'hui, nous allons parler d'un roi très important de l'histoire de France : Pépin le Bref.
 
-En résumé, Clovis était un roi important qui a joué un rôle crucial dans l'histoire de la France. Il a unifié les Francs, a créé un royaume puissant et a contribué à la formation de la France telle que nous la connaissons aujourd'hui.","Clovis, premier roi de tous les Francs",0.709,0
-4,Comment s'apellent la dynastie que forment ses successeurs ?,La dynastie que forment les successeurs de Charlemagne s'appelle la dynastie carolingienne.,La dynastie des Mérovingiens,0.604,0
-5, Qu'est ce qu'une dynastie ?,"Une dynastie est une famille qui règne sur un pays pendant une longue période de temps, souvent plusieurs générations. Les membres de la dynastie se succèdent au pouvoir, mais ils sont tous liés par des liens de parenté.
+Pépin le Bref, qui signifie ""Pépin le Court"", est un roi franc qui a régné de 751 à 768. Il est considéré comme l'un des plus grands rois de l'histoire de France.
 
-Par exemple, la dynastie des pharaons d'Égypte ou la dynastie des rois de France. Chaque pharaon ou roi est le successeur de son père ou de son frère, et il règne sur le pays jusqu'à sa mort.
+Pépin le Bref est le fils de Charles Martel, qui a vaincu les Arabes à la bataille de Poitiers en 732. Lorsque son père meurt, Pépin le Bref devient roi des Francs et commence à unifier les différents royaumes francs.
 
-La dynastie est comme une grande famille qui gouverne un pays, et cela peut durer des siècles.",Suite de rois qui appartiennent à la même famille,0.52,0
-6,Quelle dynastie succède au Mérovingiens?,"La dynastie qui succède aux Mérovingiens est la dynastie carolingienne. Elle est fondée par Charlemagne, qui règne de 768 à 814. Charlemagne est considéré comme l'un des plus grands empereurs de l'histoire de l'Europe.",Les Carolingiens succèdent aux Mérovingiens,0.65,0
-7,Qui était le premier roi des Caroligiens ?,"C'est une excellente question ! Le premier roi des Caroligiens était Charlemagne, également connu sous le nom de Charles le Grand. Il a régné de 768 à 814 et a joué un rôle important dans l'unification de la France et de l'Europe.",Charlemagne était le premier roi des Carolingiens,0.831,1
-8, Quelle est la capitale de la France sous Charlemagne?,"La capitale de la France sous Charlemagne était Aix-la-Chapelle, mais il est plus précis de dire qu'il a établi son palais à Aix-la-Chapelle, qui est actuellement en Allemagne. Cependant, la capitale de la Francie médiane, l'un des royaumes créés par Charlemagne, était Aix-la-Chapelle, mais la capitale de la Francie occidentale, l'autre royaume, était Paris.",La capitale de la France sous Charlemagne est Aix-la-Chapelle,0.885,1
-9,Que fait Charlemagne pour encourager le développement des arts et du savoir ?,"Charlemagne encourage le développement des arts et du savoir en créant des écoles et des universités dans son empire. Il invite des savants et des artistes de toute l'Europe à venir étudier et enseigner à la cour impériale. Il soutient également la traduction des textes classiques en latin, ce qui permet de diffuser les connaissances et les idées de l'Antiquité.
+Il fait beaucoup de choses importantes :
 
-Il crée également des ateliers d'artisans et des écoles de musique, où les jeunes gens peuvent apprendre les métiers manuels et les arts musicaux. Enfin, il encourage la construction de bibliothèques et de monastères, qui deviennent des centres de savoir et de culture.
+- Il crée l'Empire carolingien, qui est un grand empire qui englobe la France, l'Allemagne et l'Italie.
+- Il fonde la ville de Paris, qui deviendra la capitale de la France.
+- Il crée l'Église de France, qui est l'Église catholique en France.
+- Il fait construire de nombreux monastères et églises.
 
-Ces actions permettent de revitaliser la culture et les arts en Europe, après une période de déclin.",Charlemenagne ouvre des écoles,0.607,0
-10,Que se passe t-il à la mort de Charlemagne ?,"Bonjour les élèves ! Lorsque Charlemagne meurt en 814, il laisse derrière lui un empire vaste et puissant. Son fils Louis le Pieux, qui est le plus âgé de ses trois fils, est désigné comme son successeur. Louis le Pieux doit partager l'empire avec ses deux frères, Charles le Chauve et Louis le Germanique, ce qui va créer des tensions et des conflits entre eux.
+Pépin le Bref est donc un roi très important qui a joué un rôle crucial dans l'histoire de la France.","Pépin le Bref, qui signifie ""Pépin le Court"", est un roi franc qui a régné de 751 à 768.",0.883,1
+4, Qu'est ce qu'une dynastie ?,"Une dynastie est une famille qui règne sur un pays pendant une longue période de temps, souvent plusieurs générations. C'est comme une chaîne de commandement où le pouvoir est transmis de parent en parent.
 
-En effet, Louis le Pieux décide de diviser l'empire en trois parties : la Francie occidentale pour Charles le Chauve, la Francie orientale pour Louis le Germanique et l'Italie pour Bérenger, un autre frère. Mais cela va créer des problèmes de succession et de pouvoir, ce qui va affaiblir l'empire de Charlemagne.
+Par exemple, en Chine, la dynastie Qin a régné de 221 à 206 avant J.-C., puis la dynastie Han a pris le pouvoir et a régné de 206 avant J.-C. à 220 après J.-C. C'est comme une succession de familles qui se succèdent au pouvoir.
 
-C'est ainsi que l'empire de Charlemagne va se diviser en plusieurs royaumes, ce qui va marquer la fin de l'unité de l'empire carolingien.",L'empire est divisé entre ses trois fils,0.597,0
+Les dynasties peuvent être importantes pour comprendre l'histoire d'un pays, car elles peuvent influencer les décisions politiques, économiques et sociales de la période.","Une dynastie est une famille qui règne sur un pays pendant une longue période de temps, souvent plusieurs générations.",0.733,1
+5, Qui était Charlemagne ?,"Bonjour les élèves ! Charlemagne, également appelé Charles le Grand, était un roi des Francs qui a vécu au VIIIe siècle. Il est considéré comme l'un des plus grands souverains de l'histoire de l'Europe.
+
+Charlemagne a été roi des Francs de 768 à 814 et a réussi à unifier de nombreux peuples et territoires, créant ainsi un empire vaste et puissant. Il a également promu l'éducation, la culture et la religion chrétienne.
+
+Il est célèbre pour avoir fondé l'Empire carolingien, qui a duré pendant plusieurs siècles. Charlemagne a également été un grand défenseur de la chrétienté et a joué un rôle important dans la diffusion de la culture et de la civilisation européennes.
+
+En résumé, Charlemagne était un roi puissant et sage qui a laissé une empreinte durable dans l'histoire de l'Europe.","Charlemagne, également appelé Charles le Grand, était un roi des Francs qui a vécu au VIIIe siècle.",0.951,1
+6,Qui succède à Charlemagne ?,"Après la mort de Charlemagne en 814, son fils Louis le Pieux lui succède. Louis le Pieux est le premier empereur carolingien et règne jusqu'en 840. Il est suivi par ses trois fils : Lothaire, Louis le Germanique et Charles le Chauve.","Après la mort de Charlemagne en 814, son fils Louis le Pieux lui succède.",0.856,1
+7,Que font les seigneurs pour se protéger de la guerre ?,"Excellente question ! Les seigneurs, qui étaient des nobles qui possédaient des terres et des châteaux, se protégeaient de la guerre en construisant des châteaux forts. Ces châteaux étaient souvent situés sur des collines ou des rochers escarpés, ce qui les rendait difficiles à attaquer.
+
+Ils construisaient également des murs épais, des portes solides et des tours pour défendre leur château. Certains châteaux avaient même des fossés profonds et des pont-levis pour empêcher les ennemis de s'approcher.
+
+Les seigneurs utilisaient également des armes et des stratégies pour se défendre, comme les archers, les arbalétriers et les soldats chevaliers. Mais leur principal moyen de protection était leur château fort, qui leur permettait de se retrancher en cas d'attaque.","Les seigneurs, qui étaient des nobles qui possédaient des terres et des châteaux, se protégeaient de la guerre en construisant des châteaux forts.",0.779,1
+8, Qui sont les paysans?,"Bonjour les élèves ! Les paysans sont des personnes qui travaillent sur les terres pour cultiver des plantes et élever des animaux pour produire de la nourriture. Ils sont souvent associés à la campagne et vivent dans des villages ou des fermes.
+
+Les paysans ont toujours joué un rôle important dans l'économie et la société, car ils fournissent la nourriture nécessaire pour la survie des gens. Mais ils ont également souvent été maltraités et exploités au fil des siècles.
+
+Aujourd'hui, les paysans continuent à travailler dur pour produire de la nourriture, mais leur rôle est souvent oublié. Nous devons les remercier pour leur travail acharné qui nous permet de manger chaque jour.
+
+Maintenant, qui peut me dire ce que les paysans font pour produire de la nourriture ?","Maintenant, qui peut me dire ce que les paysans font pour produire de la nourriture ?",0.674,1
+9, Qu'est ce que la guerre de Cent ans?,"Bonjour les élèves ! La guerre de Cent Ans est un conflit qui a eu lieu en Europe, principalement en France et en Angleterre, entre 1337 et 1453. Elle a duré presque 116 ans, ce qui explique son nom.
+
+Cette guerre a commencé en raison d'un désaccord entre le roi Édouard III d'Angleterre et le roi Philippe VI de France. Le roi Édouard III revendiquait le trône de France, car il pensait que son père, le roi Édouard II, avait été légitimement roi de France.
+
+La guerre a été marquée par de nombreuses batailles sanglantes, notamment la bataille de Crécy en 1346, la bataille de Poitiers en 1356 et la bataille de Agincourt en 1415. La guerre a également vu l'émergence de nouvelles armes, comme l'arbalète et l'artillerie.
+
+La guerre de Cent Ans a eu des conséquences importantes pour la France et l'Angleterre. La France a perdu plusieurs régions, notamment la Normandie, la Picardie et le Maine. La guerre a également entraîné la perte de la vie de nombreux soldats et la destruction de nombreuses villes et villages.
+
+Mais la guerre de Cent Ans a également eu des conséquences positives. Elle a permis à la France de se renforcer et de devenir une puissance européenne. Elle a également entraîné l'émergence de nouvelles idées et de nouvelles technologies.
+
+Et vous, qu'est-ce que vous pensez de la guerre de Cent Ans ?","La guerre de Cent Ans est un conflit qui a eu lieu en Europe, principalement en France et en Angleterre, entre 1337 et 1453.",0.932,1
+10,Quelles sont les grandes inventions et découvertes du Moyen-Age ?,"Bonjour les élèves ! Le Moyen-Age, qui s'étend de l'an 500 à l'an 1500, a vu l'émergence de nombreuses inventions et découvertes importantes. Voici quelques-unes des plus grandes :
+
+1. **L'imprimerie** : inventée par Johannes Gutenberg en 1450, elle a permis de reproduire des textes de manière rapide et économique, contribuant à la diffusion de la connaissance.
+2. **La boussole** : inventée par les Chinois au VIIIe siècle, elle a permis aux navigateurs de trouver leur chemin et de découvrir de nouvelles terres.
+3. **La poudre à canon** : inventée en Chine au IXe siècle, elle a été utilisée pour la première fois en Europe au XIIIe siècle, ce qui a changé la face de la guerre.
+4. **La roue à aubes** : inventée au Moyen-Age, elle a permis de pomper l'eau des rivières et de faire fonctionner les moulins à eau.
+5. **La chirurgie** : les médecins du Moyen-Age ont développé de nouvelles techniques chirurgicales, comme la suture et la cauterisation.
+6. **La navigation** : les navigateurs du Moyen-Age ont découvert de nouvelles terres et ont établi des routes commerciales importantes.
+7. **La construction de cathédrales** : les architectes du Moyen-Age ont construit des cathédrales imposantes, comme la cathédrale de Notre-Dame de Paris.
+
+Ces inventions et découvertes ont eu un impact important sur la société, la technologie et la culture du Moyen-Age.","**La boussole** : inventée par les Chinois au VIIIe siècle, elle a permis aux navigateurs de trouver leur chemin et de découvrir de nouvelles terres.",0.752,1
+11,Qui sont les grands explorateurs ?,"Bonjour les élèves ! Les grands explorateurs sont des personnes qui ont découvert de nouveaux pays, terres et océans. Voici quelques-uns des plus célèbres :
+
+- Christophe Colomb : Il a découvert l'Amérique en 1492.
+- Vasco de Gama : Il a trouvé un chemin maritime pour aller en Inde en 1498.
+- Fernand Magellan : Il a mené la première expédition à circumnaviger la Terre en 1519-1522.
+- Jacques Cartier : Il a exploré le Canada et découvert le fleuve Saint-Laurent en 1534.
+- James Cook : Il a cartographié de nombreux pays et découvert de nouvelles terres en Australie et en Océanie en 1768-1779.
+
+Ces explorateurs ont changé la carte du monde et ont ouvert de nouvelles voies commerciales et culturelles.",- Fernand Magellan : Il a mené la première expédition à circumnaviger la Terre en 1519-1522.,0.91,1

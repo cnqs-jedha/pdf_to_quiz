@@ -3,89 +3,111 @@
     "id": 1,
     "question": "Que s'est il passé au moment des Grandes Invasions ?",
     "references": [
-      "Les Barbares",
-      "Les Barbares, ont envahi la Gaule"
+      "Au Veme siècle, des peuples germaniques, les barbabres, venant de toutes l'Europe envahissent l'Empire Romain d'Occident, dont la Gaule fait partie.",
+      "Un seul de ces peuples, les Francs, s'installe et fait disparaître l'Empire-Romain."
     ],
     "label": 1
   },
   {
     "id": 2,
-    "question": " Quel peuple s'installe en Gaule ?",
+    "question": " Qui était Clovis ?",
     "references": [
-      "Les Francs",
-      "Les Francs s'installet et font disparaître l'Empire-Romain"
+      "En 481, un chef Franc, Clovis, devient le premier roi de tous les Francs. Puis, il s'emprare de la Gaule Romaine.",
+      "Clovis se convertit au christianisme vers 496. Ses successeurs forment la dynastie des Mérovingiens.",
+      "La conversion de Clovis au christianisme marque la fin de 'l'Antiquité et le début du Moyen-Age.",
+      " A la mort de Clovis en 511, son royaume est partagé entre ses quatre fils."
     ],
     "label": 1
   },
   {
     "id": 3,
-    "question": "Qui était Clovis ?",
+    "question": "Qui est Pépin le Bref et que fait-il ?",
     "references": [
-      "Clovis, roi des Francs",
-      "Clovis, premier roi de tous les Francs"
+      "Pépin le Bref est un roi des Francs qui a régné de 751 à 768.",
+      "Il est le fils de Charles Martel et le père de Charlemagne.",
+      "Pépin le Bref est connu pour avoir déposé le dernier roi mérovingien, Childéric III, et pour avoir été couronné roi des Francs par le pape en 754.",
+      "Pépin le Bref est le fondateur de la dynastie carolingienne, qui a régné sur les Francs pendant plusieurs siècles."
     ],
     "label": 1
   },
   {
     "id": 4,
-    "question": "Comment s'apellent la dynastie que forment ses successeurs ?",
+    "question": " Qu'est ce qu'une dynastie ?",
     "references": [
-      "Les Mérovingiens",
-      "La dynastie des Mérovingiens"
+      "Une dynastie est une suite de rois qui appartiennent à la même famille. On peut citer par exemple, la dynastie des Carolingiens ou encore la dynastie des Mérovingiens.",
+      "La dynastie des Mérovingiens a été fondée par Clovis, tandis que la dynastie des Carolingiens a été fondée par Charlemagne."
     ],
     "label": 1
   },
   {
     "id": 5,
-    "question": " Qu'est ce qu'une dynastie ?",
+    "question": " Qui était Charlemagne ?",
     "references": [
-      "Rois",
-      "Suite de rois qui appartiennent à la même famille"
+      "Charlemagne, également connu sous le nom de Charles le Grand, était un roi des Francs qui a vécu au VIIIe siècle.",
+      "Il est considéré comme l'un des plus grands rois de l'histoire de France.",
+      "La ville d'Aix la Chapelle, située en Allemagne, était la capitale de l'empire de Charlemagne.",
+      "Charlemagne a encouragé le développement des arts et du savoir en créant des écoles et des universités dans son empire.",
+      "Pour être obéi, Charlemagne ordonne que tous les hommes libres lui prêtent serment de fidélité. Il nomme des comtes pour gouverner les différentes régions de son empire."
     ],
     "label": 1
   },
   {
     "id": 6,
-    "question": "Quelle dynastie succède au Mérovingiens?",
+    "question": "Qui succède à Charlemagne ?",
     "references": [
-      "Les Carolingiens",
-      "Les Carolingiens succèdent aux Mérovingiens"
+      "Louis le Pieux, son fils, lui succède à sa mort en 814.",
+      "Après sa mort, l'empire de Charlemagne est divisé entre ses trois fils : Charles le Chauve, Louis le Germanique et Lothaire. Cette division affaiblit l'empire carolingien.",
+      "En 987, les comtes choisissent un nouveau roi, Hugues Capet, qui fonde la dynastie des Capétiens."
     ],
     "label": 1
   },
     {
     "id": 7,
-    "question": "Qui était le premier roi des Caroligiens ?",
+    "question": "Que font les seigneurs pour se protéger de la guerre ?",
     "references": [
-      "Charlemagne",
-      "Charlemagne était le premier roi des Carolingiens"
+      "Au 10e siècle, le roi a de moins en moins de pouvoir. Les seigneurs, pour se protéger des guerres, construisent des châteaux forts situés en hauteur.",
+      "Les châteaux forts sont entourés de remparts et d'un fossé rempli d'eau, appelé douve. L'entrée se fait par un pont-levis. Dans la cour intérieure se trouvent les écuriées, les réserves et les ateliers. Le Seigneur vit dans le donjon, une grande tour qui se dresse au milieu du château"
     ],
     "label": 1
   },
   {
     "id": 8,
-    "question": " Quelle est la capitale de la France sous Charlemagne?",
+    "question": " Qui sont les paysans?",
     "references": [
-      "Aix-la-Chapelle",
-      "La capitale de la France sous Charlemagne est Aix-la-Chapelle"
+      "Les paysans vivent généralement dans des villages et sont soumis à un seigneur.",
+      "Il existe deux sortes de paysans : les serfs, et les vilains. Les serfs, appartiennent au seigneur, ainsi que la terre qu'ils travaillent et occupent. Ils n'ont aucune liberté. La plus grosse partie de leur récolte va au seigneur. Les vilains eux, peuvent changer de domaine, mais ils doivent payer des impôts au seigneur."
     ],
     "label": 1
   },
   {
     "id": 9,
-    "question": "Que fait Charlemagne pour encourager le développement des arts et du savoir ?",
+    "question": " Qu'est ce que la guerre de Cent ans?",
     "references": [
-      "écoles",
-      "Charlemenagne ouvre des écoles"
+      "La guerre de Cent Ans est un conflit qui a opposé la France et l'Angleterre de 1337 à 1453.",
+      "Elle a été marquée par des batailles célèbres comme celle de Crécy et celle d'Azincourt.",
+      "La guerre de Cent Ans a eu des conséquences importantes sur l'histoire de France et d'Angleterre, notamment en renforçant le sentiment national."
     ],
     "label": 1
   },
   {
     "id": 10,
-    "question": "Que se passe t-il à la mort de Charlemagne ?",
+    "question": "Quelles sont les grandes inventions et découvertes du Moyen-Age ?",
     "references": [
-      "Division de l'Empire",
-      "L'empire est divisé entre ses trois fils"
+      "La poudre. Employée depuis longtemps par les Chinois et les Arabes, la poudre est utlisée pour les armes à feu.",
+      "L'imprimerie. Vers 1450, l'Allemand Gutenberg remplace les plaques d'imprimerie en bois par des caractères mobiles en métail. La mise au point de l'imprimerie permet la diffucion de nombreux exemplaires.",
+      "La boussole. La boussole était déjà utilisée par les Chinois et les Arabes. L'aiguille, qui indique le Nord, permet aux navigateurs de s'éloigner des côtes en suivant des caps précis.",
+      "Les caravelles. Les caravelles sont des bateaux rapides équipés de gouvernail."
+    ],
+    "label": 1
+  },
+  { "id": 11,
+    "question": "Qui sont les grands explorateurs ?",
+    "references": [
+      "Christophe Colomb. En 1492, il découvre l'Amérique en traversant l'Atlantique.",
+      "Vasco de Gama. Il est le premier à atteindre l'Inde par la mer en contournant l'Afrique.",
+      "Ferdinand Magellan. Il réalise la première circumnavigation de la Terre entre 1519 et 1522.",
+      "Marco Polo. Il est l'un des premiers grands navigateurs. il part à la conquête de l'Orient",
+      "Jacques Cartier. Il comment l'exploration du Canada, alors nommé Nouvelle-France."
     ],
     "label": 1
   }
