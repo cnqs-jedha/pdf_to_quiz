@@ -1,7 +1,7 @@
 from src.pipeline.config import PDF_PATH, DRIVE_FILE_ID, CHROMA_DB_PATH, EMBEDDING_MODEL_NAME, POST_TARGET_URL, DRIVE_FOLDER_URL
 from src.utils.drive_import import authenticate_google, get_pdfs_ids
-from src.utils.extractor import iter_texts_with_progress, extract_text_pypdf_in_memory, get_all_pdfs_data
-from src.pipeline.tokenizer import chunk_text, count_tokens
+from src.utils.extractor import get_all_pdfs_data
+from src.pipeline.tokenizer import chunk_text, count_tokens, chunk_with_metadata
 from src.pipeline.embedder import get_embeddings
 from src.pipeline.chroma_handler import save_to_chroma
 from src.pipeline.clustering_theme import hdbscan_clustering
@@ -21,22 +21,23 @@ def main(difficulty="standard"):
     print(drive_ids)
     print((2/10)*100, '%')
 
-
-    full_data = get_all_pdfs_data(service, drive_ids)
-    print(full_data)
-
-    """
-    # 3. Récupère tous les textes de tous les pdfs en un seul texte
-    full_text = "\n\n".join(iter_texts_with_progress(service, drive_ids))
-    print("Textes Récupéré")
-    print((3/10)*100, '%')
+    # 3. Obtenir toutes les datas de tous les pdfs (par page)
+    pdfs_data = get_all_pdfs_data(service, drive_ids)
 
     # 4. Normalise le texte
-    text_normalize = normalize_text(full_text)
+    for pdf in pdfs_data:
+        for page in pdf:
+            page["text"] = normalize_text(page['text'])
+
     print("Textes Normalisé")
     print((4/10)*100, '%')
 
     # 5. Chunker
+    chunks = chunk_with_metadata(pdfs_data)
+    print(chunks)
+    
+
+"""
     chunks = chunk_text(text_normalize)
     token_counts = [count_tokens(c) for c in chunks]
     #print(f"{len(chunks)} chunks. Moy tokens: {round(sum(token_counts)/len(token_counts))}")
