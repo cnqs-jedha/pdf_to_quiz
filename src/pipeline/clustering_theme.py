@@ -1,4 +1,4 @@
-import fr_core_news_sm
+import fr_core_news_lg
 import spacy
 from spacy.lang.fr.stop_words import STOP_WORDS
 from spacy.lang.fr.stop_words import STOP_WORDS as FR_STOPS
@@ -17,7 +17,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import hdbscan
 from sklearn.preprocessing import normalize
 
-from src.utils.normalizer import normalize_text  # on réutilise le normalize.py
+#from src.utils.normalizer import normalize_text
 
 def clean_chunks_strings(chunks):
     """
@@ -25,7 +25,7 @@ def clean_chunks_strings(chunks):
     """
     # On suppose que les chunks sont déjà normalisés via normalize_text
     chunks_df = pd.DataFrame(chunks, columns=['string'])
-
+    
     # Nettoyage léger spécifique au clustering
     chunks_df['string_clean'] = chunks_df['string'].str.replace(r"<[^>]*>", " ", regex=True)
     chunks_df['string_clean'] = chunks_df['string_clean'].str.replace(r"\s+", " ", regex=True)
