@@ -8,22 +8,25 @@ from src.pipeline.clustering_theme import hdbscan_clustering
 from src.pipeline.collect_best_chunks_to_prompt import find_best_chunk_to_prompt
 from src.pipeline.quiz_generator import generate_quiz_from_chunks
 from src.utils.normalizer import normalize_text
+from collections import Counter
+
 import requests
 
 def main(difficulty="standard"):
+    
     # 1. S'identifier au drive
     service = authenticate_google()
     print("Identifié à Google")
     print((1/10)*100, '%')
-
+    
     # 2. Obtenir les ids des pdf contenu dans le dossier du drive
     drive_ids = get_pdfs_ids(service, DRIVE_FOLDER_URL, pdf_only=True)
     print(drive_ids)
     print((2/10)*100, '%')
-
+    
     # 3. Obtenir toutes les datas de tous les pdfs (par page)
     pdfs_data = get_all_pdfs_data(service, drive_ids)
-
+    
     # 4. Normalise le texte
     for pdf in pdfs_data:
         for page in pdf:
@@ -36,6 +39,20 @@ def main(difficulty="standard"):
     chunks = chunk_with_metadata(pdfs_data)
     print(chunks)
     
+    def count_chunks_by_theme(data_with_theme):
+        theme_counts = Counter([d["theme"] for d in data_with_theme])
+        return dict(theme_counts)
+
+    # 6. Clustering
+    data_with_theme = hdbscan_clustering(chunks)
+    print(data_with_theme)
+    counts = count_chunks_by_theme(data_with_theme)
+
+    print(counts)
+    """print("thèmes trouvé:", themes)
+    print('THEMES: OK')
+    print((6/10)*100, '%')"""
+    
 
 """
     chunks = chunk_text(text_normalize)
@@ -47,7 +64,8 @@ def main(difficulty="standard"):
     # 6. Embeddings
     #embeddings = get_embeddings(chunks, EMBEDDING_MODEL_NAME)
     #print(f"Embeddings shape: {embeddings.shape}")
-
+"""
+"""
     # 6. Clustering
     themes = hdbscan_clustering(chunks)
     print("thèmes trouvé:", themes)

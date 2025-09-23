@@ -8,55 +8,48 @@ import pandas as pd
 import numpy as np
 
 from sklearn.decomposition import TruncatedSVD
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import silhouette_score
-from sklearn.cluster import KMeans
-from sklearn.cluster import DBSCAN
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 import hdbscan
 from sklearn.preprocessing import normalize
 
-from src.utils.normalizer import normalize_text  # on réutilise le normalize.py
+from src.utils.normalizer import normalize_text
 
-def clean_chunks_strings(chunks):
+def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7):
     """
-    Nettoyage des chunks pour le clustering, en utilisant le texte déjà normalisé.
+    Nettoie les chunks déjà normalisés avec normalize_text.
+    - Supprime les mots vides (stopwords FR)
+    - Supprime les mots trop fréquents (> high_freq_threshold des docs)
+    - Supprime les mots peu informatifs (TF-IDF < tfidf_threshold)
     """
-    # On suppose que les chunks sont déjà normalisés via normalize_text
-    chunks_df = pd.DataFrame(chunks, columns=['string'])
+    df = pd.DataFrame(chunks)
 
-    # Nettoyage léger spécifique au clustering
-    chunks_df['string_clean'] = chunks_df['string'].str.replace(r"<[^>]*>", " ", regex=True)
-    chunks_df['string_clean'] = chunks_df['string_clean'].str.replace(r"\s+", " ", regex=True)
-    chunks_df['string_clean'] = chunks_df['string_clean'].fillna('').apply(lambda x: x.lower())
+    # On part directement de "text" qui est déjà normalisé
+    df["string_clean"] = df["text"].astype(str)
 
-    # Stopwords + TF/IDF pour enlever mots peu informatifs
-    chunks_df['nlp_ready'] = chunks_df['string_clean']
+    # TF-IDF pour détecter les mots peu informatifs
+    tfidf_vec = TfidfVectorizer(stop_words=None)
+    X_tfidf = tfidf_vec.fit_transform(df["string_clean"])
+    feature_names = tfidf_vec.get_feature_names_out()
+    mean_tfidf = X_tfidf.mean(axis=0).A1
+    low_info_words = [w for w, s in zip(feature_names, mean_tfidf) if s < tfidf_threshold]
 
-    # Vectorisation TF-IDF pour calculer mean_tfidf
-    vectorizer_temp = TfidfVectorizer(stop_words=None)
-    X_temp = vectorizer_temp.fit_transform(chunks_df['nlp_ready'])
-    feature_names = vectorizer_temp.get_feature_names_out()
-    mean_tfidf = X_temp.mean(axis=0).A1
-
-    vec = CountVectorizer()
-    X_count = vec.fit_transform(chunks_df['nlp_ready'])
+    # Fréquence documentaire pour les mots trop fréquents
+    count_vec = CountVectorizer()
+    X_count = count_vec.fit_transform(df["string_clean"])
     doc_freq = np.asarray(X_count.sum(axis=0)).ravel() / X_count.shape[0]
-    words_high_freq = [word for word, freq in zip(vec.get_feature_names_out(), doc_freq) if freq > 0.7]
+    words_high_freq = [w for w, f in zip(count_vec.get_feature_names_out(), doc_freq) if f > high_freq_threshold]
 
-    threshold = 0.008
-    low_info_words = [word for word, score in zip(feature_names, mean_tfidf) if score < threshold]
+    # Construire stopwords combinés
+    combined_stopwords = STOP_WORDS.union(low_info_words).union(words_high_freq)
 
-    combined_stopwords = STOP_WORDS.union(set(low_info_words)).union(set(words_high_freq))
-
-    # Filtrage final pour nlp_ready
-    chunks_df['nlp_ready'] = chunks_df['string_clean'].apply(
-        lambda x: ' '.join([w for w in x.split() if w not in combined_stopwords])
+    # Supprimer les mots inutiles
+    df["nlp_ready"] = df["string_clean"].apply(
+        lambda x: " ".join([w for w in x.split() if w not in combined_stopwords])
     )
 
-    return chunks_df
-
+    return df
 
 #Trouver automatiquement la dimension du svd
 def auto_svd_dim(X, target_var=0.7, min_dim=5, max_dim=300):
@@ -69,70 +62,122 @@ def auto_svd_dim(X, target_var=0.7, min_dim=5, max_dim=300):
     k = max(min_dim, min(k, probe))
     return k
 
-def get_3_words_by_theme(cluster_list, df_model):
-    top_words_per_cluster = {}
-    strings_array = []
-
-    for cluster_id in cluster_list.unique():
-        if cluster_id == -1:
+def extract_top_keywords(df, cluster_col="hdb_cluster", text_col="nlp_ready", top_n=3):
+    """
+    Extrait les mots-clés les plus pertinents par cluster en utilisant TF-IDF.
+    """
+    themes = {}
+    for cluster_id in df[cluster_col].unique():
+        if cluster_id == -1:  # bruit
+            themes[cluster_id] = "other"
             continue
 
-        cluster_texts = df_model[cluster_list == cluster_id]['nlp_ready']
+        cluster_texts = df[df[cluster_col] == cluster_id][text_col]
         cluster_texts = [t for t in cluster_texts if isinstance(t, str) and t.strip()]
 
-        if not cluster_texts:
-            top_words_per_cluster[cluster_id] = ["(aucun mot)"]
+        if not cluster_texts:  # cluster vide
+            themes[cluster_id] = "(empty)"
             continue
 
-        vectorizer = CountVectorizer()
         try:
+            vectorizer = TfidfVectorizer(max_features=500)
             X = vectorizer.fit_transform(cluster_texts)
+            scores = X.mean(axis=0).A1
+            words = vectorizer.get_feature_names_out()
+            top_words = [w for w, _ in sorted(zip(words, scores), key=lambda x: x[1], reverse=True)[:top_n]]
+            themes[cluster_id] = " ".join(top_words) if top_words else "(empty)"
         except ValueError:
-            top_words_per_cluster[cluster_id] = ["(aucun mot)"]
+            themes[cluster_id] = "(empty)"
+
+    return themes
+
+threshold = 0.2 # A automatiser si on veut un nombre minimum de clusters (si chiffre plus grand plus de clusters, si chiffre plus petit moins de clusters)
+def merge_close_clusters(df, embeddings, cluster_col="hdb_cluster", sim_threshold=threshold):
+    """
+    Fusionne les clusters proches en utilisant la similarité cosinus de leurs centroïdes,
+    dans l’espace des embeddings (SVD normalisés).
+    """
+    centroids = {}
+    for cluster_id in df[cluster_col].unique():
+        if cluster_id == -1:  # ignorer le bruit
             continue
+        mask = (df[cluster_col] == cluster_id).values
+        if mask.sum() == 0:
+            continue
+        centroid_vec = embeddings[mask].mean(axis=0)
+        centroids[cluster_id] = centroid_vec
 
-        word_counts = X.sum(axis=0)
-        words_freq = [(word, word_counts[0, idx]) for word, idx in vectorizer.vocabulary_.items()]
-        top_words = sorted(words_freq, key=lambda x: x[1], reverse=True)[:3]
-        top_words_per_cluster[cluster_id] = [w for w, _ in top_words] if top_words else ["(aucun mot)"]
+    if not centroids:
+        return df, {}
 
-    for theme_id, words in top_words_per_cluster.items():
-        strings_array.append(" ".join(words))
+    ids = list(centroids.keys())
+    centroid_matrix = np.vstack([centroids[i] for i in ids])
+    sims = cosine_similarity(centroid_matrix)
 
-    return strings_array
+    # Union-find pour fusionner
+    parent = {cid: cid for cid in ids}
 
-def hdbscan_clustering(chunks):
-    # Nettoyage et lemmatisation des chunks
+    def find(x):
+        while parent[x] != x:
+            x = parent[x]
+        return x
+
+    for i, id1 in enumerate(ids):
+        for j, id2 in enumerate(ids):
+            if i < j and sims[i, j] > sim_threshold:
+                p1, p2 = find(id1), find(id2)
+                if p1 != p2:
+                    parent[p2] = p1
+
+    df["merged_cluster"] = df[cluster_col].apply(lambda c: find(c) if c in parent else c)
+    return df, parent
+
+
+def hdbscan_clustering(chunks, merge_clusters=True, sim_threshold=threshold):
+    # Nettoyage
     df_chunks = clean_chunks_strings(chunks)
 
-    # TF-IDF pour la réduction de dimension
+    # TF-IDF
     vectorizer = TfidfVectorizer(stop_words=None)
     X = vectorizer.fit_transform(df_chunks['nlp_ready'])
 
-    # Détermination automatique du nombre de dimensions pour SVD
+    # SVD
     k = auto_svd_dim(X, target_var=0.7, min_dim=5, max_dim=300)
     svd_model = TruncatedSVD(n_components=k, algorithm='randomized', n_iter=100, random_state=42)
     lsa = svd_model.fit_transform(X)
 
-    # Normalisation pour HDBSCAN
+    # Normalisation
     X_norm = normalize(lsa)
 
     # Clustering
     n_samples = len(X_norm)
     clusterer = hdbscan.HDBSCAN(
-        min_cluster_size=max(3, n_samples // 50),
+        min_cluster_size=max(5, n_samples // 100),
         min_samples=1,
         metric='euclidean',
-        cluster_selection_method='leaf',
-        cluster_selection_epsilon=0.05
+        cluster_selection_method='eom',
+        cluster_selection_epsilon=0.03
     )
     labels = clusterer.fit_predict(X_norm)
+    df_chunks['hdb_cluster'] = labels
 
-    # Création du DataFrame final
-    df_result = df_chunks[['string', 'nlp_ready']].copy()
-    df_result['hdb_cluster'] = labels
+    # Fusion optionnelle
+    if merge_clusters:
+        df_chunks, merged_map = merge_close_clusters(
+            df_chunks,
+            embeddings=X_norm,
+            cluster_col="hdb_cluster",
+            sim_threshold=sim_threshold
+        )
+        final_col = "merged_cluster"
+    else:
+        final_col = "hdb_cluster"
 
-    # Extraction des 3 mots clés par thème
-    themes = get_3_words_by_theme(df_result['hdb_cluster'], df_result)
 
-    return themes
+    # Extraction des thèmes
+    themes = extract_top_keywords(df_chunks, cluster_col=final_col, text_col="nlp_ready", top_n=3)
+    df_chunks['theme'] = df_chunks[final_col].map(themes)
+
+    # Output JSON
+    theme_to_json = df_chunks.drop(columns=["hdb_cluster", "nlp_ready", "string_clean"]).to_dict(orient="records")
+    return theme_to_json
