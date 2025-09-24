@@ -1,4 +1,4 @@
-import fr_core_news_sm
+import fr_core_news_lg
 import spacy
 from spacy.lang.fr.stop_words import STOP_WORDS
 from spacy.lang.fr.stop_words import STOP_WORDS as FR_STOPS
