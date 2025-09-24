@@ -13,8 +13,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import hdbscan
 from sklearn.preprocessing import normalize
+from collections import Counter
 
-from src.utils.normalizer import normalize_text
+#from src.utils.normalizer import normalize_text
 
 def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7):
     """
@@ -181,3 +182,8 @@ def hdbscan_clustering(chunks, merge_clusters=True, sim_threshold=threshold):
     # Output JSON
     theme_to_json = df_chunks.drop(columns=["hdb_cluster", "nlp_ready", "string_clean"]).to_dict(orient="records")
     return theme_to_json
+
+
+def count_chunks_by_theme(data_with_theme):
+        theme_counts = Counter([d["theme"] for d in data_with_theme])
+        return dict(theme_counts)

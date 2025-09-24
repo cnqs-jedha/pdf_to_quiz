@@ -4,11 +4,10 @@ from src.utils.extractor import get_all_pdfs_data
 from src.pipeline.tokenizer import chunk_text, count_tokens, chunk_with_metadata
 from src.pipeline.embedder import get_embeddings
 from src.pipeline.chroma_handler import save_to_chroma
-from src.pipeline.clustering_theme import hdbscan_clustering
+from src.pipeline.clustering_theme import hdbscan_clustering, count_chunks_by_theme
 from src.pipeline.collect_best_chunks_to_prompt import find_best_chunk_to_prompt
 from src.pipeline.quiz_generator import generate_quiz_from_chunks
 from src.utils.normalizer import normalize_text
-from collections import Counter
 
 import requests
 import time
@@ -17,58 +16,68 @@ def main(difficulty="standard"):
     
     timings = []
     total_start = time.time()  # début du chronomètre
+    nbr_steps = 10
     
     # 1. S'identifier au drive
     start = time.time()
+
     service = authenticate_google()
+
     duration = time.time() - start
-    timings.append({"Etape": "Authentification", "Durée (sec)": duration})
-    print("Identifié à Google")
-    print(f"Avancement : {(1/10)*100} %")
+    timings.append({"Etape": "Authentification Google", "Durée (sec)": duration})
+    print(f"Avancement : {(1/nbr_steps)*100} %")
 
     # 2. Obtenir les ids des pdf contenu dans le dossier du drive
     start = time.time()
+
     drive_ids = get_pdfs_ids(service, DRIVE_FOLDER_URL, pdf_only=True)
     print(drive_ids)
+
     duration = time.time() - start
     timings.append({"Etape": "Récupération des IDs des PDF", "Durée (sec)": duration})
-    print(f"Avancement : {(2/10)*100} %")
+    print(f"Avancement : {(2/nbr_steps)*100} %")
 
     # 3. Récupère tous les textes de tous les pdfs en un seul texte
     start = time.time()
+
     pdfs_data = get_all_pdfs_data(service, drive_ids)
+
     duration = time.time() - start
-    timings.append({"Etape": "Concaténation de tous les PDF en un seul bloc de texte", "Durée (sec)": duration})
-    print("Textes récupérés")
-    print(f"Avancement : {(3/10)*100} %")
+    timings.append({"Etape": "Récupération de toutes les données des pdfs en un array", "Durée (sec)": duration})
+    print(f"Avancement : {(3/nbr_steps)*100} %")
 
     # 4. Normalise le texte
     start = time.time()
+
     for pdf in pdfs_data:
         for page in pdf:
             page["text"] = normalize_text(page['text'])
+
     duration = time.time() - start
     timings.append({"Etape": "Normalisation du texte", "Durée (sec)": duration})
-    print("Textes normalisés")
-    print(f"Avancement : {(4/10)*100} %")
+    print(f"Avancement : {(4/nbr_steps)*100} %")
 
     # 5. Chunker
+    start = time.time()
+
     chunks = chunk_with_metadata(pdfs_data)
     print(chunks)
-    
-    def count_chunks_by_theme(data_with_theme):
-        theme_counts = Counter([d["theme"] for d in data_with_theme])
-        return dict(theme_counts)
 
+    duration = time.time() - start
+    timings.append({"Etape": "Chunk des données", "Durée (sec)": duration})
+    print(f"Avancement : {(5/nbr_steps)*100} %")
+    
     # 6. Clustering
+    start = time.time()
     data_with_theme = hdbscan_clustering(chunks)
     print(data_with_theme)
-    counts = count_chunks_by_theme(data_with_theme)
 
+    counts = count_chunks_by_theme(data_with_theme)
     print(counts)
-    """print("thèmes trouvé:", themes)
-    print('THEMES: OK')
-    print((6/10)*100, '%')"""
+
+    duration = time.time() - start
+    timings.append({"Etape": "Thèmes créés", "Durée (sec)": duration})
+    print(f"Avancement : {(6/nbr_steps)*100} %")
     
 
     """
