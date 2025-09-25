@@ -41,5 +41,5 @@ def get_all_pdfs_data(service, file_ids):
     for i, file_id in enumerate(file_ids):
         pdf_data = extract_text_pypdf_in_memory(service, file_id, i)
         all_pdf_datas.append(pdf_data)
-        print(f"{i/total*100:.1f}%:")
+        print(f"{i}/{total}")
     return all_pdf_datas

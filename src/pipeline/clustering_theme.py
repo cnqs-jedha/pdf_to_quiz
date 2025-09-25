@@ -17,38 +17,47 @@ from collections import Counter
 
 #from src.utils.normalizer import normalize_text
 
+nlp = spacy.load("fr_core_news_lg", disable=["ner", "parser"])
+
 def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7):
     """
-    Nettoie les chunks déjà normalisés avec normalize_text.
-    - Supprime les mots vides (stopwords FR)
-    - Supprime les mots trop fréquents (> high_freq_threshold des docs)
-    - Supprime les mots peu informatifs (TF-IDF < tfidf_threshold)
+    Prépare les chunks pour HDBSCAN :
+    - Nettoyage statistique (TF-IDF, haute fréquence, stopwords)
+    - Lemmatisation linguistique
+    - Filtrage POS (supprime les tokens peu informatifs)
     """
     df = pd.DataFrame(chunks)
-
-    # On part directement de "text" qui est déjà normalisé
     df["string_clean"] = df["text"].astype(str)
 
-    # TF-IDF pour détecter les mots peu informatifs
+    # ======= Étape 1 : TF-IDF pour détecter mots peu informatifs =======
     tfidf_vec = TfidfVectorizer(stop_words=None)
     X_tfidf = tfidf_vec.fit_transform(df["string_clean"])
     feature_names = tfidf_vec.get_feature_names_out()
     mean_tfidf = X_tfidf.mean(axis=0).A1
-    low_info_words = [w for w, s in zip(feature_names, mean_tfidf) if s < tfidf_threshold]
+    low_info_words = {w for w, s in zip(feature_names, mean_tfidf) if s < tfidf_threshold}
 
-    # Fréquence documentaire pour les mots trop fréquents
+    # ======= Étape 2 : fréquence documentaire =======
     count_vec = CountVectorizer()
     X_count = count_vec.fit_transform(df["string_clean"])
     doc_freq = np.asarray(X_count.sum(axis=0)).ravel() / X_count.shape[0]
-    words_high_freq = [w for w, f in zip(count_vec.get_feature_names_out(), doc_freq) if f > high_freq_threshold]
+    words_high_freq = {w for w, f in zip(count_vec.get_feature_names_out(), doc_freq) if f > high_freq_threshold}
 
-    # Construire stopwords combinés
+    # ======= Étape 3 : stopwords combinés =======
     combined_stopwords = STOP_WORDS.union(low_info_words).union(words_high_freq)
 
-    # Supprimer les mots inutiles
-    df["nlp_ready"] = df["string_clean"].apply(
-        lambda x: " ".join([w for w in x.split() if w not in combined_stopwords])
-    )
+    # ======= Étape 4 : Lemmatisation + filtrage POS =======
+    def lemmatize_and_filter(text):
+        doc = nlp(text)
+        tokens = [
+            token.lemma_.lower()
+            for token in doc
+            if token.is_alpha
+            and token.lemma_ not in combined_stopwords
+            and token.pos_ in {"NOUN", "VERB", "ADJ"}  # garder mots porteurs de sens
+        ]
+        return " ".join(tokens)
+
+    df["nlp_ready"] = df["string_clean"].apply(lemmatize_and_filter)
 
     return df
 
@@ -92,7 +101,7 @@ def extract_top_keywords(df, cluster_col="hdb_cluster", text_col="nlp_ready", to
 
     return themes
 
-threshold = 0.2 # A automatiser si on veut un nombre minimum de clusters (si chiffre plus grand plus de clusters, si chiffre plus petit moins de clusters)
+threshold = 0.25 # A automatiser si on veut un nombre minimum de clusters (si chiffre plus grand plus de clusters, si chiffre plus petit moins de clusters)
 def merge_close_clusters(df, embeddings, cluster_col="hdb_cluster", sim_threshold=threshold):
     """
     Fusionne les clusters proches en utilisant la similarité cosinus de leurs centroïdes,
@@ -180,10 +189,11 @@ def hdbscan_clustering(chunks, merge_clusters=True, sim_threshold=threshold):
     df_chunks['theme'] = df_chunks[final_col].map(themes)
 
     # Output JSON
-    theme_to_json = df_chunks.drop(columns=["hdb_cluster", "nlp_ready", "string_clean"]).to_dict(orient="records")
+    theme_to_json = df_chunks.drop(columns=["hdb_cluster", "nlp_ready", "string_clean", "merged_cluster"]).to_dict(orient="records")
     return theme_to_json
 
 
 def count_chunks_by_theme(data_with_theme):
-        theme_counts = Counter([d["theme"] for d in data_with_theme])
+        theme_list = [d["theme"] for d in data_with_theme]
+        theme_counts = Counter(theme_list)
         return dict(theme_counts)

@@ -7,7 +7,12 @@ from src.pipeline.chroma_handler import save_to_chroma
 from src.pipeline.clustering_theme import hdbscan_clustering, count_chunks_by_theme
 from src.pipeline.collect_best_chunks_to_prompt import find_best_chunk_to_prompt
 from src.pipeline.quiz_generator import generate_quiz_from_chunks
-from src.utils.normalizer import normalize_text
+from src.utils.normalizer import normalize_text, clean_chunk_text
+from langchain_chroma import Chroma
+#from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
+
+
 
 import requests
 import time
@@ -31,7 +36,7 @@ def main(difficulty="standard"):
     start = time.time()
 
     drive_ids = get_pdfs_ids(service, DRIVE_FOLDER_URL, pdf_only=True)
-    print(drive_ids)
+    #print(drive_ids)
 
     duration = time.time() - start
     timings.append({"Etape": "Récupération des IDs des PDF", "Durée (sec)": duration})
@@ -51,7 +56,7 @@ def main(difficulty="standard"):
 
     for pdf in pdfs_data:
         for page in pdf:
-            page["text"] = normalize_text(page['text'])
+            page["text"] = clean_chunk_text(page['text'])
 
     duration = time.time() - start
     timings.append({"Etape": "Normalisation du texte", "Durée (sec)": duration})
@@ -61,7 +66,7 @@ def main(difficulty="standard"):
     start = time.time()
 
     chunks = chunk_with_metadata(pdfs_data)
-    print(chunks)
+    #print(chunks)
 
     duration = time.time() - start
     timings.append({"Etape": "Chunk des données", "Durée (sec)": duration})
@@ -72,59 +77,54 @@ def main(difficulty="standard"):
     data_with_theme = hdbscan_clustering(chunks)
     print(data_with_theme)
 
-    counts = count_chunks_by_theme(data_with_theme)
-    print(counts)
+    counts_themes = count_chunks_by_theme(data_with_theme)
+    print(counts_themes)
+
+    counts_themes.pop("other", None)
+    list_themes= list(counts_themes.keys())
+    print(list_themes)
 
     duration = time.time() - start
     timings.append({"Etape": "Thèmes créés", "Durée (sec)": duration})
     print(f"Avancement : {(6/nbr_steps)*100} %")
-    
 
-    """
-    chunks = chunk_text(text_normalize)
-    duration = time.time() - start
-    timings.append({"Etape": "Chunking du texte", "Durée (sec)": duration})
-    token_counts = [count_tokens(c) for c in chunks]
-    print(f"{len(chunks)} chunks. Moy tokens: {round(sum(token_counts)/len(token_counts))}")
-    print(f"Aperçu du premier chunk : {chunks[0]}")
-    print(f"Aperçu du deuxième chunk : {chunks[1]}")
-    print(f"Aperçu du troisième chunk : {chunks[2]}")
-    print('CHUNKS: OK')
-    print(f"Avancement : {(5/10)*100} %")
-
-    # 6. Embeddings
-    #embeddings = get_embeddings(chunks, EMBEDDING_MODEL_NAME)
-    #print(f"Embeddings shape: {embeddings.shape}")
-    """
-    """
-    # 6. Clustering
-    start = time.time()
-    themes = hdbscan_clustering(chunks)
-    duration = time.time() - start
-    timings.append({"Etape": "Identification des thèmes", "Durée (sec)": duration})
-    print("thèmes trouvés:", themes)
-    print('THEMES: OK')
-    print(f"Avancement : {(6/10)*100} %")
 
     # 7. Stockage Chroma
     start = time.time()
-    chroma_db = save_to_chroma(chunks, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH)
+
+    chroma_db = save_to_chroma(data_with_theme, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH)
+
     duration = time.time() - start
     timings.append({"Etape": "Création et stockage de la VectorDB", "Durée (sec)": duration})
-    print('SAVED TO CHROMA: OK')
-    print(f"Avancement : {(7/10)*100} %")
+    print(f"Avancement : {(7/nbr_steps)*100} %")
+
+
+    #vector_data = chroma_db.get()
+    #print("vector_data")
+    #print(vector_data)
+    #embedding_model = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
+    #db = Chroma(persist_directory=CHROMA_DB_PATH, embedding_function=embedding_model)
+
+    # Récupérer le nombre de documents
+    #print("Nombre de documents :", db._collection.count())
+
+    # Exemple : chercher le premier chunk
+    #results = db.similarity_search("Clovis", k=3)
+    #print("Exemple de résultat :")
+    #print("Texte :", results[0].page_content)
+    #print("Metadata :", results[0].metadata)
+    #print("Results :", results)
 
     # 8. Obtenir les meilleurs chunks pour le prompt
     start = time.time()
-    chunks_by_theme = find_best_chunk_to_prompt(chroma_db, themes)
+    chunks_by_theme = find_best_chunk_to_prompt(chroma_db, list_themes)
+
     duration = time.time() - start
     timings.append({"Etape": "Récupération des meilleurs chunks par thème", "Durée (sec)": duration})
     print(chunks_by_theme)
-    print(f"Avancement : {(8/10)*100} %")
-    
-    # 6. Récupération de la vector db
-    vector_data = chroma_db.get()
+    print(f"Avancement : {(8/nbr_steps)*100} %")
 
+    """
     # 9. Création du quizz avec les chunks par thèmes
     start = time.time()
     quiz = generate_quiz_from_chunks(chunks_by_theme, themes, difficulty)

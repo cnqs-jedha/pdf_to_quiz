@@ -67,7 +67,7 @@ def normalize_text(text: str) -> str:
         and ent[0].pos_ != "DET"  # le 1er élément n'est pas un déterminant
     ]
 
-    print(f"Liste des noms propres brute : {list_proper_noun_raw}")
+    #print(f"Liste des noms propres brute : {list_proper_noun_raw}")
 
     # Comptage des occurrences des entités extraites dans le texte
     entity_counts = Counter(list_proper_noun_raw) 
@@ -99,7 +99,7 @@ def normalize_text(text: str) -> str:
 
     # Comptage des occurrences des entités extraites dans le texte
     entity_counts = Counter(list_proper_noun)
-    print(f"Entités nommées avec leurs occurrences : {entity_counts}")
+    #print(f"Entités nommées avec leurs occurrences : {entity_counts}")
 
     # Seuil de sélection : fixé arbitrairement à 5 pour le moment
     threshold_count = 5
@@ -110,8 +110,8 @@ def normalize_text(text: str) -> str:
         if count >= threshold_count
     ]
 
-    print(f"Nombre de noms propres retenus : {len(list_proper_noun_final)}")
-    print(f"Liste des noms propres nettoyée (convertis en minuscule): {list_proper_noun_final}")
+    #print(f"Nombre de noms propres retenus : {len(list_proper_noun_final)}")
+    #print(f"Liste des noms propres nettoyée (convertis en minuscule): {list_proper_noun_final}")
     
     # Lemmatisation avec spaCy
 
@@ -129,4 +129,21 @@ def normalize_text(text: str) -> str:
             
     text = " ".join(lemmatized_tokens)  
     
+    return text
+
+
+def clean_chunk_text(text: str) -> str:
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = re.sub(r"[^\x20-\x7EÀ-ÖØ-öø-ÿœŒšŠžŽ]+", " ", text)
+    text = re.sub(r"http\S+|www\S+|@\S+", " ", text)
+    text = re.sub(r"\b\w\b", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    text = re.sub(r"-\s*\n", "", text)  # mot coupé en fin de ligne
+    text = re.sub(r"\n", " ", text)     # sauts de ligne → espace
+    text = re.sub(r"\bpage\s*\d+\b", " ", text)  # "Page 12"
+    text = re.sub(r"([!?.,;:])\1+", r"\1", text)
+    text = text.replace("’", "'").replace("‘", "'")
+    text = text.replace("“", '"').replace("”", '"')
+    text = re.sub(r"[©®™✓§¶∆∞≈≠±×÷]", " ", text)
+
     return text
