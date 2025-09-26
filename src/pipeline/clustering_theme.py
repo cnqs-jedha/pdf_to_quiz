@@ -14,6 +14,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import hdbscan
 from sklearn.preprocessing import normalize
 from collections import Counter
+import re
 
 #from src.utils.normalizer import normalize_text
 
@@ -25,27 +26,106 @@ def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7)
     - Nettoyage statistique (TF-IDF, haute fréquence, stopwords)
     - Lemmatisation linguistique
     - Filtrage POS (supprime les tokens peu informatifs)
+    - Conservation des noms propres fréquents (PER, GPE, LOC)
     """
     df = pd.DataFrame(chunks)
-    df["string_clean"] = df["text"].astype(str)
+    df["string"] = df["text"].astype(str)
+    df["string"] = df["string"].fillna('').apply(lambda x: x.lower())
 
-    # ======= Étape 1 : TF-IDF pour détecter mots peu informatifs =======
-    tfidf_vec = TfidfVectorizer(stop_words=None)
+    # --- Étape 1 : stopwords simples
+    df['desc_token_temp'] = df['string'].apply(
+        lambda x: [token.lemma_ for token in nlp(x) if token.text.lower() not in STOP_WORDS]
+    )
+    df['nlp_ready_temp'] = df['desc_token_temp'].apply(lambda x: ' '.join(x))
+
+    # --- Étape 2 : TF-IDF pour bas score
+    vectorizer_temp = TfidfVectorizer(stop_words='english')
+    X_temp = vectorizer_temp.fit_transform(df['nlp_ready_temp'])
+    feature_names = vectorizer_temp.get_feature_names_out()
+    mean_tfidf = X_temp.mean(axis=0).A1
+    low_info_words = [word for word, score in zip(feature_names, mean_tfidf) if score < tfidf_threshold]
+
+    # --- Étape 3 : fréquence documentaire pour mots trop fréquents
+    vec = CountVectorizer()
+    X_count = vec.fit_transform(df['nlp_ready_temp'])
+    doc_freq = np.asarray(X_count.sum(axis=0)).ravel() / X_count.shape[0]
+    words_high_freq = [word for word, freq in zip(vec.get_feature_names_out(), doc_freq) if freq > high_freq_threshold]
+
+    # --- Étape 4 : stopwords combinés
+    combined_stopwords = STOP_WORDS.union(set(low_info_words)).union(set(words_high_freq))
+
+    # --- Étape 5 : extraire les noms propres PER/GPE/LOC avec spaCy
+    all_entities = []
+    for doc in nlp.pipe(df['nlp_ready_temp'], batch_size=20):
+        ents = [ent.text for ent in doc.ents if ent.label_ in ["PER", "GPE", "LOC"]]
+        all_entities.extend(ents)
+
+    def clean_entity(ent):
+        text = ent.strip()
+        if len(text) <= 3 or len(text.split()) >= 10:
+            return None
+        text = re.sub(r"\s+", " ", text)
+        return text
+
+    entities_clean = [clean_entity(ent) for ent in all_entities if clean_entity(ent)]
+    entity_counts = Counter(entities_clean)
+    threshold_count = 5
+    proper_nouns_final = {
+        ent.lower() for ent, count in entity_counts.items() if count >= threshold_count
+    }
+
+    # --- Étape 6 : reconstruction finale
+    df['desc_token'] = df['string'].apply(
+        lambda x: [
+            token.text if token.text.lower() in proper_nouns_final else token.lemma_.lower()
+            for token in nlp(x)
+            if token.is_alpha
+            and token.text.lower() not in combined_stopwords
+            and token.lemma_.lower() not in combined_stopwords
+            and (token.pos_ in {"NOUN", "VERB", "ADJ"} or token.text.lower() in proper_nouns_final)
+        ]
+    )
+    df['nlp_ready'] = df['desc_token'].apply(lambda x: ' '.join(x))
+
+    return df
+
+    """df['desc_token'] = df['desc_clean'].apply(
+        lambda x: [token.lemma_ for token in nlp(x)
+                if token.text.lower() not in combined_stopwords
+                and token.lemma_.lower() not in combined_stopwords]
+    )"""
+    """doc = nlp(df['desc_clean'])
+    tokens = []
+    for token in doc:
+        if token.is_alpha:
+            if token.text.lower() in proper_nouns_final:
+                tokens.append(token.text)  # garder le nom propre tel quel
+            elif (
+                token.text.lower() not in combined_stopwords
+                and token.lemma_.lower() not in combined_stopwords
+                and token.pos_ in {"NOUN", "VERB", "ADJ"}
+            ):
+                tokens.append(token.lemma_.lower())
+    df['nlp_ready'] = df['desc_token'].apply(lambda x: ' '.join(x))
+
+    final_vectorizer = TfidfVectorizer(stop_words=None)
+    X = final_vectorizer.fit_transform(df['nlp_ready'])
+    X"""
+
+
+    """tfidf_vec = TfidfVectorizer(stop_words=None)
     X_tfidf = tfidf_vec.fit_transform(df["string_clean"])
     feature_names = tfidf_vec.get_feature_names_out()
     mean_tfidf = X_tfidf.mean(axis=0).A1
     low_info_words = {w for w, s in zip(feature_names, mean_tfidf) if s < tfidf_threshold}
 
-    # ======= Étape 2 : fréquence documentaire =======
     count_vec = CountVectorizer()
     X_count = count_vec.fit_transform(df["string_clean"])
     doc_freq = np.asarray(X_count.sum(axis=0)).ravel() / X_count.shape[0]
     words_high_freq = {w for w, f in zip(count_vec.get_feature_names_out(), doc_freq) if f > high_freq_threshold}
 
-    # ======= Étape 3 : stopwords combinés =======
     combined_stopwords = STOP_WORDS.union(low_info_words).union(words_high_freq)
 
-    # ======= Étape 4 : Lemmatisation + filtrage POS =======
     def lemmatize_and_filter(text):
         doc = nlp(text)
         tokens = [
@@ -53,13 +133,13 @@ def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7)
             for token in doc
             if token.is_alpha
             and token.lemma_ not in combined_stopwords
-            and token.pos_ in {"NOUN", "VERB", "ADJ"}  # garder mots porteurs de sens
+            and token.pos_ in {"NOUN", "VERB", "ADJ"}
         ]
         return " ".join(tokens)
 
-    df["nlp_ready"] = df["string_clean"].apply(lemmatize_and_filter)
+    df["nlp_ready"] = df["string_clean"].apply(lemmatize_and_filter)"""
 
-    return df
+    """return df"""
 
 #Trouver automatiquement la dimension du svd
 def auto_svd_dim(X, target_var=0.7, min_dim=5, max_dim=300):
@@ -189,7 +269,7 @@ def hdbscan_clustering(chunks, merge_clusters=True, sim_threshold=threshold):
     df_chunks['theme'] = df_chunks[final_col].map(themes)
 
     # Output JSON
-    theme_to_json = df_chunks.drop(columns=["hdb_cluster", "nlp_ready", "string_clean", "merged_cluster"]).to_dict(orient="records")
+    theme_to_json = df_chunks.drop(columns=["hdb_cluster", "nlp_ready", "merged_cluster", "desc_token_temp", "nlp_ready_temp", "string", "desc_token"]).to_dict(orient="records")
     return theme_to_json
 
 

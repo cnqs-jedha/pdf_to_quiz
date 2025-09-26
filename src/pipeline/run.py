@@ -7,7 +7,7 @@ from src.pipeline.chroma_handler import save_to_chroma
 from src.pipeline.clustering_theme import hdbscan_clustering, count_chunks_by_theme
 from src.pipeline.collect_best_chunks_to_prompt import find_best_chunk_to_prompt
 from src.pipeline.quiz_generator import generate_quiz_from_chunks
-from src.utils.normalizer import normalize_text, clean_chunk_text
+from src.utils.normalizer import normalize_text
 from langchain_chroma import Chroma
 #from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -56,7 +56,7 @@ def main(difficulty="standard"):
 
     for pdf in pdfs_data:
         for page in pdf:
-            page["text"] = clean_chunk_text(page['text'])
+            page["text"] = normalize_text(page['text'])
 
     duration = time.time() - start
     timings.append({"Etape": "Normalisation du texte", "Durée (sec)": duration})

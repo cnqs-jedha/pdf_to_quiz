@@ -7,7 +7,7 @@ from collections import Counter
 nlp = spacy.load("fr_core_news_lg")
 
 
-def normalize_text(text: str) -> str:
+def normalize_clusters(text: str) -> str:
     """
     Normalise le texte français pour NLP et embeddings :
     - normalisation Unicode
@@ -132,12 +132,11 @@ def normalize_text(text: str) -> str:
     return text
 
 
-def clean_chunk_text(text: str) -> str:
+def normalize_text(text: str) -> str:
     text = re.sub(r"<[^>]+>", " ", text)
     text = re.sub(r"[^\x20-\x7EÀ-ÖØ-öø-ÿœŒšŠžŽ]+", " ", text)
     text = re.sub(r"http\S+|www\S+|@\S+", " ", text)
     text = re.sub(r"\b\w\b", " ", text)
-    text = re.sub(r"\s+", " ", text).strip()
     text = re.sub(r"-\s*\n", "", text)  # mot coupé en fin de ligne
     text = re.sub(r"\n", " ", text)     # sauts de ligne → espace
     text = re.sub(r"\bpage\s*\d+\b", " ", text)  # "Page 12"
@@ -145,5 +144,8 @@ def clean_chunk_text(text: str) -> str:
     text = text.replace("’", "'").replace("‘", "'")
     text = text.replace("“", '"').replace("”", '"')
     text = re.sub(r"[©®™✓§¶∆∞≈≠±×÷]", " ", text)
+    text = re.sub(r"œ", "oe", text)
+    text = re.sub(r"æ", "ae", text)
+    text = re.sub(r"\s+", " ", text).strip()
 
     return text
