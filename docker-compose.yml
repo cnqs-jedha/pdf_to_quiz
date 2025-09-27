@@ -11,11 +11,34 @@ services:
     env_file:
       - .env
     command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    
+    #healthcheck:
+    #  test: ["CMD", "curl", "-f", "http://localhost:8000/health"]  
+    #  interval: 10s
+    #  timeout: 5s
+    #  retries: 5
+    
+    # Ajout Stéphane le 27/09/2024 - 11:55
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]  
+      # Utilise Python présent dans l'image pour vérifier que le quiz n'est pas vide
+      test:
+        - CMD-SHELL
+        - |
+          python - <<'PY'
+          import json, sys, urllib.request
+          try:
+              with urllib.request.urlopen("http://localhost:8000/api/quiz", timeout=3) as r:
+                  data = json.load(r)
+              ok = isinstance(data, dict) and isinstance(data.get("quiz"), list) and len(data["quiz"]) > 0
+              sys.exit(0 if ok else 1)
+          except Exception:
+              sys.exit(1)
+          PY
       interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 3s
+      retries: 60
+      start_period: 40s
+
 
   pipeline:
     build:
@@ -44,3 +67,23 @@ services:
       - ./data:/app/data
     env_file:
       - .env
+
+  # Ajout Stéphane le 27/09/2024 - 11:55
+  gradio:
+    build:
+      context: .
+      dockerfile: app/Dockerfile.gradio
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      # ces valeurs surchargent celles du Dockerfile si besoin
+      - API_BASE_URL=http://api:8000
+      - API_QUESTIONS_PATH=/api/quiz
+      - USE_API=1
+      - REQUIRE_API=1
+      # pour que Gradio écoute depuis le conteneur :
+      - GRADIO_SERVER_NAME=0.0.0.0
+      - GRADIO_SERVER_PORT=7860
+    ports:
+      - "7860:7860"
