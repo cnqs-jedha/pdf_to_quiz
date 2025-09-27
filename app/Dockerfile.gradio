@@ -1,0 +1,14 @@
+# app/Dockerfile.gradio, avec context = .
+FROM python:3.12-slim
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
+
+# Copier le requirements depuis app/
+COPY app/requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Copier uniquement l'app dans /app
+COPY app/ .
+ENV API_BASE_URL=http://api:8000 API_QUESTIONS_PATH=/api/quiz USE_API=1 REQUIRE_API=1 GRADIO_SERVER_NAME=0.0.0.0 GRADIO_SERVER_PORT=7860
+EXPOSE 7860
+CMD ["python", "gradio_quiz.py"]
