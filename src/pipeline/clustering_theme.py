@@ -69,7 +69,7 @@ def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7)
 
     entities_clean = [clean_entity(ent) for ent in all_entities if clean_entity(ent)]
     entity_counts = Counter(entities_clean)
-    threshold_count = 5
+    threshold_count = 3
     proper_nouns_final = {
         ent.lower() for ent, count in entity_counts.items() if count >= threshold_count
     }
@@ -88,58 +88,6 @@ def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7)
     df['nlp_ready'] = df['desc_token'].apply(lambda x: ' '.join(x))
 
     return df
-
-    """df['desc_token'] = df['desc_clean'].apply(
-        lambda x: [token.lemma_ for token in nlp(x)
-                if token.text.lower() not in combined_stopwords
-                and token.lemma_.lower() not in combined_stopwords]
-    )"""
-    """doc = nlp(df['desc_clean'])
-    tokens = []
-    for token in doc:
-        if token.is_alpha:
-            if token.text.lower() in proper_nouns_final:
-                tokens.append(token.text)  # garder le nom propre tel quel
-            elif (
-                token.text.lower() not in combined_stopwords
-                and token.lemma_.lower() not in combined_stopwords
-                and token.pos_ in {"NOUN", "VERB", "ADJ"}
-            ):
-                tokens.append(token.lemma_.lower())
-    df['nlp_ready'] = df['desc_token'].apply(lambda x: ' '.join(x))
-
-    final_vectorizer = TfidfVectorizer(stop_words=None)
-    X = final_vectorizer.fit_transform(df['nlp_ready'])
-    X"""
-
-
-    """tfidf_vec = TfidfVectorizer(stop_words=None)
-    X_tfidf = tfidf_vec.fit_transform(df["string_clean"])
-    feature_names = tfidf_vec.get_feature_names_out()
-    mean_tfidf = X_tfidf.mean(axis=0).A1
-    low_info_words = {w for w, s in zip(feature_names, mean_tfidf) if s < tfidf_threshold}
-
-    count_vec = CountVectorizer()
-    X_count = count_vec.fit_transform(df["string_clean"])
-    doc_freq = np.asarray(X_count.sum(axis=0)).ravel() / X_count.shape[0]
-    words_high_freq = {w for w, f in zip(count_vec.get_feature_names_out(), doc_freq) if f > high_freq_threshold}
-
-    combined_stopwords = STOP_WORDS.union(low_info_words).union(words_high_freq)
-
-    def lemmatize_and_filter(text):
-        doc = nlp(text)
-        tokens = [
-            token.lemma_.lower()
-            for token in doc
-            if token.is_alpha
-            and token.lemma_ not in combined_stopwords
-            and token.pos_ in {"NOUN", "VERB", "ADJ"}
-        ]
-        return " ".join(tokens)
-
-    df["nlp_ready"] = df["string_clean"].apply(lemmatize_and_filter)"""
-
-    """return df"""
 
 #Trouver automatiquement la dimension du svd
 def auto_svd_dim(X, target_var=0.7, min_dim=5, max_dim=300):
@@ -165,7 +113,7 @@ def extract_top_keywords(df, cluster_col="hdb_cluster", text_col="nlp_ready", to
         cluster_texts = df[df[cluster_col] == cluster_id][text_col]
         cluster_texts = [t for t in cluster_texts if isinstance(t, str) and t.strip()]
 
-        if not cluster_texts:  # cluster vide
+        if not cluster_texts:
             themes[cluster_id] = "(empty)"
             continue
 
@@ -181,7 +129,7 @@ def extract_top_keywords(df, cluster_col="hdb_cluster", text_col="nlp_ready", to
 
     return themes
 
-threshold = 0.25 # A automatiser si on veut un nombre minimum de clusters (si chiffre plus grand plus de clusters, si chiffre plus petit moins de clusters)
+threshold = 0.2 # A automatiser si on veut un nombre minimum de clusters (si chiffre plus grand plus de clusters, si chiffre plus petit moins de clusters)
 def merge_close_clusters(df, embeddings, cluster_col="hdb_cluster", sim_threshold=threshold):
     """
     Fusionne les clusters proches en utilisant la similarité cosinus de leurs centroïdes,
