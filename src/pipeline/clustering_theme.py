@@ -171,7 +171,7 @@ def merge_close_clusters(df, embeddings, cluster_col="hdb_cluster", sim_threshol
     return df, parent
 
 
-def hdbscan_clustering(chunks, merge_clusters=True, sim_threshold=threshold):
+def hdbscan_clustering(chunks, merge_clusters=True, sim_threshold=threshold, debug=False):
     # Nettoyage
     df_chunks = clean_chunks_strings(chunks)
 
@@ -190,11 +190,11 @@ def hdbscan_clustering(chunks, merge_clusters=True, sim_threshold=threshold):
     # Clustering
     n_samples = len(X_norm)
     clusterer = hdbscan.HDBSCAN(
-        min_cluster_size=max(5, n_samples // 100),
+        min_cluster_size=max(5, n_samples // 50),
         min_samples=1,
         metric='euclidean',
         cluster_selection_method='eom',
-        cluster_selection_epsilon=0.03
+        cluster_selection_epsilon=0.05
     )
     labels = clusterer.fit_predict(X_norm)
     df_chunks['hdb_cluster'] = labels
@@ -216,12 +216,25 @@ def hdbscan_clustering(chunks, merge_clusters=True, sim_threshold=threshold):
     themes = extract_top_keywords(df_chunks, cluster_col=final_col, text_col="nlp_ready", top_n=3)
     df_chunks['theme'] = df_chunks[final_col].map(themes)
 
-    # Output JSON
-    theme_to_json = df_chunks.drop(columns=["hdb_cluster", "nlp_ready", "merged_cluster", "desc_token_temp", "nlp_ready_temp", "string", "desc_token"]).to_dict(orient="records")
-    return theme_to_json
+    #  Affiche les chunks rejetés et renvoi un df avec les données
+    if debug:
+        df_noise = df_chunks[df_chunks["hdb_cluster"] == -1]
+        print("\n=== DEBUG: chunks classés en bruit (-1) ===")
+        print(df_noise[["text", "nlp_ready"]])
+        print(f"Total bruit: {len(df_noise)} / {len(df_chunks)} chunks")
+        return df_chunks  # on retourne tout le dataframe pour analyse
 
+    # Renvoi le json avec les thèmes
+    theme_to_json = df_chunks.drop(
+        columns=["hdb_cluster", "nlp_ready", "merged_cluster", 
+                "desc_token_temp", "nlp_ready_temp", "string", "desc_token"]
+    ).to_dict(orient="records")
+
+    return theme_to_json
 
 def count_chunks_by_theme(data_with_theme):
         theme_list = [d["theme"] for d in data_with_theme]
         theme_counts = Counter(theme_list)
         return dict(theme_counts)
+
+

@@ -74,11 +74,20 @@ def main(difficulty="standard"):
     
     # 6. Clustering
     start = time.time()
+
+    # Visualiser le bruit 
+    df_debug = hdbscan_clustering(chunks, debug=True)
+
+    # Afficher les counts par cluster
+    print("\nDistribution des clusters (incluant bruit):")
+    print(df_debug["hdb_cluster"].value_counts())
+
+    # Et on reprend le pipeline normalement
     data_with_theme = hdbscan_clustering(chunks)
-    # print(data_with_theme)
+    print(data_with_theme)
 
     counts_themes = count_chunks_by_theme(data_with_theme)
-    # print(counts_themes)
+    print(counts_themes)
 
     counts_themes.pop("other", None)
     list_themes= list(counts_themes.keys())
@@ -89,7 +98,7 @@ def main(difficulty="standard"):
     print(f"Avancement : {(6/nbr_steps)*100} %")
 
 
-    # 7. Stockage Chroma
+"""    # 7. Stockage Chroma
     start = time.time()
 
     chroma_db = save_to_chroma(data_with_theme, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH)
@@ -140,7 +149,7 @@ def main(difficulty="standard"):
     for timing in timings:
         name = timing["Etape"]
         duration = timing["Durée (sec)"]
-        print(name, " : ", round(duration, 2), " sec")
+        print(name, " : ", round(duration, 2), " sec")"""
 
 if __name__ == "__main__":
     main()
