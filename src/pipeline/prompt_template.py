@@ -42,7 +42,7 @@ def build_prompt(doc: str, theme: str, difficulty: str = "standard") -> str:
     Tu dois adapter ton langage et la difficulté des questions à choix multiples au niveau de difficulté suivant : {niveau_instruction}.
     
     Les questions et les choix de réponse doivent être clairs, précis et sans ambiguité.
-    La rédaction doit être irréprochable (orthographe, conjugaison, grammaire).
+    Tu ne dois pas faire de fautes de français : pas de fautes d'orthographe, de conjugaison ou de grammaire.
     
     Tu dois formuler des énoncés de question qui répondent aux critères suivants :
     - chaque énoncé doit poser une seule question
@@ -106,5 +106,5 @@ def build_prompt(doc: str, theme: str, difficulty: str = "standard") -> str:
     Contexte :
     < DEBUT CONTEXTE >
     {doc}
-    < FIN CONTEXTE>
+    < FIN CONTEXTE >
     """
