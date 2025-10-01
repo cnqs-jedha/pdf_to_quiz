@@ -5,6 +5,7 @@ google-auth-oauthlib
 langchain
 langchain_chroma
 langchain-community
+langchain-huggingface
 langchain-core 
 langchain-openai
 langchain-groq
