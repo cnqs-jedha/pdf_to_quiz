@@ -1,3 +1,4 @@
+import re
 import json
 import time
 import os
@@ -16,20 +17,26 @@ def create_llm():
         max_retries=2
     )
 
-def generate_quiz_from_chunks(strings_by_theme, themes, difficulty="standard"):
+def generate_quiz_from_chunks(best_chunks, difficulty="standard"):
     llm = create_llm()
     quiz = []
 
-    for i, (context_text, theme) in enumerate(zip(strings_by_theme, themes)):
-        prompt = build_prompt(context_text, theme, difficulty)
+    for chunk in best_chunks:
+        prompt =  build_prompt(chunk['page_content'], difficulty)
 
         try:
             response = llm.invoke(prompt)
+            # print(response)
             parsed = json.loads(response.content)
-            quiz.append(parsed)
+
+            quiz.append({"question":{
+                "llm_response": parsed,
+                "metadata": chunk["metadata"]
+            }})
+
         except Exception as e:
-            print(f"Erreur chunk {i+1}: {e}")
-            print(response.content[:200])
+            print("ERROR with chunk:", e)
+            print(response.content)
             continue
-    
+
     return quiz

@@ -5,6 +5,7 @@ google-auth-oauthlib
 langchain
 langchain_chroma
 langchain-community
+langchain-huggingface
 langchain-core 
 langchain-openai
 langchain-groq
@@ -18,7 +19,8 @@ scikit-learn
 seaborn
 sentence-transformers
 spacy
-fr-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.7.0/fr_core_news_sm-3.7.0.tar.gz
+#fr-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.7.0/fr_core_news_sm-3.7.0.tar.gz
+fr-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.7.0/fr_core_news_lg-3.7.0.tar.gz
 tiktoken
 ollama
 openai
