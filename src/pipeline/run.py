@@ -1,4 +1,4 @@
-from src.pipeline.config import PDF_PATH, DRIVE_FILE_ID, CHROMA_DB_PATH, EMBEDDING_MODEL_NAME, POST_TARGET_URL, DRIVE_FOLDER_URL
+from src.pipeline.config import CHROMA_DB_PATH, EMBEDDING_MODEL_NAME, POST_TARGET_URL, DRIVE_FOLDER_URL
 from src.utils.drive_import import authenticate_google, get_pdfs_ids
 from src.utils.extractor import get_all_pdfs_data
 from src.pipeline.tokenizer import chunk_text, count_tokens, chunk_with_metadata

@@ -4,35 +4,56 @@ from pydantic import BaseModel
 import json
 
 app = FastAPI()
-last_received_quiz = None
+app.state.last_received_quiz = None
+app.state.quiz_history = []
 
-@app.post("/api/send_quiz")
+# Send the quiz
+@app.post("/send_quiz")
 async def receive_quiz(request: Request):
-    global last_received_quiz
     data = await request.json()
-    last_received_quiz = data
-    #print("Quiz reçu :", data)
-    return {"message": "Quiz bien reçu"}
+    app.state.last_received_quiz = data
+    app.state.quiz_history.append(data)
+    return {"message": "Quiz bien reçu", "total_quizzes": len(app.state.quiz_history)}
 
-"""
-@app.get("/api/quiz")
+# The quiz
+@app.get("/quiz")
 def get_last_quiz():
-    if last_received_quiz:
-        return last_received_quiz
-    return {"message": "Aucun quiz reçu pour le moment"}
-"""
+    if app.state.last_received_quiz:
+        return app.state.last_received_quiz
+    return {"quiz": []}
 
-# Ajout Stéphane le 27/09/2025 - 11:52
-# main.py
-@app.get("/api/quiz")
+
+"""@app.get("/quiz")
 def get_last_quiz():
     if last_received_quiz and (
         ("quiz" in last_received_quiz) or isinstance(last_received_quiz, list)
     ):
         return last_received_quiz
-    # Renvoie une forme acceptée par Gradio (liste vide) en attendant le premier envoi
-    return {"quiz": []}
+    return {"quiz": []}"""
 
+# Alive
 @app.get("/health", include_in_schema=False)
 def health():
     return {"status": "ok"}
+
+# Quiz is ready to gradio ?
+@app.get("/ready", include_in_schema=False)
+def ready():
+    if app.state.last_received_quiz and len(app.state.last_received_quiz.get("quiz", [])) > 0:
+        return {
+            "status": "ok",
+            "quiz_count": len(app.state.last_received_quiz["quiz"])
+        }
+    return {"status": "error", "reason": "quiz vide"}, 500
+
+# Clean the api quiz
+@app.post("/clear")
+def clear_quiz():
+    app.state.last_received_quiz = None
+    app.state.quiz_history = []
+    return {"message": "Quiz réinitialisé"}
+
+# Quiz history
+@app.get("/history")
+def get_history():
+    return {"history": app.state.quiz_history[-10:]}

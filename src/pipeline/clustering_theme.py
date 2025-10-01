@@ -39,7 +39,7 @@ def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7)
     df['nlp_ready_temp'] = df['desc_token_temp'].apply(lambda x: ' '.join(x))
 
     # --- Étape 2 : TF-IDF pour bas score
-    vectorizer_temp = TfidfVectorizer(stop_words='english')
+    vectorizer_temp = TfidfVectorizer(stop_words='english') #ATTENTION FR !!!!!
     X_temp = vectorizer_temp.fit_transform(df['nlp_ready_temp'])
     feature_names = vectorizer_temp.get_feature_names_out()
     mean_tfidf = X_temp.mean(axis=0).A1

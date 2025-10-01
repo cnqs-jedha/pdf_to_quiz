@@ -11,12 +11,12 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY requirements/api.txt /tmp/requirements.txt
+COPY requirements/app.txt /tmp/requirements.txt
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r /tmp/requirements.txt
 
-COPY api/ /app/api/
+COPY src/ /app/app/
 
-EXPOSE 8000
+EXPOSE 7860
 
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "app/app.py"]
