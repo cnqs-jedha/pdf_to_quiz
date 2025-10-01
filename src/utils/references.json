@@ -1,0 +1,200 @@
+[
+  {
+    "id": 1,
+    "question": "Que s'est il passé au moment des Grandes Invasions ?",
+    "references": [
+      "Au Veme siècle, des peuples germaniques, les barbabres, venant de toutes l'Europe envahissent l'Empire Romain d'Occident, dont la Gaule fait partie.",
+      "Un seul de ces peuples, les Francs, s'installe et fait disparaître l'Empire-Romain."
+    ],
+    "label": 1
+  },
+  {
+    "id": 2,
+    "question": " Qui était Clovis ?",
+    "references": [
+      "En 481, un chef Franc, Clovis, devient le premier roi de tous les Francs. Puis, il s'emprare de la Gaule Romaine.",
+      "Clovis se convertit au christianisme vers 496. Ses successeurs forment la dynastie des Mérovingiens.",
+      "La conversion de Clovis au christianisme marque la fin de 'l'Antiquité et le début du Moyen-Age.",
+      " A la mort de Clovis en 511, son royaume est partagé entre ses quatre fils."
+    ],
+    "label": 1
+  },
+  {
+    "id": 3,
+    "question": "Qui est Pépin le Bref et que fait-il ?",
+    "references": [
+      "Pépin le Bref est un roi des Francs qui a régné de 751 à 768.",
+      "Il est le fils de Charles Martel et le père de Charlemagne.",
+      "Pépin le Bref est connu pour avoir déposé le dernier roi mérovingien, Childéric III, et pour avoir été couronné roi des Francs par le pape en 754.",
+      "Pépin le Bref est le fondateur de la dynastie carolingienne, qui a régné sur les Francs pendant plusieurs siècles."
+    ],
+    "label": 1
+  },
+  {
+    "id": 4,
+    "question": " Qu'est ce qu'une dynastie ?",
+    "references": [
+      "Une dynastie est une suite de rois qui appartiennent à la même famille. On peut citer par exemple, la dynastie des Carolingiens ou encore la dynastie des Mérovingiens.",
+      "La dynastie des Mérovingiens a été fondée par Clovis, tandis que la dynastie des Carolingiens a été fondée par Charlemagne."
+    ],
+    "label": 1
+  },
+  {
+    "id": 5,
+    "question": " Qui était Charlemagne ?",
+    "references": [
+      "Charlemagne, également connu sous le nom de Charles le Grand, était un roi des Francs qui a vécu au VIIIe siècle.",
+      "Il est considéré comme l'un des plus grands rois de l'histoire de France.",
+      "La ville d'Aix la Chapelle, située en Allemagne, était la capitale de l'empire de Charlemagne.",
+      "Charlemagne a encouragé le développement des arts et du savoir en créant des écoles et des universités dans son empire.",
+      "Pour être obéi, Charlemagne ordonne que tous les hommes libres lui prêtent serment de fidélité. Il nomme des comtes pour gouverner les différentes régions de son empire."
+    ],
+    "label": 1
+  },
+  {
+    "id": 6,
+    "question": "Qui succède à Charlemagne ?",
+    "references": [
+      "Louis le Pieux, son fils, lui succède à sa mort en 814.",
+      "Après sa mort, l'empire de Charlemagne est divisé entre ses trois fils : Charles le Chauve, Louis le Germanique et Lothaire. Cette division affaiblit l'empire carolingien.",
+      "En 987, les comtes choisissent un nouveau roi, Hugues Capet, qui fonde la dynastie des Capétiens."
+    ],
+    "label": 1
+  },
+    {
+    "id": 7,
+    "question": "Que font les seigneurs pour se protéger de la guerre ?",
+    "references": [
+      "Au 10e siècle, le roi a de moins en moins de pouvoir. Les seigneurs, pour se protéger des guerres, construisent des châteaux forts situés en hauteur.",
+      "Les châteaux forts sont entourés de remparts et d'un fossé rempli d'eau, appelé douve. L'entrée se fait par un pont-levis. Dans la cour intérieure se trouvent les écuriées, les réserves et les ateliers. Le Seigneur vit dans le donjon, une grande tour qui se dresse au milieu du château"
+    ],
+    "label": 1
+  },
+  {
+    "id": 8,
+    "question": " Qui sont les paysans?",
+    "references": [
+      "Les paysans vivent généralement dans des villages et sont soumis à un seigneur.",
+      "Il existe deux sortes de paysans : les serfs, et les vilains. Les serfs, appartiennent au seigneur, ainsi que la terre qu'ils travaillent et occupent. Ils n'ont aucune liberté. La plus grosse partie de leur récolte va au seigneur. Les vilains eux, peuvent changer de domaine, mais ils doivent payer des impôts au seigneur."
+    ],
+    "label": 1
+  },
+  {
+    "id": 9,
+    "question": " Qu'est ce que la guerre de Cent ans?",
+    "references": [
+      "La guerre de Cent Ans est un conflit qui a opposé la France et l'Angleterre de 1337 à 1453.",
+      "Elle a été marquée par des batailles célèbres comme celle de Crécy et celle d'Azincourt.",
+      "La guerre de Cent Ans a eu des conséquences importantes sur l'histoire de France et d'Angleterre, notamment en renforçant le sentiment national."
+    ],
+    "label": 1
+  },
+  {
+    "id": 10,
+    "question": "Quelles sont les grandes inventions et découvertes du Moyen-Age ?",
+    "references": [
+      "La poudre. Employée depuis longtemps par les Chinois et les Arabes, la poudre est utlisée pour les armes à feu.",
+      "L'imprimerie. Vers 1450, l'Allemand Gutenberg remplace les plaques d'imprimerie en bois par des caractères mobiles en métail. La mise au point de l'imprimerie permet la diffucion de nombreux exemplaires.",
+      "La boussole. La boussole était déjà utilisée par les Chinois et les Arabes. L'aiguille, qui indique le Nord, permet aux navigateurs de s'éloigner des côtes en suivant des caps précis.",
+      "Les caravelles. Les caravelles sont des bateaux rapides équipés de gouvernail."
+    ],
+    "label": 1
+  },
+  { "id": 11,
+    "question": "Qui sont les grands explorateurs ?",
+    "references": [
+      "Christophe Colomb. En 1492, il découvre l'Amérique en traversant l'Atlantique.",
+      "Vasco de Gama. Il est le premier à atteindre l'Inde par la mer en contournant l'Afrique.",
+      "Ferdinand Magellan. Il réalise la première circumnavigation de la Terre entre 1519 et 1522.",
+      "Marco Polo. Il est l'un des premiers grands navigateurs. il part à la conquête de l'Orient",
+      "Jacques Cartier. Il comment l'exploration du Canada, alors nommé Nouvelle-France."
+    ],
+    "label": 1
+  },
+  {
+    "id": 12,
+    "question": "Qu'est ce que la Renaissance ?",
+    "references": [
+      "La Renaissance est une période de l'histoire européenne qui s'étend du XIVe au XVIIe siècle.",
+      "De magnifiques châtreaux sont construits en France, comme Chambord, Chenonceau et Amboise.",
+      "La Renaissance a vu l'émergence de grands artistes comme Léonard de Vinci, Michel-Ange et Raphaël."
+    ],
+    "label": 1
+  },
+  {
+    "id": 13,
+    "question": "Qu'est ce que la Réforme ?",
+    "references": [
+      "La Réforme commence en 1517 avec Martin Luther, un moine allemand qui critique l'Église catholique.",
+      "Il crée la première église protestante, l'Église luthérienne. Vers 1540, le français Jean Calvin fonde une autre église protestante, l'Église calviniste."
+    ],
+    "label": 1
+  },
+  {
+    "id": 14,
+    "question": "Quelles sont les conséquences de la Réforme ?",
+    "references": [
+      "La Réforme a conduit à la création de nombreuses églises protestantes à travers l'Europe, telles que l'Église luthérienne, l'Église calviniste et l'Église anglicane.",
+      "Elle a également entraîné 8 guerres de religions, qui opposent les catholiques et le roi aux protestants.",
+      "Henri IV met fin aux guerres de religion et accorde la liberté de culte aux protestants avec l'Édit de Nantes en 1598."
+    ],
+    "label": 1
+  },
+  {
+    "id": 15,
+    "question": "Qu'est ce qu'un concile ?",
+    "references": [
+      "Un concile est une réunion des évêques, des cardinaux et du pape pour discuter des questions importantes concernant l'Église catholique.",
+      "Le concile de Trente, qui s'est tenu de 1545 à 1563, a été convoqué en réponse à la Réforme protestante et a abouti à des réformes importantes au sein de l'Église catholique."
+    ],
+    "label": 1
+  },
+  {
+    "id": 16,
+    "question": " Qu'est ce que la Monarchie absolue ? Citez un exemple.",
+    "references": [
+      "La Monarchie absolue est un système politique dans lequel le roi détient tous les pouvoirs sans partage. C'est par la volonté de Dieu que le roi gouverne.",
+      "Louis XIV, surnommé le Roi-Soleil, est l'exemple le plus célèbre de monarque absolu. Il a régné de 1643 à 1715 et a centralisé le pouvoir en France."
+    ],
+    "label": 1
+  }, 
+  {
+    "id": 17,
+    "question": "Citez moi 3 personnages de la Monarchie absolue ?",
+    "references": [
+      "Louis XIV, surnommé le Roi-Soleil, est l'exemple le plus célèbre de monarque absolu.",
+      "Marie Antoinette, reine de France et épouse de Louis XVI, est une figure emblématique de la monarchie absolue.",
+      "Le cardinal de Richelieu, ministre de Louis XIII, a joué un rôle clé dans le renforcement de l'autorité royale."
+    ],
+    "label": 1
+  },
+  {
+    "id": 18,
+    "question": "Où vivait Louis XIV ?",
+    "references": [
+      "Louis XIV, surnommé le Roi-Soleil, a vécu au château de Versailles, qu'il a fait construire et agrandir.",
+      "Versailles est devenu le symbole de la monarchie absolue et de l'art de vivre à la française."
+    ],
+    "label": 1
+  },
+  {
+    "id": 19,
+    "question": "Qui sont les grands scientifiques de la Monarchie absolue ?",
+    "references": [
+      "Galilée, découvre que la Terre tourne autour du soleil et non l'inverse.",
+      "Descartes, fait progresser l'algèbre, la géométrie et la logique.",
+      "Pascal, invente une machine à calculer et écrit des livres de philosophie."
+    ],
+    "label": 1
+  },
+  {
+    "id": 20,
+    "question": "Qu'est ce que la Révolution française ?",
+    "references": [
+      "La Révolution française est un événement majeur de l'histoire de France qui a eu lieu de 1789 à 1799.",
+      "Elle a commencé avec la convocation des États généraux en mai 1789, suivie par la prise de la Bastille le 14 juillet 1789.",
+      "La Révolution a conduit à la fin de la monarchie absolue, à l'abolition des privilèges et à la proclamation de la République en 1792."
+    ],
+    "label": 1
+  }
+]

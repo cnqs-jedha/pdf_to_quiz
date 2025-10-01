@@ -30,3 +30,4 @@ fastapi
 uvicorn
 hdbscan
 pypdf
+nltk
