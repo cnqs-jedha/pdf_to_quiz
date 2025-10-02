@@ -15,8 +15,6 @@ COPY requirements/notebooks.txt /tmp/requirements.txt
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r /tmp/requirements.txt
 
-#COPY notebooks/ /app/notebooks/
-
 EXPOSE 8888
 
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser"]

@@ -27,26 +27,6 @@ def build_resume_tables(resume):
     )
     return per_theme, detailed
 
-# def _normalize_questions(items):
-#     """Transforme la liste d'items -> liste de questions pour l'UI."""
-#     questions = []
-#     for item in items:
-#         llm_response = item['question']['llm_response']
-#         metadata = item['question']['metadata']
-#         print(llm_response)
-#         print(metadata)
-
-#         options = list(llm_response["choices"].values())
-#         random.shuffle(options)
-#         questions.append({
-#             "question": llm_response['text'],
-#             "options": options,
-#             "réponse": llm_response.get("correct_answer", {}).get("answer"),
-#             "theme": metadata.get("theme"),
-#             "long_answer":llm_response['correct_answer_long']
-#         })
-#     return questions
-
 def _normalize_questions(items):
     """Transforme la liste d'items -> liste de questions pour l'UI."""
     questions = []
@@ -63,30 +43,6 @@ def _normalize_questions(items):
             "metadata": item["metadata"]
         })
     return questions
-
-# def load_questions_from_json(file_path: Path):
-#     with open(file_path, "r", encoding="utf-8") as f:
-#         data = json.load(f)
-
-#     items = []
-#     if isinstance(data, dict) and "quiz" in data:  # format {quiz: [ {question:[...]}, {question:[...]} ]}
-#         for bloc in data["quiz"]:
-#             theme = bloc.get("Thème", "Sans thème")
-#             for q in bloc.get("questions", []):
-#                 qq = q.copy()
-#                 qq["_theme"] = theme
-#                 items.append(qq)
-#     elif isinstance(data, list):  # ancien format à plat
-#         for q in data:
-#             qq = q.copy()
-#             qq["_theme"] = qq.get("_theme", "Sans thème")
-#             items.append(qq)
-#     else:
-#         raise ValueError("Format JSON inattendu (ni liste, ni dict avec 'quiz').")
-
-#     return _normalize_questions(items)
-
-# -------- API parsing robust --------
 
 def _extract_quiz_payload(data):
     """Cherche récursivement une clé 'quiz' contenant une liste."""
@@ -134,9 +90,6 @@ def load_questions_from_api(api_base_url, api_question_path):
         items.append(qq)
 
     return _normalize_questions(items)
-
-
-
 
 def load_questions(api_base_url, api_question_path, use_api, require_api, json_path):
     if use_api:
