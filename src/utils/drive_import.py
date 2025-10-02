@@ -103,7 +103,6 @@ def iter_children(service, folder_id: str):
 
 # Vérifie les lien ét les métadatas
 def documents_in_folder(service, folder_meta, recursive=False):
-    #meta = get_folder_meta(service, folder_id)
     drive_id = folder_meta.get("driveId")  # None si My Drive
 
     out, queue = [], [folder_meta["id"]]
@@ -158,11 +157,8 @@ def list_document_ids_shallow(service, folder_id: str, pdf_only: bool = False) -
 def get_pdfs_ids(service, drive_folder_url: str, pdf_only: bool = False) -> list[str]:
     ids = []
     folder_id = get_folder_drive_id(drive_folder_url)
-    #folder_meta = get_folder_meta(service, folder_id)
     get_folder_meta(service, folder_id)
-    """if folder_meta:
-        raise"""
-    #check = documents_in_folder(service, folder_meta)
+
     for item in iter_children(service, folder_id):
         mt = item.get("mimeType")
 
