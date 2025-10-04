@@ -57,9 +57,11 @@ def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7)
     # --- Étape 5 : extraire les noms propres PER/GPE/LOC avec spaCy
     all_entities = []
     for doc in nlp.pipe(df['text'], batch_size=20):
-        ents = [ent.text for ent in doc.ents if ent.label_ in ["PER", "GPE", "LOC"]]
+        ents = [ent.text for ent in doc.ents if ent.label_ in ["PER", "GPE", "LOC"] and ent[0].pos_ != "DET"]
         all_entities.extend(ents)
 
+    print(f"Liste brute des noms propres: {all_entities}")
+    
     def clean_entity(ent):
         text = ent.strip()
         if len(text) <= 3 or len(text.split()) >= 10:
@@ -73,6 +75,7 @@ def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7)
     proper_nouns_final = {
         ent.lower() for ent, count in entity_counts.items() if count >= threshold_count
     }
+    
     print(proper_nouns_final)
     print(f"nombre de noms propres détectés: {len(proper_nouns_final)}")
     
@@ -180,6 +183,7 @@ def hdbscan_clustering(chunks, merge_clusters=True, sim_threshold=threshold):
     # TF-IDF
     vectorizer = TfidfVectorizer(stop_words=None)
     X = vectorizer.fit_transform(df_chunks['nlp_ready'])
+    print(f"Taille de la matrice TF IDF : {X.shape}")
 
     # SVD
     k = auto_svd_dim(X, target_var=0.7, min_dim=5, max_dim=300)

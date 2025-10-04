@@ -12,7 +12,8 @@ def chunk_text(text: str, chunk_size=500, chunk_overlap=50):
 def chunk_with_metadata(all_pdfs_data, chunk_size=500, chunk_overlap=50):
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap
+        chunk_overlap=chunk_overlap,
+        separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""]
     )
 
     chunks_results = []
@@ -30,5 +31,5 @@ def chunk_with_metadata(all_pdfs_data, chunk_size=500, chunk_overlap=50):
                     "page": page["page"],
                     "text": chunk
                 })
-    
+    print("Les 6 premiers chunks", chunks_results[:6])
     return chunks_results
