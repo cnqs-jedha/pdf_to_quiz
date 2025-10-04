@@ -18,7 +18,7 @@ import re
 
 #from src.utils.normalizer import normalize_text
 
-nlp = spacy.load("fr_core_news_lg", disable=["ner", "parser"])
+nlp = spacy.load("fr_core_news_lg", disable=["parser"])
 
 def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7):
     """
@@ -56,7 +56,7 @@ def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7)
 
     # --- Étape 5 : extraire les noms propres PER/GPE/LOC avec spaCy
     all_entities = []
-    for doc in nlp.pipe(df['nlp_ready_temp'], batch_size=20):
+    for doc in nlp.pipe(df['text'], batch_size=20):
         ents = [ent.text for ent in doc.ents if ent.label_ in ["PER", "GPE", "LOC"]]
         all_entities.extend(ents)
 
@@ -73,7 +73,9 @@ def clean_chunks_strings(chunks, tfidf_threshold=0.008, high_freq_threshold=0.7)
     proper_nouns_final = {
         ent.lower() for ent, count in entity_counts.items() if count >= threshold_count
     }
-
+    print(proper_nouns_final)
+    print(f"nombre de noms propres détectés: {len(proper_nouns_final)}")
+    
     # --- Étape 6 : reconstruction finale
     df['desc_token'] = df['string'].apply(
         lambda x: [

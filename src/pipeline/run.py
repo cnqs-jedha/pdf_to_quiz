@@ -79,7 +79,7 @@ def main(difficulty="standard"):
     print(f"Avancement : {(6/nbr_steps)*100} %")
 
     # 7. Stockage Chroma
-    start = time.time()
+    '''start = time.time()
 
     chroma_db = save_to_chroma(data_with_theme, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH)
 
@@ -121,7 +121,7 @@ def main(difficulty="standard"):
         print(f"Échec de l'envoi : {response.status_code} - {response.text}")
     
     total_duration = time.time() - total_start
-    timings.append({"Etape": "Durée totale", "Durée (sec)": total_duration})
+    timings.append({"Etape": "Durée totale", "Durée (sec)": total_duration})'''
 
     # --- Résumé final des temps d'exécution ---
     print("\nRésumé des temps d'exécution par étape :")

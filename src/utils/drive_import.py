@@ -1,4 +1,4 @@
-from src.pipeline.config import DRIVE_FOLDER_URL, SCOPES, SHORTCUT_MIME, FOLDER_MIME, DRIVE_FOLDER_URL 
+from src.pipeline.config import DRIVE_FOLDER_URL, SCOPES, SHORTCUT_MIME, FOLDER_MIME
 import pickle, os, io
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
