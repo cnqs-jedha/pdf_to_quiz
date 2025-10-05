@@ -11,9 +11,11 @@ from core.helpers import build_resume_tables
 from core.config import API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, BASE_DIR, json_path
 from core.helpers import load_questions
 
-niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
+# niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
 
 def start_quiz():
+    niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
+    
     qs = random.sample(niveau, min(10, len(niveau)))  # 10 questions si possible
     resume = []
     question_out, choix_out, feedback_out, score_out, *states = update_ui(qs, 0, 0, False, "", resume)

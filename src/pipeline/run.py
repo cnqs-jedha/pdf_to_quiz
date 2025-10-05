@@ -1,18 +1,12 @@
 from src.pipeline.config import CHROMA_DB_PATH, EMBEDDING_MODEL_NAME, POST_TARGET_URL, DRIVE_FOLDER_URL
 from src.utils.drive_import import authenticate_google, get_pdfs_ids
 from src.utils.extractor import get_all_pdfs_data
-from src.pipeline.tokenizer import chunk_text, count_tokens, chunk_with_metadata
-from src.pipeline.embedder import get_embeddings
+from src.pipeline.tokenizer import chunk_with_metadata
 from src.pipeline.chroma_handler import save_to_chroma
 from src.pipeline.clustering_theme import hdbscan_clustering, count_chunks_by_theme
 from src.pipeline.collect_best_chunks_to_prompt import find_best_chunk_to_prompt
 from src.pipeline.quiz_generator import generate_quiz_from_chunks
 from src.utils.normalizer import normalize_text
-from langchain_chroma import Chroma
-#from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_huggingface import HuggingFaceEmbeddings
-
-
 
 import requests
 import time
@@ -66,7 +60,6 @@ def main(difficulty="standard"):
     start = time.time()
 
     chunks = chunk_with_metadata(pdfs_data)
-    #print(chunks)
 
     duration = time.time() - start
     timings.append({"Etape": "Chunk des données", "Durée (sec)": duration})
@@ -74,12 +67,9 @@ def main(difficulty="standard"):
     
     # 6. Clustering
     start = time.time()
+
     data_with_theme = hdbscan_clustering(chunks)
-    # print(data_with_theme)
-
     counts_themes = count_chunks_by_theme(data_with_theme)
-    # print(counts_themes)
-
     counts_themes.pop("other", None)
     list_themes= list(counts_themes.keys())
     print(list_themes)
@@ -87,7 +77,6 @@ def main(difficulty="standard"):
     duration = time.time() - start
     timings.append({"Etape": "Thèmes créés", "Durée (sec)": duration})
     print(f"Avancement : {(6/nbr_steps)*100} %")
-
 
     # 7. Stockage Chroma
     start = time.time()

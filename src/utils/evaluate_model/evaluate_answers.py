@@ -13,7 +13,7 @@ nltk.download("punkt")
 nltk.download("punkt_tab")
 
 # Définir les chemins
-UTILS_DIR = r"D:\Profils\NLefort\Desktop\JEDHA\pdf_to_quiz\src\utils"
+UTILS_DIR = r"D:\Profils\NLefort\Desktop\JEDHA\pdf_to_quiz\src\utils\evaluate_model"
 REF_FILE = os.path.join(UTILS_DIR, "references.json")
 GEN_FILE = os.path.join(UTILS_DIR, "generated.json")
 OUTPUT_CSV = os.path.join(UTILS_DIR, "evaluation_report.csv")

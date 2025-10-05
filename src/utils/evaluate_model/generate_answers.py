@@ -9,7 +9,7 @@ from src.pipeline.quiz_generator import create_llm
 load_dotenv()
 
 # Définir les chemins
-UTILS_DIR = r"D:\Profils\NLefort\Desktop\JEDHA\pdf_to_quiz\src\utils"
+UTILS_DIR = r"D:\Profils\NLefort\Desktop\JEDHA\pdf_to_quiz\src\utils\evaluate_model"
 REF_FILE = os.path.join(UTILS_DIR, "references.json")
 GEN_FILE = os.path.join(UTILS_DIR, "generated.json")
 
@@ -27,7 +27,7 @@ for q in questions:
     # Construire le prompt
     prompt = ChatPromptTemplate.from_messages(
         [("system", "Tu es un professeur d'histoire d'une classe de CM1. Réponds de façon claire et concise."),
-         ("human", question_text)]
+        ("human", question_text)]
     )
 
     # Appeler le modèle
