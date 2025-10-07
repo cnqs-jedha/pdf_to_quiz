@@ -24,10 +24,15 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     with gr.Column(visible=False) as page_quiz:
         with gr.Column(elem_classes=["block"]):
             start_btn = gr.Button("🚀 Démarrer le quiz", variant="primary", elem_classes=["primary-btn"])
+            progress_bar = gr.HTML(visible=False, elem_id="quiz-progress")
             question = gr.Markdown(visible=False)
-            choix = gr.Radio(choices=[], label="Choisis ta réponse :", visible=False)
-            feedback = gr.Markdown(visible=False)
-            score_display = gr.Textbox(label="Score", interactive=False, visible=False)
+            choix = gr.Radio(choices=[], label="Choisis ta réponse :", visible=False, elem_classes=["quiz-radio"], container=False, elem_id="choices-radio")
+            with gr.Row():
+                explain_btn = gr.Button("Voir l'explication", visible=False, elem_classes=["explain-btn-rect"])
+                feedback = gr.Markdown(visible=False)
+            explain_md = gr.Markdown(visible=False)
+            script_injector = gr.HTML(visible=False)
+            score_display = gr.Markdown(visible=False)
             next_btn = gr.Button("➡️ Question suivante", visible=False, variant="secondary")
 
         with gr.Column(elem_classes=["block"], visible=False) as recap_block:
@@ -51,10 +56,11 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     score_state = gr.State()
     done_state = gr.State()
     resume_state = gr.State()
+    explain_visible = gr.State(False)
 
     outputs_common = [
         start_btn,
-        question, choix, feedback, score_display,
+        question, progress_bar, choix, feedback, explain_btn, explain_md, script_injector, score_display,
         qs_state, idx_state, score_state, done_state, resume_state,
         next_btn, score_final_display, encouragement_display, bilan_theme_display,
         bilan_theme_table, details_title, resume_table, restart_btn, recap_block
@@ -64,9 +70,29 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     choix.change(fn=check_answer,
                     inputs=[choix, qs_state, idx_state, score_state, done_state, resume_state],
                     outputs=outputs_common)
-    next_btn.click(fn=next_question,
+    def _next_question_with_reset(*args):
+        # Réinitialiser l'état d'explication avant de passer à la question suivante
+        explain_visible.value = False
+        return next_question(*args)
+    
+    next_btn.click(fn=_next_question_with_reset,
                     inputs=[qs_state, idx_state, score_state, done_state, resume_state],
                     outputs=outputs_common)
+    
+    def _toggle_explain():
+        # Basculer l'état
+        explain_visible.value = not explain_visible.value
+        if explain_visible.value:
+            return gr.update(visible=True), gr.update(value="Masquer l'explication")
+        else:
+            return gr.update(visible=False), gr.update(value="Voir l'explication")
+    
+    def _reset_explain_state():
+        # Réinitialiser l'état d'explication
+        explain_visible.value = False
+        return gr.update(visible=False), gr.update(value="Voir l'explication")
+    
+    explain_btn.click(fn=_toggle_explain, outputs=[explain_md, explain_btn])
     restart_btn.click(fn=restart_quiz, outputs=outputs_common)
 
     # Quand je clique sur "Réessayer" → teste l’API
