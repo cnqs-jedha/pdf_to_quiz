@@ -13,7 +13,6 @@ body, .gradio-container {
     padding: 24px !important; 
     margin: 16px 0 !important;
     box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08) !important; 
-    border: 1px solid rgba(226, 232, 240, 0.8) !important;
 }
 .markdown h1 {
     color: #1e293b !important;
@@ -39,4 +38,47 @@ body, .gradio-container {
 .dataframe td { padding:10px 8px!important; border-bottom:1px solid #f3f4f6!important; vertical-align:top!important; }
 .primary-btn { background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%)!important; border:none!important; border-radius:8px!important; padding:12px 24px!important; font-weight:600!important; transition:all .2s ease!important; }
 .primary-btn:hover { transform: translateY(-1px)!important; box-shadow:0 6px 20px rgba(59,130,246,.3)!important; }
+/* Barre de progression du quiz */
+#quiz-progress {margin:0 0 16px 0}
+#quiz-progress .bar{height:32px;border-radius:999px;background:#fef3e2;overflow:hidden;position:relative}
+#quiz-progress .bar>span{display:block;height:100%;background:linear-gradient(135deg,#f97316,#ea580c);width:0;border-radius:999px;transition:width .25s ease}
+#quiz-progress .label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-weight:700;color:#1f2937;font-size:1.1rem}
+/* Bloc réponse/explication (correct/incorrect) */
+.answer-block{border:2px solid transparent!important;border-radius:12px!important;padding:16px!important;margin-top:12px!important}
+.answer-block .answer-title{font-weight:700!important;margin-bottom:8px!important}
+.answer-block .answer-expl{opacity:.95!important;line-height:1.6!important}
+.answer-block.correct{background:rgba(16,185,129,.12)!important;border-color:#10b981!important}
+.answer-block.correct .answer-title{color:#047857!important}
+.answer-block.wrong{background:rgba(239,68,68,.12)!important;border-color:#ef4444!important}
+.answer-block.wrong .answer-title{color:#b91c1c!important}
+/* Mise en forme des options Radio sélectionnées */
+.quiz-radio.correct label.selected,
+.quiz-radio.correct label:has(input:checked){background:rgba(16,185,129,.12)!important;border:2px solid #10b981!important;color:#065f46!important}
+.quiz-radio.wrong label.selected,
+.quiz-radio.wrong label:has(input:checked){background:rgba(239,68,68,.12)!important;border:2px solid #ef4444!important;color:#7f1d1d!important}
+/* Remplacer le point orange par ✅ ou ❌ selon la réponse */
+.quiz-radio.correct label:has(input:checked) input[type="radio"] {
+    display: none !important;
+}
+.quiz-radio.correct label:has(input:checked)::before {
+    content: "✅" !important;
+    font-size: 16px !important;
+    margin-right: 8px !important;
+    display: inline-block !important;
+}
+.quiz-radio.wrong label:has(input:checked) input[type="radio"] {
+    display: none !important;
+}
+.quiz-radio.wrong label:has(input:checked)::before {
+    content: "❌" !important;
+    font-size: 16px !important;
+    margin-right: 8px !important;
+    display: inline-block !important;
+}
+/* Bouton d'explication et bloc d'aide */
+.explain-teaser{background:#f8fafc!important;border:2px solid #e2e8f0!important;border-radius:12px!important;padding:16px!important;margin:12px 0!important;text-align:center!important}
+.explain-btn-rect{background:linear-gradient(135deg,#3b82f6,#2563eb)!important;border:none!important;border-radius:10px!important;padding:10px 16px!important;font-weight:600!important;color:#fff!important;margin:0 auto!important;display:block!important}
+.explain-btn-rect:hover{transform:translateY(-1px)!important;box-shadow:0 6px 16px rgba(59,130,246,.3)!important}
+/* Explication longue (sur demande) */
+.explain-content{background:rgba(59,130,246,.08)!important;border:2px solid #3b82f6!important;border-radius:12px!important;padding:16px!important;margin:12px 0!important}
 """
