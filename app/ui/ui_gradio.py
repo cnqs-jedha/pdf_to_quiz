@@ -191,8 +191,8 @@ def check_answer(reponse, qs, index, score, finished, resume):
             gr.update(),                                       # question (2)
             gr.update(),                                       # ✅ progress_html (3)  <-- ajouté
             gr.update(interactive=False,
-                      elem_classes=["quiz-radio","wrong"],
-                      elem_id=f"choices-radio-{correct.replace(' ', '-').replace('é', 'e').replace('è', 'e').replace('à', 'a').replace('ç', 'c').replace('ô', 'o').replace('ù', 'u').replace('î', 'i').replace('ê', 'e')[:30]}"),   # choix (4)
+                        elem_classes=["quiz-radio","wrong"],
+                        elem_id=f"choices-radio-{correct.replace(' ', '-').replace('é', 'e').replace('è', 'e').replace('à', 'a').replace('ç', 'c').replace('ô', 'o').replace('ù', 'u').replace('î', 'i').replace('ê', 'e')[:30]}"),   # choix (4)
             gr.update(value=feedback_html, visible=False),                    # feedback (5)
             gr.update(visible=True),                           # explain_btn (6)
             gr.update(value=f"<div class=\"explain-content\">{current_q.get('long_answer','')}</div>", visible=False),  # explain_md (7)
@@ -236,3 +236,24 @@ def next_question(qs, index, score, finished, resume):
 
 def restart_quiz():
     return start_quiz()
+
+
+def send_drive_link_to_api(drive_link: str):
+    """Envoie le lien Google Drive à l’API pour lancer la génération du quiz."""
+    if not drive_link or "drive.google.com" not in drive_link:
+        return gr.update(value="❌ Lien Google Drive invalide. Vérifie le format.")
+
+    try:
+        resp = requests.post(
+            f"{API_BASE_URL}/run_pipeline",
+            json={"drive_link": drive_link},
+            timeout=30
+        )
+        if resp.status_code == 200:
+            data = resp.json()
+            message = data.get("message", "✅ Quiz en cours de génération.")
+            return gr.update(value=message)
+        else:
+            return gr.update(value=f"⚠️ Erreur API : {resp.text}")
+    except Exception as e:
+        return gr.update(value=f"❌ Erreur de connexion à l’API : {e}")

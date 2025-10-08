@@ -48,6 +48,8 @@ services:
       - ./data:/app/data
       - ./src:/app/src:rw
       - ./api:/app/api:rw
+    # command: uvicorn src.pipeline.server:app --host 0.0.0.0 --port 8001
+
 
   devlab:
     profiles: ["notebooks"]

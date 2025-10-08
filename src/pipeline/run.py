@@ -1,4 +1,4 @@
-from src.pipeline.config import CHROMA_DB_PATH, EMBEDDING_MODEL_NAME, POST_TARGET_URL, DRIVE_FOLDER_URL
+from src.pipeline.config import CHROMA_DB_PATH, EMBEDDING_MODEL_NAME, POST_TARGET_URL
 from src.utils.drive_import import authenticate_google, get_pdfs_ids
 from src.utils.extractor import get_all_pdfs_data
 from src.pipeline.tokenizer import chunk_with_metadata
@@ -10,8 +10,9 @@ from src.utils.normalizer import normalize_text
 
 import requests
 import time
+import argparse
 
-def main(difficulty="standard"):
+def main(drive_url, difficulty="standard"):
     
     timings = []
     total_start = time.time()  # début du chronomètre
@@ -29,7 +30,7 @@ def main(difficulty="standard"):
     # 2. Obtenir les ids des pdf contenu dans le dossier du drive
     start = time.time()
 
-    drive_ids = get_pdfs_ids(service, DRIVE_FOLDER_URL, pdf_only=True)
+    drive_ids = get_pdfs_ids(service, drive_url, pdf_only=True)
     #print(drive_ids)
 
     duration = time.time() - start
@@ -132,4 +133,15 @@ def main(difficulty="standard"):
         print(name, " : ", round(duration, 2), " sec")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Lancer le pipeline à partir d'un lien Google Drive")
+    parser.add_argument("--drive_link", required=False, help="Lien Google Drive du dossier à traiter")
+    # parser.add_argument("--difficulty", default="standard", help="Niveau de difficulté du quiz")
+    args = parser.parse_args()
+    print("args:", args)
+
+    # Si un lien est fourni, exécution directe (utile en local)
+    if args.drive_link:
+        print('link:', args.drive_link)
+        main(args.drive_link)
+    else:
+        print("⚠️ Aucun lien fourni — le pipeline est prêt mais en attente d'appel via l'API.")

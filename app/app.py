@@ -11,14 +11,24 @@ from core.config import API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, 
 from core.check import check_ready_for_gradio
 from core.helpers import load_questions
 from ui.style import custom_css
-from ui.ui_gradio import start_quiz, check_answer, next_question, restart_quiz
+from ui.ui_gradio import start_quiz, check_answer, next_question, restart_quiz, send_drive_link_to_api
+
+# from api.routes import quiz_routes, health_routes, admin_routes
+# app.include_router(quiz_routes.router, prefix="/quiz")
+
+# app.load(check_ready_for_gradio, outputs=[page_erreur, page_quiz])
 
 with gr.Blocks(css=custom_css, title="Quiz App") as app:
     # Page erreur
     with gr.Column(visible=True) as page_erreur:
-        gr.Markdown("# ⚠️ Impossible de lancer le quiz")
-        gr.Markdown("L’API est vide.")
-        bouton_retry = gr.Button("🔄 Réessayer")
+        gr.Markdown("Générez votre quiz via un lien Google Drive")
+        drive_input = gr.Textbox(label="Lien Google Drive")
+        send_button = gr.Button("Lancer la génération du quiz")
+        output = gr.Textbox(label="Statut", interactive=False)
+        # bouton_retry = gr.Button("🔄 Réessayer")
+
+        send_button.click(fn=send_drive_link_to_api, inputs=drive_input, outputs=output)
+
 
     # Page quiz
     with gr.Column(visible=False) as page_quiz:
@@ -96,7 +106,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     restart_btn.click(fn=restart_quiz, outputs=outputs_common)
 
     # Quand je clique sur "Réessayer" → teste l’API
-    bouton_retry.click(fn=check_ready_for_gradio, outputs=[page_erreur, page_quiz])
+    # bouton_retry.click(fn=check_ready_for_gradio, outputs=[page_erreur, page_quiz])
 
 
 if __name__ == "__main__":
