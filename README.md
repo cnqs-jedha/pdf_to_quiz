@@ -126,10 +126,10 @@ Le tableau ci-dessous décrit la séquence complète des échanges entre les dif
 | 12     | **API**               | **Health route**              | Vérification de la disponibilité de l’API (endpoint `/ready`)                            | `api/routes/health_routes.py`                                                   |
 | 13  | **API**               | **Admin route**               | Gestion administrative : `/history`, `/clear`                                            | `api/routes/admin_routes.py`                                                    |
 | 14   | **App (Gradio)**      | **API**                       | Vérifie que l’API est prête à servir le quiz                                             | `core/check.py` → `check_ready_for_gradio()`                                    |
-| 15    | **App (Gradio)**      | **UI utilisateur**            | Chargement du quiz, affichage des questions, score, feedback                             | `ui/ui_gradio.py` → `start_quiz()`, `check_answer()`, `next_question()`         |
-| 16    | **Utilisateur**       | **App (Gradio)**              | Interaction : répondre aux questions, naviguer, rejouer le quiz                          | `app/core/quiz_handler.py`                |
-| 17  | **App (Gradio)**      | **API (FastAPI)**             | (optionnel) Envoi des résultats du quiz à l’API pour historisation                       | `core/helpers.py` (via `requests.post`)                                         |
-| 18  | **App (Gradio)**      | **Utilisateur**               | Affichage final : score, bilan par thème, feedback positif                               | `ui/ui_gradio.py` (rendu final de l’interface)                                  |
+| 15    | **App (Gradio)**      | **UI utilisateur**            | Chargement du quiz, affichage des questions, score                            | `ui/ui_gradio.py` → `start_quiz()`, `check_answer()`, `next_question()`         |
+| 16    | **Utilisateur**       | **App (Gradio)**              | Interaction : répondre aux questions, rejouer le quiz                          | `app/core/quiz_handler.py`                |
+| 17  | **App (Gradio)**      | **API (FastAPI)**             | Envoi des résultats du quiz à l’API pour historisation                       | `core/helpers.py` (via `requests.post`)                                         |
+| 18  | **App (Gradio)**      | **Utilisateur**               | Affichage final : score, bilan par thème                             | `ui/ui_gradio.py` (rendu final de l’interface)                                  |
 
 * Module source : élément qui envoie une information, une requête ou un traitement
 * Module cible : destinataire de l'action. Il reçoit, traite ou stocke les données
