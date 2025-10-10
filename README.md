@@ -3,7 +3,6 @@
 **pdf_to_quiz** est une application d’apprentissage automatisé qui transforme des documents pédagogiques (PDF) en **quiz interactifs**.  
 Elle combine **traitement de texte, regroupement sémantique et génération LLM** pour offrir une expérience éducative intelligente et dynamique.
 
----
 
 ## :rocket: Objectif du projet
 
@@ -17,7 +16,6 @@ L'application a pour but de :
 6. **Envoyer les données** vers l'application pour permettre à l'utilisateur de jouer le quiz
 7. **Evaluer les performances** du LLM utilisé (pertinence, cohérence).
 
----
 
 ## :brain: Pipeline de traitement
 
@@ -42,8 +40,6 @@ Envoi des données à l'API
     ↓
 Lancement du quiz
 ```
-
----
 
 ## :building_construction: Architecture
 
@@ -93,8 +89,6 @@ pdf_to_quiz/
     |   +---evaluate_model # Script pour évaluer la qualité des quiz générés
 ```
 
----
-
 ## :arrows_counterclockwise: Interactions
 
 ### Résumé des interactions
@@ -140,7 +134,6 @@ Le tableau ci-dessous décrit la séquence complète des échanges entre les dif
 * Module source : élément qui envoie une information, une requête ou un traitement
 * Module cible : destinataire de l'action. Il reçoit, traite ou stocke les données
 
----
 
 ## :atom_symbol: Technologies principale
 
@@ -155,7 +148,6 @@ Le tableau ci-dessous décrit la séquence complète des échanges entre les dif
 | **Backend API**             | FastAPI, pydantic                                      |
 | **Frontend / UI**           | Gradio (quiz interactif)                               |
 
----
 
 ## :zap: Flux API
 
@@ -170,7 +162,6 @@ Le tableau ci-dessous décrit la séquence complète des échanges entre les dif
 
 voir aussi <http://localhost:8000/docs>
 
----
 
 ## :test_tube: Evaluation du LLM
 
@@ -183,7 +174,6 @@ Chaque génération de quiz est évalué selon :
 
 Les scores sont stockés et visualisés dans un fichier d'évaluation.
 
----
 
 ## :mag: Points techniques
 
@@ -193,7 +183,6 @@ Les scores sont stockés et visualisés dans un fichier d'évaluation.
 * Reproductibilité : pipeline entièrement conteneurisé via Docker et Devcontainer
 * Surveillance : endpoints de santé, logs d'évaluation
 
----
 
 ## :arrow_forward: Installation, exécution, tutlisation
 
@@ -215,21 +204,23 @@ cd pdf_to_quiz
 
 ### 2. Démarrer les conteneurs Docker
 
-Vérifier que Docker fonctionne
+* Vérifier que Docker fonctionne : 
 `docker ps`
 
-Pour builder les images de l'api, de l'app, et du pipeline lancer la commande :
+* Builder les images de l'api, de l'app et du pipeline :
 `docker compose build`
 
-Pour lancer le projet:
+* Lancer le projet:
 `docker compose up`
 
-Pour lancer une composante du projet :
+* Lancer une composante du projet :
 `docker compose up pipeline`
+
 `docker compose up api`
+
 `docker compose up app`
 
-Arrêter le conteneur Docker
+* Arrêter le conteneur Docker :
 `docker compose down`
 
 ### 3. Lancer l'application
@@ -237,7 +228,6 @@ Arrêter le conteneur Docker
 * Backend : <http://localhost:8000/docs>
 * Interface quiz : <http://localhost:7860>
 
----
 
 ## :file_folder: Exemple de quiz généré
 
@@ -274,8 +264,6 @@ Arrêter le conteneur Docker
 }
 ```
 
----
-
 ## :compass: Roadmap
 
 * [x] Extraction PDF
@@ -294,9 +282,11 @@ Arrêter le conteneur Docker
 
 * [ ] Tableau de bord des performances des utilisateurs
 
----
 
 ## :busts_in_silhouette: Auteurs
 
-Projet développé par Stéphane Durig, Quentin Haentjens, Nadège Lefort, Catherine Silavong
-Sous la supervision de Jedha
+Projet développé par [Stéphane Durig](https://github.com/StephaneDurig), [Quentin Haentjens](https://github.com/Quentin-qha), [Nadège Lefort](https://github.com/nlefort), [Catherine Silavong](https://github.com/csil08)
+
+Sous la supervision de [Jedha](https://www.jedha.co/)
+
+*La réalisation de ce projet s'inscrit dans le cadre de la [formation Data Scientist](https://www.jedha.co/formations/formation-data-scientist) développé par [Jedha](https://www.jedha.co/), en vue de l'obtention de la certification professionnelle de niveau 6 (bac+4) enregistrée au RNCP : [Concepteur développeur en science des données](https://www.francecompetences.fr/recherche/rncp/35288/).*
