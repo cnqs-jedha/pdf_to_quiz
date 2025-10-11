@@ -13,26 +13,60 @@ from core.config import API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, 
 from core.helpers import load_questions
 from core.check import check_ready_api
 
-niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
+# niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
+
+# def start_quiz():
+#     qs = random.sample(niveau, len(niveau))   #min(10, len(niveau)) 10 questions si possible
+#     resume = []
+#     question_out, progress_html, choix_out, feedback_out, explain_btn_out, explain_md_out, script_injector_out, score_out, *states = update_ui(qs, 0, 0, False, "", resume)
+#     return [
+#         gr.update(visible=False),               # start_btn
+#         question_out, progress_html, choix_out, feedback_out, explain_btn_out, explain_md_out, script_injector_out, score_out,
+#         *states,                                # states (5)
+#         gr.update(visible=False),               # next_btn
+#         gr.update(visible=False),               # score_final_display
+#         gr.update(visible=False),               # encouragement_display
+#         gr.update(visible=False),               # bilan_theme_display
+#         gr.update(visible=False),               # bilan_theme_table
+#         gr.update(visible=False),               # details_title
+#         gr.update(visible=False),               # resume_table
+#         gr.update(visible=False),               # restart_btn
+#         gr.update(visible=False),               # recap_block
+#     ]
 
 def start_quiz():
-    qs = random.sample(niveau, min(10, len(niveau)))  # 10 questions si possible
+    """Démarre le quiz en rechargeant les questions depuis l’API."""
+    print("⏳ Chargement des questions depuis l'API...", flush=True)
+    niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
+    print(f"📋 {len(niveau)} questions récupérées", flush=True)
+
+    if not niveau:
+        return [
+            gr.update(visible=True),   # afficher page erreur
+            gr.update(visible=False),  # masquer loader
+            gr.update(visible=False),  # masquer quiz
+            "❌ Aucun quiz trouvé. Veuillez relancer la génération."
+        ]
+
+    qs = random.sample(niveau, len(niveau))   #min(10, len(niveau)) 10 questions si possible
     resume = []
     question_out, progress_html, choix_out, feedback_out, explain_btn_out, explain_md_out, script_injector_out, score_out, *states = update_ui(qs, 0, 0, False, "", resume)
+
     return [
-        gr.update(visible=False),               # start_btn
+        gr.update(visible=False),  # start_btn
         question_out, progress_html, choix_out, feedback_out, explain_btn_out, explain_md_out, script_injector_out, score_out,
-        *states,                                # states (5)
-        gr.update(visible=False),               # next_btn
-        gr.update(visible=False),               # score_final_display
-        gr.update(visible=False),               # encouragement_display
-        gr.update(visible=False),               # bilan_theme_display
-        gr.update(visible=False),               # bilan_theme_table
-        gr.update(visible=False),               # details_title
-        gr.update(visible=False),               # resume_table
-        gr.update(visible=False),               # restart_btn
-        gr.update(visible=False),               # recap_block
+        *states,
+        gr.update(visible=False),  # next_btn
+        gr.update(visible=False),  # score_final_display
+        gr.update(visible=False),  # encouragement_display
+        gr.update(visible=False),  # bilan_theme_display
+        gr.update(visible=False),  # bilan_theme_table
+        gr.update(visible=False),  # details_title
+        gr.update(visible=False),  # resume_table
+        gr.update(visible=False),  # restart_btn
+        gr.update(visible=False),  # recap_block
     ]
+
 
 def update_ui(qs, index, score, finished, feedback_txt, resume):
     if index >= len(qs):
@@ -365,14 +399,14 @@ def send_drive_link_to_api(drive_link: str):
 
     # 2️⃣ Envoi du lien à l’API
     try:
-        print('try', flush=True)
+        # print('try', flush=True)
         resp = requests.post(
             f"{API_BASE_URL}/run_pipeline",
             json={"drive_link": drive_link},
             timeout=15
         )
-        print(f"Status code: {resp.status_code}", flush=True)
-        print(f"Response text: {resp.text}", flush=True)
+        # print(f"Status code: {resp.status_code}", flush=True)
+        # print(f"Response text: {resp.text}", flush=True)
         if resp.status_code != 200:
             print('try code not 200')
             yield [
@@ -383,8 +417,8 @@ def send_drive_link_to_api(drive_link: str):
             ]
             return
     except Exception as e:
-        print('except', flush=True)
-        print(traceback.format_exc(), flush=True)
+        # print('except', flush=True)
+        # print(traceback.format_exc(), flush=True)
         yield [
             gr.update(visible=True),
             gr.update(visible=False),
@@ -394,7 +428,7 @@ def send_drive_link_to_api(drive_link: str):
         return
 
     # 3️⃣ Passage à la page de chargement
-    print('loader here', flush=True)
+    # print('loader here', flush=True)
     yield [
         gr.update(visible=False),  # page_erreur masquée
         gr.update(visible=True),   # page_loader affichée
@@ -404,7 +438,7 @@ def send_drive_link_to_api(drive_link: str):
 
     # 4️⃣ Boucle d’attente non bloquante
     for i in range(60):  # 60 x 5s = 5 minutes max
-        print('await function', flush=True)
+        # print('await function', flush=True)
         time.sleep(5)
         quiz_ready, quiz_data = check_ready_api()
         message = quiz_data.get("message", "Traitement en cours...")
@@ -417,7 +451,7 @@ def send_drive_link_to_api(drive_link: str):
         ]
 
         if quiz_ready:
-            print('quiz ready', flush=True)
+            # print('quiz ready', flush=True)
             time.sleep(2)
             yield [
                 gr.update(visible=False),  # cacher page erreur
@@ -428,7 +462,7 @@ def send_drive_link_to_api(drive_link: str):
             return
 
     # 5️⃣ Timeout après 5 min
-    print('time out', flush=True)
+    # print('time out', flush=True)
     yield [
         gr.update(visible=True),
         gr.update(visible=False),
