@@ -40,8 +40,6 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
         gr.Markdown("Générez votre quiz via un lien Google Drive")
         drive_input = gr.Textbox(label="Lien Google Drive")  # Champ de saisie pour le lien
         send_quiz_button = gr.Button("Lancer la génération du quiz")  # Bouton pour lancer la génération
-        # output = gr.Textbox(label="Statut", interactive=False)  # Champ de statut (commenté)
-        # bouton_retry = gr.Button("🔄 Réessayer")  # Bouton de retry (commenté)
 
     # ============================================
     # PAGE DE CHARGEMENT : GÉNÉRATION EN COURS
