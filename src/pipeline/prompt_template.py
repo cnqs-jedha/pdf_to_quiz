@@ -47,6 +47,7 @@ def build_prompt(text: str, difficulty: str = "standard") -> str:
     - chaque choix de réponse sera différent : un choix ne doit pas être répété avec une tournure synonyme
     - chaque choix sera affiché dans un ordre neutre : il peut être alphabétique, chronologique ou numérique
     - chaque choix sera homogène en termes de structure grammaticale
+    - Chaque choix doit faire une longueur maximum de 5 mots
 
     Le résultat attendu devra respecter les consignes suivantes :
     - utilise uniquement des guillemets doubles `"` pour les clés et les valeurs.
