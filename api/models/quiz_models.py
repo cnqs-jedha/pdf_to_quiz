@@ -80,3 +80,6 @@ class ClearResponse(BaseModel):
 
 class HistoryResponse(BaseModel):
     history: List[Quiz]
+
+class PipelineRequest(BaseModel):
+    drive_link: str

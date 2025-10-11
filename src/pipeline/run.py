@@ -1,4 +1,4 @@
-from src.pipeline.config import CHROMA_DB_PATH, EMBEDDING_MODEL_NAME, POST_TARGET_URL, DRIVE_FOLDER_URL
+from src.pipeline.config import CHROMA_DB_PATH, EMBEDDING_MODEL_NAME, POST_TARGET_URL
 from src.utils.drive_import import authenticate_google, get_pdfs_ids
 from src.utils.extractor import get_all_pdfs_data
 from src.pipeline.tokenizer import chunk_with_metadata
@@ -7,11 +7,13 @@ from src.pipeline.clustering_theme import hdbscan_clustering, count_chunks_by_th
 from src.pipeline.collect_best_chunks_to_prompt import find_best_chunk_to_prompt
 from src.pipeline.quiz_generator import generate_quiz_from_chunks
 from src.utils.normalizer import normalize_text
+from src.utils.status_to_api import notify_stage
 
 import requests
 import time
+import argparse
 
-def main(difficulty="standard"):
+def main(drive_url, difficulty="standard"):
     
     timings = []
     total_start = time.time()  # début du chronomètre
@@ -20,6 +22,7 @@ def main(difficulty="standard"):
     # 1. S'identifier au drive
     start = time.time()
 
+    notify_stage("Authentification Google Drive...")
     service = authenticate_google()
 
     duration = time.time() - start
@@ -29,7 +32,8 @@ def main(difficulty="standard"):
     # 2. Obtenir les ids des pdf contenu dans le dossier du drive
     start = time.time()
 
-    drive_ids = get_pdfs_ids(service, DRIVE_FOLDER_URL, pdf_only=True)
+    notify_stage("Récupération des PDFs...")
+    drive_ids = get_pdfs_ids(service, drive_url, pdf_only=True)
     #print(drive_ids)
 
     duration = time.time() - start
@@ -39,6 +43,7 @@ def main(difficulty="standard"):
     # 3. Récupère tous les textes de tous les pdfs en un seul texte
     start = time.time()
 
+    notify_stage("Lecture des textes...")
     pdfs_data = get_all_pdfs_data(service, drive_ids)
 
     duration = time.time() - start
@@ -48,6 +53,7 @@ def main(difficulty="standard"):
     # 4. Normalise le texte
     start = time.time()
 
+    notify_stage("Nettoyage des textes...")
     for pdf in pdfs_data:
         for page in pdf:
             page["text"] = normalize_text(page['text'])
@@ -68,6 +74,7 @@ def main(difficulty="standard"):
     # 6. Clustering
     start = time.time()
 
+    notify_stage("Analyse des thèmes...")
     data_with_theme = hdbscan_clustering(chunks)
     counts_themes = count_chunks_by_theme(data_with_theme)
     counts_themes.pop("other", None)
@@ -100,6 +107,7 @@ def main(difficulty="standard"):
     # 9. Création du quizz avec les chunks par thèmes
     start = time.time()
 
+    notify_stage("Génération du quiz...")
     quiz = generate_quiz_from_chunks(chunks_by_theme, difficulty)
     print(quiz)
 
@@ -117,6 +125,7 @@ def main(difficulty="standard"):
 
     if response.status_code == 200:
         print("Quiz envoyé avec succès !")
+        notify_stage("Quiz Prêt...")
     else:
         print(f"Échec de l'envoi : {response.status_code} - {response.text}")
     
@@ -132,4 +141,15 @@ def main(difficulty="standard"):
         print(name, " : ", round(duration, 2), " sec")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Lancer le pipeline à partir d'un lien Google Drive")
+    parser.add_argument("--drive_link", required=False, help="Lien Google Drive du dossier à traiter")
+    # parser.add_argument("--difficulty", default="standard", help="Niveau de difficulté du quiz")
+    args = parser.parse_args()
+    print("args:", args)
+
+    # Si un lien est fourni, exécution directe (utile en local)
+    if args.drive_link:
+        print('link:', args.drive_link)
+        main(args.drive_link)
+    else:
+        print("⚠️ Aucun lien fourni — le pipeline est prêt mais en attente d'appel via l'API.")
