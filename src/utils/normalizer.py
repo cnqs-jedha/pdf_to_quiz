@@ -133,22 +133,27 @@ def normalize_clusters(text: str) -> str:
 
 
 def normalize_text(text: str) -> str:
-    text = re.sub(r"([ﬁﬂﬃﬄﬀﬅﬆ])\b\s+([a-zàâçéèêëîïôûùüÿñæœ])", r"\1\2", text, flags=re.IGNORECASE)
-    text = unicodedata.normalize("NFKC", text)
-    text = re.sub(r"<[^>]+>", " ", text)
-    text = re.sub(r"[^\x20-\x7EÀ-ÖØ-öø-ÿœŒšŠžŽ]+", " ", text)
-    text = re.sub(r"http\S+|www\S+|@\S+", " ", text)
-    text = re.sub(r"\b\w\b", " ", text)
-    text = re.sub(r"-\s*\n", "", text)
-    text = re.sub(r"\n", " ", text)
-    text = re.sub(r"\bpage\s*\d+\b", " ", text)
-    text = re.sub(r"([!?.,;:])\1+", r"\1", text)
-    text = text.replace("’", "'").replace("‘", "'")
-    text = text.replace("“", '"').replace("”", '"')
-    text = re.sub(r"[©®™✓§¶∆∞≈≠±×÷]", " ", text)
+    text = unicodedata.normalize("NFKC", text)  # normalise le texte Unicode (unification des caractères équivalents)
+    text = re.sub(r"/uni[0-9A-Fa-f]{4}\s*", " ", text) # supprime les séquences comme /uniXXXX (où XXXX est hexadécimal).
+    text = re.sub(r"<[^>]+>", " ", text)  # supprime les balises HTML/XML
+    text = re.sub(r"\[\s*\.\.\.\s*\]", "", text) # retrait de [...]
+    text = text.replace("’", "'").replace("‘", "'")  # remplace les apostrophes typographiques par des apostrophes simples
+    text = text.replace("“", '"').replace("”", '"')  # remplace les guillemets typographiques par des guillemets simples
+    text = re.sub(r"[^\x20-\x7EÀ-ÖØ-öø-ÿœŒšŠžŽ]+", " ", text)  # supprime les caractères non imprimables ou hors alphabet latin étendu
+    text = re.sub(r"http\S+|www\S+|@\S+", " ", text) # Supprime les URLs et les mentions Twitter
+    text = re.sub(r"\s+", " ", text).strip() # # Remplace tous types d’espaces Unicode par un espace simple (ex : espaces insécables)
+    #text = re.sub(r"\b\w\b", " ", text) # supprime les mots d'un caractère => commenté ici car il faut garder tous les mots pour le chunking. L'instruction est basculée das clustering_theme
+    text = re.sub(r"-\s*\n", "", text) # supprime les coupures de mots en fin de ligne (- suivi de saut de ligne)
+    text = re.sub(r"\n", " ", text)  # remplace les sauts de ligne par des espaces
+    text = re.sub(r"\bpage\s*\d+\b", " ", text)  # supprime les mentions de pages
+    text = re.sub(r"([!?.,;:])\1+", r"\1", text)  # réduit les ponctuations répétées
+    #text = text.replace("’", "'").replace("‘", "'")  
+    #text = text.replace("“", '"').replace("”", '"')
+    text = re.sub(r"[©®™✓§¶∆∞≈≠±×÷]", " ", text)  # remplace des symboles non pertinents pour l’analyse par des espaces
+    text = re.sub(r"([ﬁﬂﬃﬄﬀﬅﬆ])\b\s+([a-zàâçéèêëîïôûùüÿñæœ])", r"\1\2", text, flags=re.IGNORECASE)  # traite les ligatures suivies d'un mot
     text = re.sub(r"œ", "oe", text)
     text = re.sub(r"æ", "ae", text)
-    text = re.sub(r"\b(\w+)( \1\b)+", r"\1", text)
-    text = re.sub(r"\s+", " ", text).strip()
+    text = re.sub(r"\b(\w+)( \1\b)+", r"\1", text)  # supprime les doublons consécutifs d’un même mot
+    text = re.sub(r"\s+", " ", text).strip()  # nettoie les espaces
 
     return text

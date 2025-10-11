@@ -28,13 +28,17 @@ def find_best_chunk_to_prompt(vector_db, themes, k=10, fetch_k=50, lambda_mult=0
     for query in themes:
     
         retriever = vector_db.as_retriever(
-            search_type="mmr",
-            search_kwargs={"k": k, "fetch_k": fetch_k, "lambda_mult": lambda_mult}
+            #search_type="mmr",
+            #search_kwargs={"k": k, "fetch_k": fetch_k, "lambda_mult": lambda_mult}
+            search_type="similarity", 
+            search_kwargs={"k": k}
         )
 
         relevant_docs = retriever.invoke(query)
         #print(f"[DEBUG] Total chunks collectés: {len(full_chunks_themes)}")
-
+        #print(f"[DEBUG]type de relevant_docs : {type(relevant_docs)}"")
+        #print(f"[DEBUG]relevant_docs : {relevant_docs}")
+        print(f"Nombre de chunks récupérés pour le thème -- {query} -- : {len(relevant_docs)}")
 
         if len(relevant_docs) > chunks_len:
             selected_docs = random.sample(relevant_docs, chunks_len)
@@ -44,6 +48,7 @@ def find_best_chunk_to_prompt(vector_db, themes, k=10, fetch_k=50, lambda_mult=0
             #print("no len", query)
 
         for doc in selected_docs:
+            doc.metadata['theme'] = query # remplace l'ancien thème qui a été déterminé par le clustering
             full_chunks_themes.append({
                 "page_content": doc.page_content,
                 "metadata": doc.metadata

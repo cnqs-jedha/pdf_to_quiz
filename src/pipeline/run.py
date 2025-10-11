@@ -10,10 +10,9 @@ from src.pipeline.quiz_generator import generate_quiz_from_chunks
 from src.utils.normalizer import normalize_text
 from langchain_chroma import Chroma
 #from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_huggingface import HuggingFaceEmbeddings
+#from langchain_huggingface import HuggingFaceEmbeddings
 
-
-
+import os
 import requests
 import time
 
@@ -73,6 +72,7 @@ def main(difficulty="standard"):
     print(f"Avancement : {(5/nbr_steps)*100} %")
     
     # 6. Clustering
+    
     start = time.time()
     data_with_theme = hdbscan_clustering(chunks)
     # print(data_with_theme)
@@ -82,13 +82,13 @@ def main(difficulty="standard"):
 
     counts_themes.pop("other", None)
     list_themes= list(counts_themes.keys())
-    print(list_themes)
+    print("Liste des thèmes : ", list_themes)
 
     duration = time.time() - start
     timings.append({"Etape": "Thèmes créés", "Durée (sec)": duration})
     print(f"Avancement : {(6/nbr_steps)*100} %")
 
-
+    """
     # 7. Stockage Chroma
     start = time.time()
 
@@ -105,7 +105,7 @@ def main(difficulty="standard"):
 
     duration = time.time() - start
     timings.append({"Etape": "Récupération des meilleurs chunks par thème", "Durée (sec)": duration})
-    print(chunks_by_theme)
+    print(f"Meilleurs chunks par thème : ", chunks_by_theme)
     print(f"Avancement : {(8/nbr_steps)*100} %")
     
     # 9. Création du quizz avec les chunks par thèmes
@@ -133,6 +133,7 @@ def main(difficulty="standard"):
     
     total_duration = time.time() - total_start
     timings.append({"Etape": "Durée totale", "Durée (sec)": total_duration})
+    """
 
     # --- Résumé final des temps d'exécution ---
     print("\nRésumé des temps d'exécution par étape :")

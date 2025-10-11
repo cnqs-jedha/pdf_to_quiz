@@ -9,10 +9,11 @@ def chunk_text(text: str, chunk_size=500, chunk_overlap=50):
     splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     return splitter.split_text(text)
 
-def chunk_with_metadata(all_pdfs_data, chunk_size=500, chunk_overlap=50):
+def chunk_with_metadata(all_pdfs_data, chunk_size=600, chunk_overlap=50):
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap
+        chunk_overlap=chunk_overlap,
+        #separators=["\n\n", "\n \n", ".", "!", "?", ",", ";", ":", " ", "\n"]
     )
 
     chunks_results = []
