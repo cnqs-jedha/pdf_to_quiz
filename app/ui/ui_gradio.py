@@ -1,17 +1,28 @@
-import os
-import json
-import random
-import time
-from pathlib import Path
+# =========================
+# FICHIER PRINCIPAL DE L'INTERFACE QUIZ
+# =========================
+# Ce fichier contient toute la logique de l'interface utilisateur pour le quiz
+# Il gère l'affichage des questions, la vérification des réponses, et la navigation
 
-import gradio as gr
-import pandas as pd
-import requests
+# ============================================
+# IMPORTS ET DÉPENDANCES
+# ============================================
 
-from core.helpers import build_resume_tables
-from core.config import API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, BASE_DIR, json_path
-from core.helpers import load_questions
-from core.check import check_ready_api
+import os  # Pour les opérations sur le système de fichiers
+import json  # Pour manipuler les données JSON
+import random  # Pour mélanger les questions
+import time  # Pour les délais d'attente
+from pathlib import Path  # Pour gérer les chemins de fichiers
+
+import gradio as gr  # Framework pour créer l'interface web
+import pandas as pd  # Pour manipuler les tableaux de données
+import requests  # Pour faire des requêtes HTTP vers l'API
+
+# Imports des modules personnalisés
+from core.helpers import build_resume_tables  # Pour construire les tableaux de résultats
+from core.config import API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, BASE_DIR, json_path  # Configuration
+from core.helpers import load_questions  # Pour charger les questions depuis l'API
+from core.check import check_ready_api  # Pour vérifier si l'API est prête
 
 # niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
 
@@ -34,12 +45,30 @@ from core.check import check_ready_api
 #         gr.update(visible=False),               # recap_block
 #     ]
 
+# ============================================
+# FONCTION PRINCIPALE : DÉMARRAGE DU QUIZ
+# ============================================
+
 def start_quiz():
-    """Démarre le quiz en rechargeant les questions depuis l’API."""
+    """
+    Démarre un nouveau quiz en chargeant les questions depuis l'API.
+    
+    Cette fonction :
+    1. Charge les questions depuis l'API ou le fichier local
+    2. Sélectionne aléatoirement 10 questions maximum
+    3. Initialise l'interface avec la première question
+    4. Retourne tous les éléments de l'interface mis à jour
+    
+    Returns:
+        list: Liste des mises à jour pour tous les éléments de l'interface
+    """
     print("⏳ Chargement des questions depuis l'API...", flush=True)
+    
+    # Charger les questions depuis l'API ou le fichier local
     niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
     print(f"📋 {len(niveau)} questions récupérées", flush=True)
 
+    # Vérifier qu'il y a des questions disponibles
     if not niveau:
         return [
             gr.update(visible=True),   # afficher page erreur
@@ -48,45 +77,81 @@ def start_quiz():
             "❌ Aucun quiz trouvé. Veuillez relancer la génération."
         ]
 
-    qs = random.sample(niveau, min(10, len(niveau)))   #min(10, len(niveau)) 10 questions si possible
-    resume = []
+    # Sélectionner aléatoirement 10 questions maximum
+    qs = random.sample(niveau, min(10, len(niveau)))
+    resume = []  # Liste pour stocker les résultats de chaque question
+    
+    # Générer l'interface pour la première question
     question_out, progress_html, choix_out, feedback_out, explain_btn_out, explain_md_out, script_injector_out, score_out, *states = update_ui(qs, 0, 0, False, "", resume)
 
+    # Retourner les mises à jour pour tous les éléments de l'interface
     return [
-        gr.update(visible=False),  # start_btn
+        gr.update(visible=False),  # start_btn (masquer le bouton démarrer)
         question_out, progress_html, choix_out, feedback_out, explain_btn_out, explain_md_out, script_injector_out, score_out,
-        *states,
-        gr.update(visible=False),  # next_btn
-        gr.update(visible=False),  # score_final_display
-        gr.update(visible=False),  # encouragement_display
-        gr.update(visible=False),  # bilan_theme_display
-        gr.update(visible=False),  # bilan_theme_table
-        gr.update(visible=False),  # details_title
-        gr.update(visible=False),  # resume_table
-        gr.update(visible=False),  # restart_btn
-        gr.update(visible=False),  # recap_block
+        *states,  # États internes (questions, index, score, etc.)
+        gr.update(visible=False),  # next_btn (masquer le bouton suivant)
+        gr.update(visible=False),  # score_final_display (masquer le score final)
+        gr.update(visible=False),  # encouragement_display (masquer l'encouragement)
+        gr.update(visible=False),  # bilan_theme_display (masquer le bilan par thème)
+        gr.update(visible=False),  # bilan_theme_table (masquer le tableau de thèmes)
+        gr.update(visible=False),  # details_title (masquer le titre des détails)
+        gr.update(visible=False),  # resume_table (masquer le tableau de résumé)
+        gr.update(visible=False),  # restart_btn (masquer le bouton rejouer)
+        gr.update(visible=False),  # recap_block (masquer le bloc de récapitulatif)
     ]
 
 
+# ============================================
+# FONCTION DE MISE À JOUR DE L'INTERFACE
+# ============================================
+
 def update_ui(qs, index, score, finished, feedback_txt, resume):
+    """
+    Met à jour l'interface utilisateur pour afficher une question.
+    
+    Args:
+        qs (list): Liste des questions du quiz
+        index (int): Index de la question actuelle
+        score (int): Score actuel de l'utilisateur
+        finished (bool): Indique si le quiz est terminé
+        feedback_txt (str): Texte de feedback à afficher
+        resume (list): Liste des résultats des questions précédentes
+    
+    Returns:
+        list: Mises à jour pour tous les éléments de l'interface
+    """
+    # Si on a dépassé le nombre de questions, afficher l'écran final
     if index >= len(qs):
         return list(update_final_screen(qs, score, resume))
+    
+    # Récupérer la question actuelle
     q = qs[index]
     total = len(qs)
+    
+    # Formater le numéro de question (ex: "01/10")
     numero = f"{index+1:02d}/{total:02d}"
+    
+    # Créer le HTML pour la question
     question_md = f"### {q['question']}"
-    progress_html = f"<div class=\"bar\"><span style=\"width:{((index+1)/total)*100:.0f}%\"></span><div class=\"label\">Question {index+1:02d}/{total:02d}</div></div>"
+    
+    # Créer la barre de progression
+    progress_percentage = ((index+1)/total)*100
+    progress_html = f"<div class=\"bar\"><span style=\"width:{progress_percentage:.0f}%\"></span><div class=\"label\">Question {index+1:02d}/{total:02d}</div></div>"
+    
+    # Créer le texte du score
     score_txt = f"Score : {score:02d}"
+    
+    # Retourner les mises à jour pour tous les éléments
     return [
-        gr.update(value=question_md, visible=True),           # question
-        gr.update(value=progress_html, visible=True),           # progress
-        gr.update(choices=q["options"], value=None, interactive=True, visible=True, elem_classes=["quiz-radio"], elem_id="choices-radio"),  # choix (reset classes)
-        gr.update(value="", visible=False),            # feedback (teaser)
-        gr.update(visible=False, value="Voir l'explication"),   # explain_btn (hidden until answered, reset text)
-        gr.update(value=q.get("long_answer", ""), visible=False), # explain_md (content hidden)
-        gr.update(value="", visible=False),                     # script_injector (hidden)
-        gr.update(value=score_txt, visible=True),               # score_display
-        qs, index, score, finished, resume                      # states (5)
+        gr.update(value=question_md, visible=True),           # question (afficher la question)
+        gr.update(value=progress_html, visible=True),           # progress (afficher la barre de progression)
+        gr.update(choices=q["options"], value=None, interactive=True, visible=True, elem_classes=["quiz-radio"], elem_id="choices-radio"),  # choix (options de réponse)
+        gr.update(value="", visible=False),            # feedback (masquer le feedback)
+        gr.update(visible=False, value="Voir l'explication"),   # explain_btn (masquer le bouton d'explication)
+        gr.update(value=q.get("long_answer", ""), visible=False), # explain_md (masquer l'explication)
+        gr.update(value="", visible=False),                     # script_injector (masquer les scripts)
+        gr.update(value=score_txt, visible=True),               # score_display (afficher le score)
+        qs, index, score, finished, resume                      # states (états internes)
     ]
 
 def update_final_screen(qs, score, resume):
@@ -171,79 +236,115 @@ def update_final_screen(qs, score, resume):
         gr.update(visible=True),                                   # recap_block
     ]
 
+# ============================================
+# FONCTION DE VÉRIFICATION DES RÉPONSES
+# ============================================
+
 def check_answer(reponse, qs, index, score, finished, resume):
+    """
+    Vérifie si la réponse de l'utilisateur est correcte et met à jour l'interface.
+    
+    Cette fonction :
+    1. Vérifie si la réponse est correcte
+    2. Met à jour le score si nécessaire
+    3. Affiche le bouton d'explication avec le bon texte
+    4. Applique les styles visuels appropriés (vert pour correct, rouge pour incorrect)
+    
+    Args:
+        reponse (str): La réponse sélectionnée par l'utilisateur
+        qs (list): Liste des questions du quiz
+        index (int): Index de la question actuelle
+        score (int): Score actuel de l'utilisateur
+        finished (bool): Indique si le quiz est terminé
+        resume (list): Liste des résultats des questions précédentes
+    
+    Returns:
+        list: Mises à jour pour tous les éléments de l'interface
+    """
+    # Si le quiz est terminé ou aucune réponse n'a été sélectionnée, ne rien faire
     if finished or reponse is None:
         return [gr.update()] * 23
 
+    # Récupérer la question actuelle
     current_q = qs[index]
+    
     # Récupérer la bonne réponse depuis la structure JSON
+    # Support de deux formats : nouveau (llm_response) et ancien (réponse)
     if "llm_response" in current_q and "correct_answer" in current_q["llm_response"]:
         correct = current_q["llm_response"]["correct_answer"]["answer"]
     else:
         correct = current_q["réponse"]  # fallback pour l'ancienne structure
-    resultat = "✅" if reponse == correct else "❌"
+    
+    # Déterminer si la réponse est correcte
+    is_correct = reponse == correct
+    resultat = "✅" if is_correct else "❌"
 
+    # Ajouter le résultat à la liste des réponses
     resume.append({
         "Thème": current_q.get("theme", "Sans thème"),
         "Question": current_q["question"],
         "Ta réponse": reponse,
         "Bonne réponse": correct,
         "Résultat": resultat,
-        "Correct": (reponse == correct),
+        "Correct": is_correct,
     })
 
-    if reponse == correct:
-        score += 1
+    # Si la réponse est correcte
+    if is_correct:
+        score += 1  # Incrémenter le score
         explication = current_q.get("long_answer", "")
         feedback_txt = ""
+        
         return [
-            gr.update(visible=False),                          # start_btn (1)
-            gr.update(),                                       # question (2)
-            gr.update(),                                       # ✅ progress_html (3)  <-- ajouté
-            gr.update(interactive=False,
-                      elem_classes=["quiz-radio","correct", f"correct-{correct}"]), # choix (4)
-            gr.update(value=feedback_txt, visible=False),       # feedback (5)
-            gr.update(visible=True, value="Voir l'explication"),                           # explain_btn (6)
-            gr.update(value=f"<div class=\"explain-content\">{current_q.get('long_answer','')}</div>", visible=False),  # explain_md (7)
-            gr.update(value="", visible=False),                     # script_injector (8)
-            gr.update(value=f"Score : {score:02d}"),     # score_display (9)
-            qs, index, score, finished, resume,                # states (10..14)
-            gr.update(visible=True),                           # next_btn (15)
-            gr.update(visible=False),                          # score_final_display (16)
-            gr.update(visible=False),                          # encouragement_display (17)
-            gr.update(visible=False),                          # bilan_theme_display (18)
-            gr.update(visible=False),                          # bilan_theme_table (19)
-            gr.update(visible=False),                          # details_title (20)
-            gr.update(visible=False),                          # resume_table (21)
-            gr.update(visible=False),                          # restart_btn (22)
-            gr.update(visible=False),                          # recap_block (23)
+            gr.update(visible=False),                          # start_btn (masquer le bouton démarrer)
+            gr.update(),                                       # question (garder la question)
+            gr.update(),                                       # progress_html (garder la barre de progression)
+            gr.update(interactive=False,                       # choix (désactiver les options)
+                      elem_classes=["quiz-radio","correct", f"correct-{correct}"]),  # Appliquer le style vert
+            gr.update(value=feedback_txt, visible=False),       # feedback (masquer le feedback)
+            gr.update(visible=True, value="Voir l'explication"),  # explain_btn (afficher avec texte "explication")
+            gr.update(value=f"<div class=\"explain-content\">{current_q.get('long_answer','')}</div>", visible=False),  # explain_md (préparer l'explication)
+            gr.update(value="", visible=False),                     # script_injector (masquer les scripts)
+            gr.update(value=f"Score : {score:02d}"),     # score_display (mettre à jour le score)
+            qs, index, score, finished, resume,                # states (états internes)
+            gr.update(visible=True),                           # next_btn (afficher le bouton suivant)
+            gr.update(visible=False),                          # score_final_display (masquer le score final)
+            gr.update(visible=False),                          # encouragement_display (masquer l'encouragement)
+            gr.update(visible=False),                          # bilan_theme_display (masquer le bilan par thème)
+            gr.update(visible=False),                          # bilan_theme_table (masquer le tableau de thèmes)
+            gr.update(visible=False),                          # details_title (masquer le titre des détails)
+            gr.update(visible=False),                          # resume_table (masquer le tableau de résumé)
+            gr.update(visible=False),                          # restart_btn (masquer le bouton rejouer)
+            gr.update(visible=False),                          # recap_block (masquer le bloc de récapitulatif)
         ]
     else:
+        # Si la réponse est incorrecte
         explication = current_q.get('long_answer', '')
         feedback_html = ""
         script_html = ""
+        
         return [
-            gr.update(visible=False),                          # start_btn (1)
-            gr.update(),                                       # question (2)
-            gr.update(),                                       # ✅ progress_html (3)  <-- ajouté
-            gr.update(interactive=False,
-                        elem_classes=["quiz-radio","wrong"],
-                        elem_id=f"choices-radio-{correct.replace(' ', '-').replace('é', 'e').replace('è', 'e').replace('à', 'a').replace('ç', 'c').replace('ô', 'o').replace('ù', 'u').replace('î', 'i').replace('ê', 'e')[:30]}"),   # choix (4)
-            gr.update(value=feedback_html, visible=False),                    # feedback (5)
-            gr.update(visible=True, value="Voir la correction"),                           # explain_btn (6)
-            gr.update(value=f"<div class=\"correct-answer-box\"><span class=\"answer-label\">✅ Bonne réponse :</span><span class=\"answer-text\">{correct}</span></div><div class=\"explain-content\">{current_q.get('long_answer','')}</div>", visible=False),  # explain_md (7)
-            gr.update(value=script_html, visible=False),       # script_injector (8) - pas de script à injecter
-            gr.update(value=f"Score : {score:02d}"),     # score_display (9)
-            qs, index, score, finished, resume,                # states (10..14)
-            gr.update(visible=True),                           # next_btn (15)
-            gr.update(visible=False),                          # score_final_display (16)
-            gr.update(visible=False),                          # encouragement_display (17)
-            gr.update(visible=False),                          # bilan_theme_display (18)
-            gr.update(visible=False),                          # bilan_theme_table (19)
-            gr.update(visible=False),                          # details_title (20)
-            gr.update(visible=False),                          # resume_table (21)
-            gr.update(visible=False),                          # restart_btn (22)
-            gr.update(visible=False),                          # recap_block (23)
+            gr.update(visible=False),                          # start_btn (masquer le bouton démarrer)
+            gr.update(),                                       # question (garder la question)
+            gr.update(),                                       # progress_html (garder la barre de progression)
+            gr.update(interactive=False,                       # choix (désactiver les options)
+                        elem_classes=["quiz-radio","wrong"],   # Appliquer le style rouge
+                        elem_id=f"choices-radio-{correct.replace(' ', '-').replace('é', 'e').replace('è', 'e').replace('à', 'a').replace('ç', 'c').replace('ô', 'o').replace('ù', 'u').replace('î', 'i').replace('ê', 'e')[:30]}"),   # ID unique pour le style
+            gr.update(value=feedback_html, visible=False),     # feedback (masquer le feedback)
+            gr.update(visible=True, value="Voir la correction"),  # explain_btn (afficher avec texte "correction")
+            gr.update(value=f"<div class=\"correct-answer-box\"><span class=\"answer-label\">✅ Bonne réponse :</span><span class=\"answer-text\">{correct}</span></div><div class=\"explain-content\">{current_q.get('long_answer','')}</div>", visible=False),  # explain_md (préparer l'explication avec encadré vert)
+            gr.update(value=script_html, visible=False),       # script_injector (masquer les scripts)
+            gr.update(value=f"Score : {score:02d}"),     # score_display (mettre à jour le score)
+            qs, index, score, finished, resume,                # states (états internes)
+            gr.update(visible=True),                           # next_btn (afficher le bouton suivant)
+            gr.update(visible=False),                          # score_final_display (masquer le score final)
+            gr.update(visible=False),                          # encouragement_display (masquer l'encouragement)
+            gr.update(visible=False),                          # bilan_theme_display (masquer le bilan par thème)
+            gr.update(visible=False),                          # bilan_theme_table (masquer le tableau de thèmes)
+            gr.update(visible=False),                          # details_title (masquer le titre des détails)
+            gr.update(visible=False),                          # resume_table (masquer le tableau de résumé)
+            gr.update(visible=False),                          # restart_btn (masquer le bouton rejouer)
+            gr.update(visible=False),                          # recap_block (masquer le bloc de récapitulatif)
         ]
 
 def next_question(qs, index, score, finished, resume):
