@@ -7,6 +7,7 @@ from src.pipeline.clustering_theme import hdbscan_clustering, count_chunks_by_th
 from src.pipeline.collect_best_chunks_to_prompt import find_best_chunk_to_prompt
 from src.pipeline.quiz_generator import generate_quiz_from_chunks
 from src.utils.normalizer import normalize_text
+from src.utils.status_to_api import notify_stage
 
 import requests
 import time
@@ -21,6 +22,7 @@ def main(drive_url, difficulty="standard"):
     # 1. S'identifier au drive
     start = time.time()
 
+    notify_stage("Authentification Google Drive...")
     service = authenticate_google()
 
     duration = time.time() - start
@@ -30,6 +32,7 @@ def main(drive_url, difficulty="standard"):
     # 2. Obtenir les ids des pdf contenu dans le dossier du drive
     start = time.time()
 
+    notify_stage("Récupération des PDFs...")
     drive_ids = get_pdfs_ids(service, drive_url, pdf_only=True)
     #print(drive_ids)
 
@@ -40,6 +43,7 @@ def main(drive_url, difficulty="standard"):
     # 3. Récupère tous les textes de tous les pdfs en un seul texte
     start = time.time()
 
+    notify_stage("Lecture des textes...")
     pdfs_data = get_all_pdfs_data(service, drive_ids)
 
     duration = time.time() - start
@@ -49,6 +53,7 @@ def main(drive_url, difficulty="standard"):
     # 4. Normalise le texte
     start = time.time()
 
+    notify_stage("Nettoyage des textes...")
     for pdf in pdfs_data:
         for page in pdf:
             page["text"] = normalize_text(page['text'])
@@ -69,6 +74,7 @@ def main(drive_url, difficulty="standard"):
     # 6. Clustering
     start = time.time()
 
+    notify_stage("Analyse des thèmes...")
     data_with_theme = hdbscan_clustering(chunks)
     counts_themes = count_chunks_by_theme(data_with_theme)
     counts_themes.pop("other", None)
@@ -101,6 +107,7 @@ def main(drive_url, difficulty="standard"):
     # 9. Création du quizz avec les chunks par thèmes
     start = time.time()
 
+    notify_stage("Génération du quiz...")
     quiz = generate_quiz_from_chunks(chunks_by_theme, difficulty)
     print(quiz)
 
@@ -118,6 +125,7 @@ def main(drive_url, difficulty="standard"):
 
     if response.status_code == 200:
         print("Quiz envoyé avec succès !")
+        notify_stage("Quiz Prêt...")
     else:
         print(f"Échec de l'envoi : {response.status_code} - {response.text}")
     

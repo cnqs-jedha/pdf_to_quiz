@@ -1,6 +1,7 @@
 import os
 import json
 import random
+import time
 from pathlib import Path
 
 import gradio as gr
@@ -10,6 +11,7 @@ import requests
 from core.helpers import build_resume_tables
 from core.config import API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, BASE_DIR, json_path
 from core.helpers import load_questions
+from core.check import check_ready_api
 
 niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
 
@@ -238,22 +240,198 @@ def restart_quiz():
     return start_quiz()
 
 
-def send_drive_link_to_api(drive_link: str):
-    """Envoie le lien Google Drive à l’API pour lancer la génération du quiz."""
-    if not drive_link or "drive.google.com" not in drive_link:
-        return gr.update(value="❌ Lien Google Drive invalide. Vérifie le format.")
+# def send_drive_link_to_api(drive_link: str):
+#     """Envoie le lien Google Drive à l’API, affiche un loader, et bascule sur le quiz quand il est prêt."""
 
+#     # Vérification basique
+#     if not drive_link or "drive.google.com" not in drive_link:
+#         yield (
+#             gr.update(visible=True),   # page_erreur visible
+#             gr.update(visible=False),  # page_loader masquée
+#             gr.update(visible=False),  # page_quiz masquée
+#             "❌ Lien Google Drive invalide."
+#         )
+#         return
+
+#     # 1️⃣ Envoi du lien à l’API
+#     try:
+#         resp = requests.post(f"{API_BASE_URL}/run_pipeline", json={"drive_link": drive_link}, timeout=30)
+#         if resp.status_code != 200:
+#             yield (
+#                 gr.update(visible=True),
+#                 gr.update(visible=False),
+#                 gr.update(visible=False),
+#                 f"⚠️ Erreur API : {resp.text}"
+#             )
+#             return
+#     except Exception as e:
+#         yield (
+#             gr.update(visible=True),
+#             gr.update(visible=False),
+#             gr.update(visible=False),
+#             f"❌ Erreur de connexion à l’API : {e}"
+#         )
+#         return
+
+#     # 2️⃣ Passage au loader
+#     yield (
+#         gr.update(visible=False),  # cacher la page erreur
+#         gr.update(visible=True),   # afficher la page loader
+#         gr.update(visible=False),  # masquer la page quiz
+#         "🚀 Pipeline lancée, génération du quiz en cours..."
+#     )
+
+#     # 3️⃣ Boucle d’attente avec feedback
+#     for i in range(60):  # 60 * 5s = 5 minutes
+#         time.sleep(5)
+#         quiz_ready, info = check_ready_api()
+
+#         # Envoie un état à chaque itération pour actualiser le loader
+#         yield (
+#             gr.update(visible=False),
+#             gr.update(visible=True),
+#             gr.update(visible=False),
+#             f"⏳ Génération du quiz... ({i*5} sec)"
+#         )
+
+#         if quiz_ready:
+#             # 4️⃣ Quiz prêt → affiche la page quiz
+#             yield (
+#                 gr.update(visible=False),  # cacher la page erreur
+#                 gr.update(visible=False),  # cacher le loader
+#                 gr.update(visible=True),   # afficher la page quiz
+#                 "✅ Quiz prêt !"
+#             )
+#             return
+
+#     # 5️⃣ Timeout
+#     yield (
+#         gr.update(visible=True),   # afficher page erreur
+#         gr.update(visible=False),  # masquer loader
+#         gr.update(visible=False),  # masquer quiz
+#         "❌ Temps d’attente dépassé. Le quiz n’a pas pu être généré."
+#     )
+
+#FONCTION SIMPLIFIÉE FONCTIONNE MAIS ÇA NE CHANGE PAS D'ÉCRANS AVEC LA BONNE FONCTION, PAR CONTRE ENVOIE BIEN LA DEMANDE À L'API
+
+# def send_drive_link_to_api(drive_link: str):
+#     yield gr.update(visible=False), gr.update(visible=True), gr.update(visible=False), "⏳ Loader affiché"
+#     time.sleep(2)
+#     yield gr.update(visible=False), gr.update(visible=False), gr.update(visible=True), "✅ Page quiz"
+
+
+import asyncio
+import gradio as gr
+import requests
+import time
+
+from core.config import API_BASE_URL
+
+import traceback
+
+
+# def check_ready_api():
+#     """Vérifie si le quiz est prêt côté API."""
+#     try:
+#         resp = requests.get(f"{API_BASE_URL}/ready", timeout=5)
+#         data = resp.json()
+#         return data.get("ready", False), data
+#     except Exception:
+#         return False, None
+
+
+# def send_drive_link_to_api(drive_link: str):
+
+#     print('time out', flush=True)
+#     return [
+#         gr.update(visible=True),
+#         gr.update(visible=False),
+#         gr.update(visible=False),
+#         "❌ Temps d’attente dépassé. Le quiz n’a pas pu être généré."
+#     ]
+def send_drive_link_to_api(drive_link: str):
+    """Envoie le lien Google Drive à l’API, affiche le loader, puis montre le quiz quand prêt."""
+
+    # 1️⃣ Vérif du lien
+    if not drive_link or "drive.google.com" not in drive_link:
+        print('lien drive invalide', flush=True)
+        yield [
+            gr.update(visible=True),   # page_erreur visible
+            gr.update(visible=False),  # loader masqué
+            gr.update(visible=False),  # quiz masqué
+            "❌ Lien Google Drive invalide."
+        ]
+        return
+
+    # 2️⃣ Envoi du lien à l’API
     try:
+        print('try', flush=True)
         resp = requests.post(
             f"{API_BASE_URL}/run_pipeline",
             json={"drive_link": drive_link},
-            timeout=30
+            timeout=15
         )
-        if resp.status_code == 200:
-            data = resp.json()
-            message = data.get("message", "✅ Quiz en cours de génération.")
-            return gr.update(value=message)
-        else:
-            return gr.update(value=f"⚠️ Erreur API : {resp.text}")
+        print(f"Status code: {resp.status_code}", flush=True)
+        print(f"Response text: {resp.text}", flush=True)
+        if resp.status_code != 200:
+            print('try code not 200')
+            yield [
+                gr.update(visible=True),
+                gr.update(visible=False),
+                gr.update(visible=False),
+                f"⚠️ Erreur API : {resp.text}"
+            ]
+            return
     except Exception as e:
-        return gr.update(value=f"❌ Erreur de connexion à l’API : {e}")
+        print('except', flush=True)
+        print(traceback.format_exc(), flush=True)
+        yield [
+            gr.update(visible=True),
+            gr.update(visible=False),
+            gr.update(visible=False),
+            f"❌ Erreur de connexion à l’API : {e}"
+        ]
+        return
+
+    # 3️⃣ Passage à la page de chargement
+    print('loader here', flush=True)
+    yield [
+        gr.update(visible=False),  # page_erreur masquée
+        gr.update(visible=True),   # page_loader affichée
+        gr.update(visible=False),  # page_quiz masquée
+        "🚀 Pipeline lancée, génération du quiz en cours..."
+    ]
+
+    # 4️⃣ Boucle d’attente non bloquante
+    for i in range(60):  # 60 x 5s = 5 minutes max
+        print('await function', flush=True)
+        time.sleep(5)
+        quiz_ready, quiz_data = check_ready_api()
+        message = quiz_data.get("message", "Traitement en cours...")
+
+        yield [
+            gr.update(visible=False),
+            gr.update(visible=True),
+            gr.update(visible=False),
+            f"⏳ {message} ({(i+1)*5} sec)"
+        ]
+
+        if quiz_ready:
+            print('quiz ready', flush=True)
+            time.sleep(2)
+            yield [
+                gr.update(visible=False),  # cacher page erreur
+                gr.update(visible=False),  # cacher loader
+                gr.update(visible=True),   # afficher quiz
+                "✅ Quiz prêt !"
+            ]
+            return
+
+    # 5️⃣ Timeout après 5 min
+    print('time out', flush=True)
+    yield [
+        gr.update(visible=True),
+        gr.update(visible=False),
+        gr.update(visible=False),
+        "❌ Temps d’attente dépassé. Le quiz n’a pas pu être généré."
+    ]

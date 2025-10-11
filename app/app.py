@@ -13,22 +13,19 @@ from core.helpers import load_questions
 from ui.style import custom_css
 from ui.ui_gradio import start_quiz, check_answer, next_question, restart_quiz, send_drive_link_to_api
 
-# from api.routes import quiz_routes, health_routes, admin_routes
-# app.include_router(quiz_routes.router, prefix="/quiz")
-
-# app.load(check_ready_for_gradio, outputs=[page_erreur, page_quiz])
-
 with gr.Blocks(css=custom_css, title="Quiz App") as app:
     # Page erreur
     with gr.Column(visible=True) as page_erreur:
         gr.Markdown("Générez votre quiz via un lien Google Drive")
         drive_input = gr.Textbox(label="Lien Google Drive")
-        send_button = gr.Button("Lancer la génération du quiz")
-        output = gr.Textbox(label="Statut", interactive=False)
+        send_quiz_button = gr.Button("Lancer la génération du quiz")
+        # output = gr.Textbox(label="Statut", interactive=False)
         # bouton_retry = gr.Button("🔄 Réessayer")
 
-        send_button.click(fn=send_drive_link_to_api, inputs=drive_input, outputs=output)
-
+    # Page de chargement (loader)
+    with gr.Column(visible=False) as page_loader:
+        gr.Markdown("### ⏳ Génération du quiz en cours...")
+        loader_message = gr.Markdown("Merci de patienter pendant la création de votre quiz 🔄")
 
     # Page quiz
     with gr.Column(visible=False) as page_quiz:
@@ -107,6 +104,12 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
 
     # Quand je clique sur "Réessayer" → teste l’API
     # bouton_retry.click(fn=check_ready_for_gradio, outputs=[page_erreur, page_quiz])
+    send_quiz_button.click(
+        fn=send_drive_link_to_api, 
+        inputs=drive_input, 
+        outputs=[page_erreur, page_loader, page_quiz, loader_message]
+    )
+
 
 
 if __name__ == "__main__":
