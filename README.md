@@ -3,7 +3,6 @@
 **pdf_to_quiz** est une application d’apprentissage automatisé qui transforme des documents pédagogiques (PDF) en **quiz interactifs**.  
 Elle combine **traitement de texte, regroupement sémantique et génération LLM** pour offrir une expérience éducative intelligente et dynamique.
 
-
 ## :rocket: Objectif du projet
 
 L'application a pour but de :
@@ -15,7 +14,6 @@ L'application a pour but de :
 5. **Générer automatiquement des quiz** (QCM, vrai/faux).
 6. **Envoyer les données** vers l'application pour permettre à l'utilisateur de jouer le quiz
 7. **Evaluer les performances** du LLM utilisé (pertinence, cohérence).
-
 
 ## :brain: Pipeline de traitement
 
@@ -134,7 +132,6 @@ Le tableau ci-dessous décrit la séquence complète des échanges entre les dif
 * Module source : élément qui envoie une information, une requête ou un traitement
 * Module cible : destinataire de l'action. Il reçoit, traite ou stocke les données
 
-
 ## :atom_symbol: Technologies principale
 
 | Domaine                     | Outils                                                 |
@@ -147,7 +144,6 @@ Le tableau ci-dessous décrit la séquence complète des échanges entre les dif
 | **LLM/génération prompt**   | Langchain(Groq)                                        |
 | **Backend API**             | FastAPI, pydantic                                      |
 | **Frontend / UI**           | Gradio (quiz interactif)                               |
-
 
 ## :zap: Flux API
 
@@ -162,7 +158,6 @@ Le tableau ci-dessous décrit la séquence complète des échanges entre les dif
 
 voir aussi <http://localhost:8000/docs>
 
-
 ## :test_tube: Evaluation du LLM
 
 L’évaluation se base sur un score de pertinence thématique (similarité cosinus entre embeddings du texte source et du quiz)
@@ -174,7 +169,6 @@ Chaque génération de quiz est évalué selon :
 
 Les scores sont stockés et visualisés dans un fichier d'évaluation.
 
-
 ## :mag: Points techniques
 
 * Isolation entre le traitement (Core) et l'intferface (Gradio)
@@ -182,7 +176,6 @@ Les scores sont stockés et visualisés dans un fichier d'évaluation.
 * Traçabilité : chaque chunk est lié à son texte source
 * Reproductibilité : pipeline entièrement conteneurisé via Docker et Devcontainer
 * Surveillance : endpoints de santé, logs d'évaluation
-
 
 ## :arrow_forward: Installation, exécution, tutlisation
 
@@ -227,7 +220,6 @@ cd pdf_to_quiz
 
 * Backend : <http://localhost:8000/docs>
 * Interface quiz : <http://localhost:7860>
-
 
 ## :file_folder: Exemple de quiz généré
 
@@ -281,7 +273,6 @@ cd pdf_to_quiz
 * [ ] Déploiement web  du quiz interactif
 
 * [ ] Tableau de bord des performances des utilisateurs
-
 
 ## :busts_in_silhouette: Auteurs
 
