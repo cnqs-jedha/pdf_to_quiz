@@ -1,2 +1,5 @@
-fastapi 
+fastapi
 uvicorn
+pydantic
+pytest
+requests

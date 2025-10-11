@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
@@ -17,4 +17,5 @@ RUN pip install --upgrade pip \
 
 COPY src/ /app/src/
 
-ENTRYPOINT ["python", "-m", "src.pipeline.run"]
+# ENTRYPOINT ["python", "-m", "src.pipeline.run"]
+CMD ["uvicorn", "src.pipeline.server:app", "--host", "0.0.0.0", "--port", "8001"]

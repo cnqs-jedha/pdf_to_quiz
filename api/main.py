@@ -1,21 +1,30 @@
-from fastapi import FastAPI, Request
-from pydantic import BaseModel
-#from src.pipeline.run import main
-import json
+from fastapi import FastAPI
+from api.routes.quiz_routes import router as quiz_router
+from api.routes.health_routes import router as health_router
+from api.routes.admin_routes import router as admin_router
 
-app = FastAPI()
-last_received_quiz = None
+app = FastAPI(
+    title="Quiz API",
+    description="""
+API pour recevoir, stocker et fournir des quiz.  
+- **/send_quiz** : envoi d’un quiz au serveur  
+- **/quiz** : récupération du dernier quiz  
+- **/ready** : état de préparation (utile pour Gradio ou d’autres clients)  
+- **/history** : consulter l’historique  
+- **/clear** : réinitialiser l’API  
+    """,
+    version="1.0.0",
+    contact={
+        "name": "Catherine Silavong, Nadège Lefort, Quentin Haentjens, Stephane Durig",
+        "email": "cnsq@gmail.com",
+    },
+)
 
-@app.post("/api/send_quiz")
-async def receive_quiz(request: Request):
-    global last_received_quiz
-    data = await request.json()
-    last_received_quiz = data
-    #print("Quiz reçu :", data)
-    return {"message": "Quiz bien reçu"}
+# Initialiser les variables d'état
+app.state.last_received_quiz = None
+app.state.quiz_history = []
 
-@app.get("/api/quiz")
-def get_last_quiz():
-    if last_received_quiz:
-        return last_received_quiz
-    return {"message": "Aucun quiz reçu pour le moment"}
+# Inclusion des routes
+app.include_router(quiz_router)
+app.include_router(health_router)
+app.include_router(admin_router)

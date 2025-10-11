@@ -1,4 +1,6 @@
-def build_prompt(doc: str, theme: str, difficulty: str = "standard") -> str:
+import json
+
+def build_prompt(text: str, difficulty: str = "standard") -> str:
     niveau_instruction = {
         "facile": "La question doit être simple, accessible à un élève de collège.",
         "moyen": "La question doit correspondre à un niveau lycée ou début d’université.",
@@ -9,36 +11,23 @@ def build_prompt(doc: str, theme: str, difficulty: str = "standard") -> str:
     # Variable qui spécifie la structure du JSON attendu
     json_output_format = """
     {
-        "Thème": "__THEME__",
-        "questions": [
-            {
-                "question": "...",
-                "choices": {"a": "...", "b": "...", "c": "...", "d": "..."},
-                "correct_answer": {"lettre": "...", "answer": "..."},
-                "difficulty_level": "..."
-            },
-            {
-                "question": "...",
-                "choices": {"a": "...", "b": "...", "c": "...", "d": "..."},
-                "correct_answer": {"lettre": "...", "answer": "..."},
-                "difficulty_level": "..."
-            },
-            {
-                "question": "...",
-                "choices": {"a": "...", "b": "...", "c": "...", "d": "..."},
-                "correct_answer": {"lettre": "...", "answer": "..."},
-                "difficulty_level": "..."
-            }
-        ]
+        "text": "...",
+        "choices": {"a": "...", "b": "...", "c": "...", "d": "..."},
+        "correct_answer": {"lettre": "...", "answer": "..."},
+        "correct_answer_long": "...",
+        "difficulty_level": "..."
     }
-    """.replace("__THEME__", theme)
-
+    """
 
     return f"""
-    Tu es un professeur et tu dois créer 3 questions à choix multiples (QCM) à partir du contexte ci-dessous.
+    Tu es un expert en pédagogie et tu dois créer 1 question de QCM pertinente à partir du contexte ci-dessous.
+    Poses les question comme le ferai un professeur.
 
     Tu dois uniquement utiliser les informations contenues dans le contexte. Tu ne dois pas mobiliser de connaissances extérieures ni inventer d'information.  
 
+    Quand tu génère le quizz, dans "correct_answer_long" écris moi une réponse longue à propos de la vrai réponse,
+    qui aidera l'étudiant à rétenir pourquoi il a eu faux.
+    
     Tu dois adapter ton langage et la difficulté des questions à choix multiples au niveau de difficulté suivant : {niveau_instruction}.
     
     Les questions et les choix de réponse doivent être clairs, précis et sans ambiguité.
@@ -70,24 +59,25 @@ def build_prompt(doc: str, theme: str, difficulty: str = "standard") -> str:
     
     ###### DEBUT DES EXEMPLES ######
     ###### Bon exemple de question
+
+    #### Le résultat
     {{
-        "question": "Quel événement a marqué un tournant majeur dans l'histoire de France en 1789 ?",
+        "text": "Quel était l’objectif principal de l’édit de Nantes en 1598 ?",
         "choices": {{
-            "a": "La chute de Napoléon",
-            "b": "La Révolution française",
-            "c": "La guerre franco-prussienne",
-            "d": "Le couronnement de Louis XVI",
+            "a": "Renforcer le pouvoir du pape en France",
+            "b": "Mettre fin aux guerres de religion",
+            "c": "Imposer le protestantisme comme religion officielle",
+            "d": "Supprimer les droits civils des catholiques"
         }},
-        "correct_answer": {{
-            "lettre": "b",
-            "answer": "La Révolution française"
-        }},
+        "correct_answer": {{"lettre": "b", "answer": "Mettre fin aux guerres de religion"}},
+        "correct_answer_long": "L’édit de Nantes fut signé par Henri IV en 1598 pour apaiser les tensions entre catholiques et protestants. Il garantissait aux protestants certains droits civils et la liberté de culte dans des lieux précis, mais reconnaissait le catholicisme comme religion d’État. Son but était donc la paix religieuse.",
         "difficulty_level": "standard"
     }}
 
+
     ###### Mauvais exemple de question, à ne pas reproduire
     {{
-        "question": "Qui n'a pas été couronné par le pape en l'an 800 ?",
+        "text": "Qui n'a pas été couronné par le pape en l'an 800 ?",
         "choices": {{
             "a": "Charlemagne",
             "b": "Clovis",
@@ -98,13 +88,15 @@ def build_prompt(doc: str, theme: str, difficulty: str = "standard") -> str:
             "lettre": "b",
             "answer": "Clovis"
         }},
+        "correct_answer_long": "Carolus Magnus et Charles Ier correspondent à Charlemagne qui a été couronné en 800.",
         "difficulty_level": "difficile"
     }}
+
 
     ###### FIN DES EXEMPLES ######
     
     Contexte :
     < DEBUT CONTEXTE >
-    {doc}
+    {text}
     < FIN CONTEXTE >
     """
