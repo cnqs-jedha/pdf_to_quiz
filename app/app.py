@@ -86,20 +86,26 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
                     inputs=[qs_state, idx_state, score_state, done_state, resume_state],
                     outputs=outputs_common)
     
-    def _toggle_explain():
+    def _toggle_explain(btn_text):
         # Basculer l'état
         explain_visible.value = not explain_visible.value
         if explain_visible.value:
-            return gr.update(visible=True), gr.update(value="Masquer l'explication")
+            if "explication" in btn_text:
+                return gr.update(visible=True), gr.update(value="Masquer l'explication")
+            else:  # "correction" dans le texte
+                return gr.update(visible=True), gr.update(value="Masquer la correction")
         else:
-            return gr.update(visible=False), gr.update(value="Voir l'explication")
+            if "explication" in btn_text:
+                return gr.update(visible=False), gr.update(value="Voir l'explication")
+            else:  # "correction" dans le texte
+                return gr.update(visible=False), gr.update(value="Voir la correction")
     
     def _reset_explain_state():
         # Réinitialiser l'état d'explication
         explain_visible.value = False
         return gr.update(visible=False), gr.update(value="Voir l'explication")
     
-    explain_btn.click(fn=_toggle_explain, outputs=[explain_md, explain_btn])
+    explain_btn.click(fn=_toggle_explain, inputs=[explain_btn], outputs=[explain_md, explain_btn])
     restart_btn.click(fn=restart_quiz, outputs=outputs_common)
 
     # Quand je clique sur "Réessayer" → teste l’API

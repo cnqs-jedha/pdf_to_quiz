@@ -81,4 +81,9 @@ body, .gradio-container {
 .explain-btn-rect:hover{transform:translateY(-1px)!important;box-shadow:0 6px 16px rgba(59,130,246,.3)!important}
 /* Explication longue (sur demande) */
 .explain-content{background:rgba(59,130,246,.08)!important;border:2px solid #3b82f6!important;border-radius:12px!important;padding:16px!important;margin:12px 0!important}
+
+/* Encadré vert pour la bonne réponse */
+.correct-answer-box{background:rgba(16,185,129,.12)!important;border:2px solid #10b981!important;border-radius:12px!important;padding:16px!important;margin:12px auto!important;font-weight:600!important;color:#047857!important;text-align:center!important;max-width:600px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important}
+.correct-answer-box .answer-label{font-size:0.9rem!important;text-transform:uppercase!important;letter-spacing:0.5px!important;margin:0!important;opacity:0.8!important}
+.correct-answer-box .answer-text{font-size:1.1rem!important;line-height:1.4!important;margin:0!important}
 """

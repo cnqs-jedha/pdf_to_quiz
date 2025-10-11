@@ -48,7 +48,7 @@ def start_quiz():
             "❌ Aucun quiz trouvé. Veuillez relancer la génération."
         ]
 
-    qs = random.sample(niveau, len(niveau))   #min(10, len(niveau)) 10 questions si possible
+    qs = random.sample(niveau, min(10, len(niveau)))   #min(10, len(niveau)) 10 questions si possible
     resume = []
     question_out, progress_html, choix_out, feedback_out, explain_btn_out, explain_md_out, script_injector_out, score_out, *states = update_ui(qs, 0, 0, False, "", resume)
 
@@ -203,7 +203,7 @@ def check_answer(reponse, qs, index, score, finished, resume):
             gr.update(interactive=False,
                       elem_classes=["quiz-radio","correct", f"correct-{correct}"]), # choix (4)
             gr.update(value=feedback_txt, visible=False),       # feedback (5)
-            gr.update(visible=True),                           # explain_btn (6)
+            gr.update(visible=True, value="Voir l'explication"),                           # explain_btn (6)
             gr.update(value=f"<div class=\"explain-content\">{current_q.get('long_answer','')}</div>", visible=False),  # explain_md (7)
             gr.update(value="", visible=False),                     # script_injector (8)
             gr.update(value=f"Score : {score:02d}"),     # score_display (9)
@@ -230,8 +230,8 @@ def check_answer(reponse, qs, index, score, finished, resume):
                         elem_classes=["quiz-radio","wrong"],
                         elem_id=f"choices-radio-{correct.replace(' ', '-').replace('é', 'e').replace('è', 'e').replace('à', 'a').replace('ç', 'c').replace('ô', 'o').replace('ù', 'u').replace('î', 'i').replace('ê', 'e')[:30]}"),   # choix (4)
             gr.update(value=feedback_html, visible=False),                    # feedback (5)
-            gr.update(visible=True),                           # explain_btn (6)
-            gr.update(value=f"<div class=\"explain-content\">{current_q.get('long_answer','')}</div>", visible=False),  # explain_md (7)
+            gr.update(visible=True, value="Voir la correction"),                           # explain_btn (6)
+            gr.update(value=f"<div class=\"correct-answer-box\"><span class=\"answer-label\">✅ Bonne réponse :</span><span class=\"answer-text\">{correct}</span></div><div class=\"explain-content\">{current_q.get('long_answer','')}</div>", visible=False),  # explain_md (7)
             gr.update(value=script_html, visible=False),       # script_injector (8) - pas de script à injecter
             gr.update(value=f"Score : {score:02d}"),     # score_display (9)
             qs, index, score, finished, resume,                # states (10..14)
