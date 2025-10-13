@@ -1,6 +1,6 @@
 import random
 
-def find_best_chunk_to_prompt(vector_db, themes, k=10, fetch_k=50, lambda_mult=0.5, chunks_len=3):
+def find_best_chunk_to_prompt(vector_db, themes, k=10, fetch_k=60, lambda_mult=0.5, chunks_len=3):
     full_chunks_themes = []
 
     for query in themes:
@@ -11,12 +11,12 @@ def find_best_chunk_to_prompt(vector_db, themes, k=10, fetch_k=50, lambda_mult=0
 
         relevant_docs = retriever.invoke(query)
 
-        if len(relevant_docs) > chunks_len:
-            selected_docs = random.sample(relevant_docs, chunks_len)
-        else:
-            selected_docs = relevant_docs
+        # if len(relevant_docs) > chunks_len:
+        #     selected_docs = random.sample(relevant_docs, chunks_len)
+        # else:
+        #     selected_docs = relevant_docs
 
-        for doc in selected_docs:
+        for doc in relevant_docs:
             full_chunks_themes.append({
                 "page_content": doc.page_content,
                 "metadata": doc.metadata

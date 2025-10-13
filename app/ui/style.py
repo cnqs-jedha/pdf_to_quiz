@@ -13,10 +13,11 @@ custom_css = """
 body, .gradio-container { 
     background-color: #f8fafc !important;  /* Couleur de fond gris très clair */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;  /* Police moderne et lisible */
+    max-width: 100% !important;
 }
 
 /* Style pour tous les blocs de contenu (questions, réponses, etc.) */
-.block { 
+.block-container { 
     background: #ffffff !important;  /* Fond blanc pour les blocs */
     border-radius: 16px !important;  /* Coins arrondis pour un look moderne */
     padding: 24px !important;  /* Espacement interne */
@@ -158,19 +159,37 @@ body, .gradio-container {
 
 /* Style pour les boutons principaux (démarrer, rejouer) */
 .primary-btn { 
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;  /* Dégradé bleu */
+    background: #8704FD;  /* Dégradé bleu */
     border: none !important;  /* Pas de bordure */
     border-radius: 8px !important;  /* Coins arrondis */
     padding: 12px 24px !important;  /* Espacement interne */
     font-weight: 600 !important;  /* Texte semi-gras */
-    transition: all 0.2s ease !important;  /* Animation fluide */
+    transition: all 0.3s ease !important;  /* Animation fluide */
+    color: white;
 }
 
 /* Effet de survol pour les boutons principaux */
 .primary-btn:hover { 
-    transform: translateY(-1px) !important;  /* Légère élévation */
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3) !important;  /* Ombre bleue */
+    background-color: #590AA0;
 }
+
+.secondary-btn { 
+    background: #F3E6FF;  /* Dégradé bleu */
+    border: 1px solid #8704FD;  /* Pas de bordure */
+    border-radius: 8px !important;  /* Coins arrondis */
+    padding: 11px 23px !important;  /* Espacement interne */
+    font-weight: 600 !important;  /* Texte semi-gras */
+    transition: all 0.2s ease !important;  /* Animation fluide */
+    color: #8704FD;
+}
+
+/* Effet de survol pour les boutons principaux */
+.primary-btn:hover { 
+    background-color: #590AA0;
+    color: white;
+}
+
+
 /* ============================================
    STYLES POUR LA BARRE DE PROGRESSION
    ============================================ */
@@ -374,5 +393,45 @@ body, .gradio-container {
     font-size: 1.1rem !important;  /* Taille de police légèrement plus grande */
     line-height: 1.4 !important;  /* Hauteur de ligne */
     margin: 0 !important;  /* Pas de marge */
+}
+
+
+/* ============================================
+   STYLES POUR LA PAGE D'ACCUEIL
+   ============================================ */
+
+.home {
+    background: #ffffff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.home .main-title .title {
+    margin-bottom: .5rem;
+}
+
+.home .intro {
+    opacity: .7;
+    margin-top: 0;
+    margin-bottom: 2rem !important;
+}
+
+.home .col-block {
+    background-color: #F9F9F9;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    justify-content: space-between;
+}
+
+.home intro-right {
+    opacity:.7;
+}
+
+.home .col-block .intro {
+    margin-bottom: .5rem !important;
 }
 """

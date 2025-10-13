@@ -22,7 +22,7 @@ from core.config import API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, 
 from core.check import check_ready_for_gradio  # Pour vérifier si l'API est prête
 from core.helpers import load_questions  # Pour charger les questions
 from ui.style import custom_css  # Styles CSS personnalisés
-from ui.ui_gradio import start_quiz, check_answer, next_question, restart_quiz, send_drive_link_to_api  # Fonctions de l'interface
+from ui.ui_gradio import start_quiz, start_quiz_from_home, check_answer, next_question, restart_quiz, send_drive_link_to_api  # Fonctions de l'interface
 
 # ============================================
 # CRÉATION DE L'INTERFACE PRINCIPALE
@@ -36,10 +36,57 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     # ============================================
     
     # Page d'erreur/entrée (visible par défaut)
-    with gr.Column(visible=True) as page_erreur:
-        gr.Markdown("Générez votre quiz via un lien Google Drive")
-        drive_input = gr.Textbox(label="Lien Google Drive")  # Champ de saisie pour le lien
-        send_quiz_button = gr.Button("Lancer la génération du quiz")  # Bouton pour lancer la génération
+    with gr.Column(visible=True, elem_classes=["home"]) as home:
+        # gr.Markdown("Générez votre quiz via un lien Google Drive")
+        # drive_input = gr.Textbox(label="Lien Google Drive")  # Champ de saisie pour le lien
+        # send_quiz_button = gr.Button("Lancer la génération du quiz")  # Bouton pour lancer la génération
+    # 🌟 Titre principal
+        gr.Markdown(
+            """
+            <h1 class="title">
+                🎓 Bienvenue sur le Générateur de Quiz
+            </h1>
+            <p class="intro">
+                Crée un quiz à partir de tes documents ou reprends un quiz déjà généré par tes soins.
+            </p>
+            """,
+            elem_classes=["main-title"]
+        )
+
+        # 📦 Deux colonnes : gauche (drive), droite (quiz déjà prêt)
+        with gr.Row():
+            # 🧩 Colonne gauche : génération via Drive
+            with gr.Column(scale=1, elem_classes=["col-block"]):
+                gr.Markdown(
+                    "### Génére ton quiz via un lien Google Drive",
+                    elem_id="subtitle-left"
+                )
+                drive_input = gr.Textbox(
+                    label="Lien Google Drive",
+                    placeholder="https://drive.google.com/...",
+                    lines=1
+                )
+                send_quiz_button = gr.Button(
+                    "Générer du quiz",
+                    variant="primary",
+                    elem_classes=["primary-btn"]
+                )
+
+            # 🧠 Colonne droite : quiz déjà prêt
+            with gr.Column(scale=1, elem_classes=["col-block"]):
+                gr.Markdown(
+                    """
+                    <h3 class="title">Tu as déjà généré un quiz ?</h3>
+                    <p class="intro">Lance un quiz que tu as déja généré.</p>
+                    """,
+                    elem_classes=["right-col-title"]
+                )
+                restart_quiz_home = gr.Button(
+                    "Tester mes connaissances",
+                    variant="secondary",
+                    elem_classes=["secondary-btn"]
+                )
+
 
     # ============================================
     # PAGE DE CHARGEMENT : GÉNÉRATION EN COURS
@@ -60,7 +107,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
         # BLOC PRINCIPAL : INTERFACE DU QUIZ
         # ============================================
         
-        with gr.Column(elem_classes=["block"]):
+        with gr.Column(elem_classes=["block-container"]):
             # Bouton pour démarrer le quiz
             start_btn = gr.Button("🚀 Démarrer le quiz", variant="primary", elem_classes=["primary-btn"])
             
@@ -95,7 +142,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
         # ============================================
         
         # Bloc de récapitulatif (masqué par défaut)
-        with gr.Column(elem_classes=["block"], visible=False) as recap_block:
+        with gr.Column(elem_classes=["block-container"], visible=False) as recap_block:
             gr.Markdown("### 📊 Résultats du quiz")
             
             # Affichage du score final avec style coloré
@@ -227,6 +274,12 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     # Clic sur le bouton "Rejouer"
     restart_btn.click(fn=restart_quiz, outputs=outputs_common)
 
+    # Clic sur le bouton "Rejouer" sur l'écran d'accueil
+    restart_quiz_home.click(
+        fn=start_quiz_from_home,
+        outputs=[home, page_loader, page_quiz] + outputs_common
+    )
+
     # ============================================
     # GESTIONNAIRE POUR LA GÉNÉRATION DU QUIZ
     # ============================================
@@ -236,7 +289,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     send_quiz_button.click(
         fn=send_drive_link_to_api,  # Fonction qui gère l'envoi du lien à l'API
         inputs=drive_input,  # Entrée : le lien Google Drive saisi par l'utilisateur
-        outputs=[page_erreur, page_loader, page_quiz, loader_message]  # Sorties : les différentes pages et le message
+        outputs=[home, page_loader, page_quiz, loader_message]  # Sorties : les différentes pages et le message
     )
 
 # ============================================

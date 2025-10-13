@@ -80,6 +80,15 @@ def start_quiz():
         gr.update(visible=False),  # recap_block (masquer le bloc de récapitulatif)
     ]
 
+def start_quiz_from_home():
+    """Démarre le quiz depuis la page d’accueil (cache home, montre quiz)."""
+    quiz_updates = start_quiz()
+
+    return [gr.update(visible=False),  # home masqué
+            gr.update(visible=False),  # loader masqué
+            gr.update(visible=True)] + quiz_updates
+
+
 
 # ============================================
 # FONCTION DE MISE À JOUR DE L'INTERFACE
@@ -354,19 +363,6 @@ def next_question(qs, index, score, finished, resume):
 def restart_quiz():
     return start_quiz()
 
-
-
-
-import asyncio
-import gradio as gr
-import requests
-import time
-
-from core.config import API_BASE_URL
-
-import traceback
-
-
 def send_drive_link_to_api(drive_link: str):
     """Envoie le lien Google Drive à l’API, affiche le loader, puis montre le quiz quand prêt."""
 
@@ -421,7 +417,7 @@ def send_drive_link_to_api(drive_link: str):
     ]
 
     # 4️⃣ Boucle d’attente non bloquante
-    for i in range(60):  # 60 x 5s = 5 minutes max
+    for i in range(240):  # 60 x 5s = 5 minutes max
         # print('await function', flush=True)
         time.sleep(5)
         quiz_ready, quiz_data = check_ready_api()
