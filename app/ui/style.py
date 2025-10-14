@@ -198,6 +198,16 @@ body, .gradio-container {
     margin: 0 0 16px 0;  /* Espacement en bas */
 }
 
+.loader-questions {
+    position: relative;
+}
+
+.loader-questions .current-score {
+    position: absolute;
+    top: .2rem;
+    right: 0;
+}
+
 /* Barre de progression elle-même */
 #quiz-progress .bar {
     height: .3rem;  /* Hauteur de la barre */
@@ -416,6 +426,52 @@ body, .gradio-container {
     margin: 0 !important;  /* Pas de marge */
 }
 
+.answer-container {
+    padding: 1rem;
+    border-radius: 1rem;
+    border: 1px solid #fff;
+}
+
+.answer-container.wrong {
+    background-color: #FDE7E7;
+    border-color: #ED3B3C;
+}
+
+.answer-container.correct {
+    background-color: #E2F5EE;
+    border-color: #0FB076;
+}
+
+.answer-intro-bravo{
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem;
+    color: #0FB076;
+}
+
+.answer-intro-wrong{
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem;
+    color: #ED3B3C;
+}
+
+.answer-container .answer-explication-title {
+    font-weight: 700;
+}
+
+.answer-container .answer-long-text {
+    opacity: .7;
+}
+
+.answer-correction {
+    padding:1rem 1.25rem;
+    background-color: #E2F5EE;
+    border: 1px solid #0FB076;
+    color: 0FB076;
+    border-radius: 1rem;
+    margin-bottom: .5rem !important;
+    display: inline-block;
+    width: auto !important;
+}
 
 /* ============================================
    STYLES POUR LA PAGE D'ACCUEIL

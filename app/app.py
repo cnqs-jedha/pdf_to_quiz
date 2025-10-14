@@ -111,8 +111,12 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
             # Bouton pour démarrer le quiz
             start_btn = gr.Button("🚀 Démarrer le quiz", variant="primary", elem_classes=["primary-btn"])
             
-            # Barre de progression du quiz
-            progress_bar = gr.HTML(visible=False, elem_id="quiz-progress")
+            with gr.Row(elem_classes=["loader-questions"]):
+                # Barre de progression du quiz
+                progress_bar = gr.HTML(visible=False, elem_id="quiz-progress")
+                
+                # Affichage du score actuel
+                score_display = gr.Markdown(visible=False, elem_classes=["current-score"])
             
             # Affichage de la question
             question = gr.Markdown(visible=False)
@@ -121,21 +125,21 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
             choix = gr.Radio(choices=[], label="Choisis ta réponse :", visible=False, elem_classes=["quiz-radio"], container=False, elem_id="choices-radio")
             
             # Ligne contenant le bouton d'explication et le feedback
-            with gr.Row():
-                explain_btn = gr.Button("Voir l'explication", visible=False, elem_classes=["explain-btn-rect"])
-                feedback = gr.Markdown(visible=False)
+            # with gr.Row(elem_classes=["answer_container"]):
+            #     # explain_btn = gr.Button("Voir l'explication", visible=False, elem_classes=["explain-btn-rect"])
+            #     feedback = gr.Markdown(visible=False)
+
+            # Bouton pour passer à la question suivante
+            next_btn = gr.Button("Question suivante", visible=False, variant="primary", elem_classes=["primary-btn"])
             
             # Zone d'affichage de l'explication
-            explain_md = gr.Markdown(visible=False)
+            explain_md = gr.HTML(visible=False)
             
             # Zone pour les scripts (masquée)
             script_injector = gr.HTML(visible=False)
             
-            # Affichage du score actuel
-            score_display = gr.Markdown(visible=False)
             
-            # Bouton pour passer à la question suivante
-            next_btn = gr.Button("Question suivante", visible=True, variant="primary", elem_classes=["primary-btn"])
+            
 
         # ============================================
         # BLOC DE RÉCAPITULATIF : RÉSULTATS FINAUX
@@ -190,7 +194,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     # Liste de tous les éléments qui peuvent être mis à jour
     outputs_common = [
         start_btn,  # Bouton démarrer
-        question, progress_bar, choix, feedback, explain_btn, explain_md, script_injector, score_display,  # Éléments du quiz
+        question, progress_bar, choix, explain_md, script_injector, score_display,  # Éléments du quiz
         qs_state, idx_state, score_state, done_state, resume_state,  # États internes
         next_btn, score_final_display, encouragement_display, bilan_theme_display,  # Éléments de navigation
         bilan_theme_table, details_title, resume_table, restart_btn, recap_block  # Éléments de récapitulatif
@@ -230,46 +234,46 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     # GESTION DU BOUTON D'EXPLICATION
     # ============================================
     
-    def _toggle_explain(btn_text):
-        """
-        Bascule l'affichage de l'explication et change le texte du bouton.
+    # def _toggle_explain(btn_text):
+    #     """
+    #     Bascule l'affichage de l'explication et change le texte du bouton.
         
-        Cette fonction détecte le type de bouton (explication ou correction) 
-        et adapte le texte en conséquence.
+    #     Cette fonction détecte le type de bouton (explication ou correction) 
+    #     et adapte le texte en conséquence.
         
-        Args:
-            btn_text (str): Texte actuel du bouton
+    #     Args:
+    #         btn_text (str): Texte actuel du bouton
         
-        Returns:
-            tuple: Mises à jour pour l'explication et le bouton
-        """
-        # Basculer l'état de visibilité
-        explain_visible.value = not explain_visible.value
+    #     Returns:
+    #         tuple: Mises à jour pour l'explication et le bouton
+    #     """
+    #     # Basculer l'état de visibilité
+    #     explain_visible.value = not explain_visible.value
         
-        if explain_visible.value:
-            # Si on affiche l'explication
-            if "explication" in btn_text:
-                return gr.update(visible=True), gr.update(value="Masquer l'explication")
-            else:  # "correction" dans le texte
-                return gr.update(visible=True), gr.update(value="Masquer la correction")
-        else:
-            # Si on masque l'explication
-            if "explication" in btn_text:
-                return gr.update(visible=False), gr.update(value="Voir l'explication")
-            else:  # "correction" dans le texte
-                return gr.update(visible=False), gr.update(value="Voir la correction")
+    #     if explain_visible.value:
+    #         # Si on affiche l'explication
+    #         if "explication" in btn_text:
+    #             return gr.update(visible=True), gr.update(value="Masquer l'explication")
+    #         else:  # "correction" dans le texte
+    #             return gr.update(visible=True), gr.update(value="Masquer la correction")
+    #     else:
+    #         # Si on masque l'explication
+    #         if "explication" in btn_text:
+    #             return gr.update(visible=False), gr.update(value="Voir l'explication")
+    #         else:  # "correction" dans le texte
+    #             return gr.update(visible=False), gr.update(value="Voir la correction")
     
-    def _reset_explain_state():
-        """
-        Réinitialise l'état d'explication.
-        Utilisée lors du passage à la question suivante.
-        """
-        # Réinitialiser l'état d'explication
-        explain_visible.value = False
-        return gr.update(visible=False), gr.update(value="Voir l'explication")
+    # def _reset_explain_state():
+    #     """
+    #     Réinitialise l'état d'explication.
+    #     Utilisée lors du passage à la question suivante.
+    #     """
+    #     # Réinitialiser l'état d'explication
+    #     explain_visible.value = False
+    #     return gr.update(visible=False), gr.update(value="Voir l'explication")
     
     # Clic sur le bouton d'explication
-    explain_btn.click(fn=_toggle_explain, inputs=[explain_btn], outputs=[explain_md, explain_btn])
+    # explain_btn.click(fn=_toggle_explain, inputs=[explain_btn], outputs=[explain_md, explain_btn])
     
     # Clic sur le bouton "Rejouer"
     restart_btn.click(fn=restart_quiz, outputs=outputs_common)
