@@ -208,8 +208,8 @@ def update_final_screen(qs, score, resume):
         gr.update(value="### 🎯 Quiz terminé !", visible=True),   # question (titre final)
         gr.update(visible=False),                                  # progress_bar
         gr.update(visible=False),                                  # choix
-        gr.update(visible=False),                                  # feedback teaser
-        gr.update(visible=False),                                  # explain_btn
+        # gr.update(visible=False),                                  # feedback teaser
+        # gr.update(visible=False),                                  # explain_btn
         gr.update(visible=False),                                  # explain_md
         gr.update(visible=False),                                  # script_injector
         gr.update(visible=False),                                  # score_display
