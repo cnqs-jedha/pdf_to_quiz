@@ -102,12 +102,12 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     # ============================================
     
     # Page quiz (masquée par défaut)
-    with gr.Column(visible=False) as page_quiz:
+    with gr.Column(visible=False, elem_classes=["quiz"]) as page_quiz:
         # ============================================
         # BLOC PRINCIPAL : INTERFACE DU QUIZ
         # ============================================
         
-        with gr.Column(elem_classes=["block-container"]):
+        with gr.Column():
             # Bouton pour démarrer le quiz
             start_btn = gr.Button("🚀 Démarrer le quiz", variant="primary", elem_classes=["primary-btn"])
             
@@ -135,7 +135,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
             score_display = gr.Markdown(visible=False)
             
             # Bouton pour passer à la question suivante
-            next_btn = gr.Button("➡️ Question suivante", visible=False, variant="secondary")
+            next_btn = gr.Button("Question suivante", visible=True, variant="primary", elem_classes=["primary-btn"])
 
         # ============================================
         # BLOC DE RÉCAPITULATIF : RÉSULTATS FINAUX

@@ -193,7 +193,6 @@ body, .gradio-container {
 /* ============================================
    STYLES POUR LA BARRE DE PROGRESSION
    ============================================ */
-
 /* Conteneur de la barre de progression */
 #quiz-progress {
     margin: 0 0 16px 0;  /* Espacement en bas */
@@ -201,18 +200,16 @@ body, .gradio-container {
 
 /* Barre de progression elle-même */
 #quiz-progress .bar {
-    height: 32px;  /* Hauteur de la barre */
+    height: .3rem;  /* Hauteur de la barre */
     border-radius: 999px;  /* Forme arrondie (pilule) */
-    background: #fef3e2;  /* Fond orange clair */
-    overflow: hidden;  /* Masque le débordement */
-    position: relative;  /* Position relative pour le label */
+    background: #F3E6FF;  /* Fond orange clair */
 }
 
 /* Partie remplie de la barre (animation) */
 #quiz-progress .bar > span {
     display: block;  /* Affichage en bloc */
     height: 100%;  /* Hauteur complète */
-    background: linear-gradient(135deg, #f97316, #ea580c);  /* Dégradé orange */
+    background: #8704FD;  /* Dégradé orange */
     width: 0;  /* Largeur initiale (sera animée) */
     border-radius: 999px;  /* Forme arrondie */
     transition: width 0.25s ease;  /* Animation fluide */
@@ -220,18 +217,31 @@ body, .gradio-container {
 
 /* Label au centre de la barre */
 #quiz-progress .label {
-    position: absolute;  /* Position absolue */
-    top: 50%;  /* Centré verticalement */
-    left: 50%;  /* Centré horizontalement */
-    transform: translate(-50%, -50%);  /* Centrage parfait */
-    font-weight: 700;  /* Texte en gras */
-    color: #1f2937;  /* Couleur gris foncé */
-    font-size: 1.1rem;  /* Taille de police */
+    margin-top: .2rem;
+    color: #410578;
+    font-size: .75rem;
+    opacity: .7;
 }
 
 /* ============================================
    STYLES POUR LES BLOCS DE RÉPONSE
    ============================================ */
+
+
+.quiz {
+    background: #ffffff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.quiz h3 {
+    font-size: 1.25rem;
+    margin-top: 2rem;
+}
 
 /* Style de base pour les blocs de réponse */
 .answer-block {
@@ -276,6 +286,17 @@ body, .gradio-container {
 /* ============================================
    STYLES POUR LES OPTIONS DE RÉPONSE (RADIO)
    ============================================ */
+
+.quiz .quiz-radio .wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1rem;
+}
+
+.quiz .quiz-radio .wrap label {
+    padding: 16px 24px;
+    min-height: 64px;
+}
 
 /* Options radio sélectionnées - Réponse correcte */
 .quiz-radio.correct label.selected,
