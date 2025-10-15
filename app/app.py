@@ -95,9 +95,24 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     # ============================================
     
     # Page de chargement (masquée par défaut)
-    with gr.Column(visible=False) as page_loader:
-        gr.Markdown("### ⏳ Génération du quiz en cours...")
-        loader_message = gr.Markdown("Merci de patienter pendant la création de votre quiz 🔄")
+    with gr.Column(visible=False, elem_classes=["loading-page"]) as page_loader:
+        # gr.Markdown("### Génération du quiz en cours !")
+
+        gr.HTML(
+            """
+            <div class="loader">
+            <div class="loader__bar"></div>
+            <div class="loader__bar"></div>
+            <div class="loader__bar"></div>
+            <div class="loader__bar"></div>
+            <div class="loader__bar"></div>
+            <div class="loader__ball"></div>
+            </div>
+            """,
+            elem_classes=["loader-component"]
+        )
+
+        loader_message = gr.Markdown("Merci de patienter pendant la création de votre quiz...")
 
     # ============================================
     # PAGE PRINCIPALE : INTERFACE DU QUIZ

@@ -501,7 +501,7 @@ def send_drive_link_to_api(drive_link: str):
         gr.update(visible=False),  # page_erreur masquée
         gr.update(visible=True),   # page_loader affichée
         gr.update(visible=False),  # page_quiz masquée
-        "🚀 Pipeline lancée, génération du quiz en cours..."
+        "Pipeline lancée, génération du quiz en cours..."
     ]
 
     # 4️⃣ Boucle d’attente non bloquante
@@ -515,7 +515,7 @@ def send_drive_link_to_api(drive_link: str):
             gr.update(visible=False),
             gr.update(visible=True),
             gr.update(visible=False),
-            f"⏳ {message} ({(i+1)*5} sec)"
+            f"{message}"
         ]
 
         if quiz_ready:
