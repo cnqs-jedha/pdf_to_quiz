@@ -16,6 +16,8 @@ from pathlib import Path  # Pour gérer les chemins de fichiers
 import gradio as gr  # Framework principal pour l'interface web
 import pandas as pd  # Pour manipuler les tableaux de données
 import requests  # Pour faire des requêtes HTTP vers l'API
+from fastapi.staticfiles import StaticFiles
+
 
 # Imports des modules personnalisés
 from core.config import API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, BASE_DIR, json_path  # Configuration
@@ -141,39 +143,39 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
             
             
 
-        # ============================================
-        # BLOC DE RÉCAPITULATIF : RÉSULTATS FINAUX
-        # ============================================
+    # ============================================
+    # BLOC DE RÉCAPITULATIF : RÉSULTATS FINAUX
+    # ============================================
+    
+    # Bloc de récapitulatif (masqué par défaut)
+    with gr.Column(elem_classes=["recap"], visible=False) as recap_block:
+        # gr.Markdown("### 📊 Résultats du quiz")
         
-        # Bloc de récapitulatif (masqué par défaut)
-        with gr.Column(elem_classes=["block-container"], visible=False) as recap_block:
-            gr.Markdown("### 📊 Résultats du quiz")
-            
-            # Affichage du score final avec style coloré
-            score_final_display = gr.HTML(visible=False, elem_classes=["score-final"])
-            
-            # Message d'encouragement
-            encouragement_display = gr.Markdown(visible=False, elem_classes=["encouragement"])
-            
-            # Bilan par thème
-            bilan_theme_display = gr.Markdown(visible=False, elem_classes=["bilan-theme"])
-            
-            # Tableau du bilan par thème
-            bilan_theme_table = gr.Dataframe(
-                visible=False, label="", interactive=False, wrap=True, elem_classes=["dataframe"],
-                headers=["Thème", "Bonnes réponses", "Questions", "% Réussite"]
-            )
-            
-            # Titre pour les détails
-            details_title = gr.Markdown(visible=False)
-            
-            # Tableau des résultats détaillés
-            resume_table = gr.Dataframe(visible=False, label="Résultats détaillés", interactive=False, wrap=True,
-                                        elem_classes=["dataframe"])
-            
-            # Bouton pour rejouer
-            with gr.Row():
-                restart_btn = gr.Button("🔄 Rejouer", visible=False, variant="primary", elem_classes=["primary-btn"])
+        # Affichage du score final avec style coloré
+        score_final_display = gr.HTML(visible=False, elem_classes=["score-final"])
+        
+        # Message d'encouragement
+        encouragement_display = gr.HTML(visible=False, elem_classes=["encouragement"])
+        
+        # Bilan par thème
+        bilan_theme_display = gr.Markdown(visible=False, elem_classes=["bilan-theme"])
+        
+        # Tableau du bilan par thème
+        bilan_theme_table = gr.Dataframe(
+            visible=False, label="", interactive=False, wrap=True, elem_classes=["dataframe"],
+            headers=["Thème", "Bonnes réponses", "Questions", "% Réussite"]
+        )
+        
+        # Titre pour les détails
+        details_title = gr.Markdown(visible=False)
+        
+        # Tableau des résultats détaillés
+        resume_table = gr.Dataframe(visible=False, label="Résultats détaillés", interactive=False, wrap=True,
+                                    elem_classes=["dataframe"])
+        
+        # Bouton pour rejouer
+        with gr.Row():
+            restart_btn = gr.Button("🔄 Rejouer", visible=False, variant="primary", elem_classes=["primary-btn"])
 
     # ============================================
     # ÉTATS INTERNES DE L'APPLICATION

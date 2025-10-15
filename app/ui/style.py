@@ -52,6 +52,105 @@ body, .gradio-container {
 /* ============================================
    STYLES POUR LES SCORES FINAUX
    ============================================ */
+.recap {
+    background: #ffffff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.quiz-finish-title {
+    margin-top: 0 !important;
+    transform: translateY(-8px);
+}
+
+.score-jauge-container {
+    position: relative; 
+    width: 100px; 
+    height: 100px; 
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    position: absolute;
+    top: -1.5rem;
+    background-color: white;
+    padding: 12px;
+    border-radius: 999px;
+    box-shadow: 8px 8px 20px 0 rgba(0, 0, 0, .1);
+    transform: rotate(-15deg);
+    right: -1rem;
+}
+
+.score-jauge-container svg {
+    width: 100px;
+    height: 100px;
+}
+
+.jauge-circle.score-bad {
+    stroke: #ED3B3C;
+}
+.jauge-percentage-text.score-bad {
+    color: #ED3B3C;
+}
+
+.jauge-circle.score-bof {
+    stroke: #FF7801;
+}
+.jauge-percentage-text.score-bof {
+    color: #FF7801;
+}
+
+.jauge-circle.score-good {
+    stroke: #FFB901;
+}
+.jauge-percentage-text.score-good {
+    color: #FFB901;
+}
+
+.jauge-circle.score-top {
+    stroke: #0FB076;
+}
+.jauge-percentage-text.score-top {
+    color: #0FB076;
+}
+
+.jauge-percentage-text {
+    position: absolute;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111;
+}
+
+.score-card {
+    background-color: #F9F9F9;
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+}
+
+.score-card.score-top {
+    background-color: #E2F5EE;
+}
+.score-card.score-good {
+    background-color: #FFF5D9;
+}
+.score-card.score-bof {
+    background-color: #FFEBD9;
+}
+.score-card.score-bad {
+    background-color: #FDE7E7;
+}
+
+.score-text-container {
+    width: 100%;
+    text-align: center;
+}
 
 /* Score excellent (100%) - Vert */
 .score-excellent {
@@ -115,6 +214,90 @@ body, .gradio-container {
     margin: 8px 0 0 0 !important; 
     font-size: 1.2rem !important; 
     opacity: 0.95 !important;  /* Légèrement transparent */
+}
+
+
+/* Study card */
+.study-container {
+    padding: 1.5rem;
+    background-color: #F9F9F9;
+    border-radius: 1rem;
+}
+
+.study-title {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.study-intro {
+    opacity: .7;
+    text-align: center;
+    max-width: 24rem;
+    margin: 0 auto;
+}
+
+.study-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.study-card {
+    padding: .5rem;
+    border-radius: 1rem;
+    background-color: #FFFFFF;
+    border: #px solid #DFDFDF;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    text-decoration: none;
+    transition: ease .3s;
+}
+
+.study-card:hover {
+    transform: scale(1.05);
+    box-shadow: 8px 8px 20px 0 rgba(91, 0, 171, .2);
+}
+
+.theme-tag {
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    background-color: rgb(240 227 252);
+    margin-bottom: 3px;
+    display: inline-block;
+}
+
+.pdf-icon-container{
+    background-color: #fff2f2;
+    padding: 1rem;
+    border-radius: .75rem;
+    height: 5rem;
+}
+
+.pdf-icon-svg {
+    width: auto;
+    height: 100%;
+    margin: 0 auto .5rem;
+}
+
+.study-card-content p {
+    margin: .5rem 0 0;
+    margin-left: 0.25rem;
+    font-size: 1.25rem;
+    line-height: 1.4rem;
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.pdf-pages {
+    opacity: .7;
+    font-style: italic;
+    display: block;
+    margin-left: 4px;
 }
 
 /* ============================================
