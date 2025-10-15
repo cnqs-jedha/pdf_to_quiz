@@ -13,10 +13,11 @@ custom_css = """
 body, .gradio-container { 
     background-color: #f8fafc !important;  /* Couleur de fond gris très clair */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;  /* Police moderne et lisible */
+    max-width: 100% !important;
 }
 
 /* Style pour tous les blocs de contenu (questions, réponses, etc.) */
-.block { 
+.block-container { 
     background: #ffffff !important;  /* Fond blanc pour les blocs */
     border-radius: 16px !important;  /* Coins arrondis pour un look moderne */
     padding: 24px !important;  /* Espacement interne */
@@ -51,6 +52,105 @@ body, .gradio-container {
 /* ============================================
    STYLES POUR LES SCORES FINAUX
    ============================================ */
+.recap {
+    background: #ffffff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.quiz-finish-title {
+    margin-top: 0 !important;
+    transform: translateY(-8px);
+}
+
+.score-jauge-container {
+    position: relative; 
+    width: 100px; 
+    height: 100px; 
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    position: absolute;
+    top: -1.5rem;
+    background-color: white;
+    padding: 12px;
+    border-radius: 999px;
+    box-shadow: 8px 8px 20px 0 rgba(0, 0, 0, .1);
+    transform: rotate(-15deg);
+    right: -1rem;
+}
+
+.score-jauge-container svg {
+    width: 100px;
+    height: 100px;
+}
+
+.jauge-circle.score-bad {
+    stroke: #ED3B3C;
+}
+.jauge-percentage-text.score-bad {
+    color: #ED3B3C;
+}
+
+.jauge-circle.score-bof {
+    stroke: #FF7801;
+}
+.jauge-percentage-text.score-bof {
+    color: #FF7801;
+}
+
+.jauge-circle.score-good {
+    stroke: #FFB901;
+}
+.jauge-percentage-text.score-good {
+    color: #FFB901;
+}
+
+.jauge-circle.score-top {
+    stroke: #0FB076;
+}
+.jauge-percentage-text.score-top {
+    color: #0FB076;
+}
+
+.jauge-percentage-text {
+    position: absolute;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111;
+}
+
+.score-card {
+    background-color: #F9F9F9;
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+}
+
+.score-card.score-top {
+    background-color: #E2F5EE;
+}
+.score-card.score-good {
+    background-color: #FFF5D9;
+}
+.score-card.score-bof {
+    background-color: #FFEBD9;
+}
+.score-card.score-bad {
+    background-color: #FDE7E7;
+}
+
+.score-text-container {
+    width: 100%;
+    text-align: center;
+}
 
 /* Score excellent (100%) - Vert */
 .score-excellent {
@@ -116,6 +216,90 @@ body, .gradio-container {
     opacity: 0.95 !important;  /* Légèrement transparent */
 }
 
+
+/* Study card */
+.study-container {
+    padding: 1.5rem;
+    background-color: #F9F9F9;
+    border-radius: 1rem;
+}
+
+.study-title {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.study-intro {
+    opacity: .7;
+    text-align: center;
+    max-width: 24rem;
+    margin: 0 auto;
+}
+
+.study-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.study-card {
+    padding: .5rem;
+    border-radius: 1rem;
+    background-color: #FFFFFF;
+    border: #px solid #DFDFDF;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    text-decoration: none;
+    transition: ease .3s;
+}
+
+.study-card:hover {
+    transform: scale(1.05);
+    box-shadow: 8px 8px 20px 0 rgba(91, 0, 171, .2);
+}
+
+.theme-tag {
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    background-color: rgb(240 227 252);
+    margin-bottom: 3px;
+    display: inline-block;
+}
+
+.pdf-icon-container{
+    background-color: #fff2f2;
+    padding: 1rem;
+    border-radius: .75rem;
+    height: 5rem;
+}
+
+.pdf-icon-svg {
+    width: auto;
+    height: 100%;
+    margin: 0 auto .5rem;
+}
+
+.study-card-content p {
+    margin: .5rem 0 0;
+    margin-left: 0.25rem;
+    font-size: 1.25rem;
+    line-height: 1.4rem;
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.pdf-pages {
+    opacity: .7;
+    font-style: italic;
+    display: block;
+    margin-left: 4px;
+}
+
 /* ============================================
    STYLES POUR LES TABLEAUX ET BILANS
    ============================================ */
@@ -158,42 +342,67 @@ body, .gradio-container {
 
 /* Style pour les boutons principaux (démarrer, rejouer) */
 .primary-btn { 
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;  /* Dégradé bleu */
+    background: #8704FD;  /* Dégradé bleu */
     border: none !important;  /* Pas de bordure */
     border-radius: 8px !important;  /* Coins arrondis */
     padding: 12px 24px !important;  /* Espacement interne */
     font-weight: 600 !important;  /* Texte semi-gras */
-    transition: all 0.2s ease !important;  /* Animation fluide */
+    transition: all 0.3s ease !important;  /* Animation fluide */
+    color: white;
 }
 
 /* Effet de survol pour les boutons principaux */
 .primary-btn:hover { 
-    transform: translateY(-1px) !important;  /* Légère élévation */
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3) !important;  /* Ombre bleue */
+    background-color: #590AA0;
 }
+
+.secondary-btn { 
+    background: #F3E6FF;  /* Dégradé bleu */
+    border: 1px solid #8704FD;  /* Pas de bordure */
+    border-radius: 8px !important;  /* Coins arrondis */
+    padding: 11px 23px !important;  /* Espacement interne */
+    font-weight: 600 !important;  /* Texte semi-gras */
+    transition: all 0.2s ease !important;  /* Animation fluide */
+    color: #8704FD;
+}
+
+/* Effet de survol pour les boutons principaux */
+.primary-btn:hover { 
+    background-color: #590AA0;
+    color: white;
+}
+
+
 /* ============================================
    STYLES POUR LA BARRE DE PROGRESSION
    ============================================ */
-
 /* Conteneur de la barre de progression */
 #quiz-progress {
     margin: 0 0 16px 0;  /* Espacement en bas */
 }
 
+.loader-questions {
+    position: relative;
+}
+
+.loader-questions .current-score {
+    position: absolute;
+    top: .2rem;
+    right: 0;
+}
+
 /* Barre de progression elle-même */
 #quiz-progress .bar {
-    height: 32px;  /* Hauteur de la barre */
+    height: .3rem;  /* Hauteur de la barre */
     border-radius: 999px;  /* Forme arrondie (pilule) */
-    background: #fef3e2;  /* Fond orange clair */
-    overflow: hidden;  /* Masque le débordement */
-    position: relative;  /* Position relative pour le label */
+    background: #F3E6FF;  /* Fond orange clair */
 }
 
 /* Partie remplie de la barre (animation) */
 #quiz-progress .bar > span {
     display: block;  /* Affichage en bloc */
     height: 100%;  /* Hauteur complète */
-    background: linear-gradient(135deg, #f97316, #ea580c);  /* Dégradé orange */
+    background: #8704FD;  /* Dégradé orange */
     width: 0;  /* Largeur initiale (sera animée) */
     border-radius: 999px;  /* Forme arrondie */
     transition: width 0.25s ease;  /* Animation fluide */
@@ -201,18 +410,31 @@ body, .gradio-container {
 
 /* Label au centre de la barre */
 #quiz-progress .label {
-    position: absolute;  /* Position absolue */
-    top: 50%;  /* Centré verticalement */
-    left: 50%;  /* Centré horizontalement */
-    transform: translate(-50%, -50%);  /* Centrage parfait */
-    font-weight: 700;  /* Texte en gras */
-    color: #1f2937;  /* Couleur gris foncé */
-    font-size: 1.1rem;  /* Taille de police */
+    margin-top: .2rem;
+    color: #410578;
+    font-size: .75rem;
+    opacity: .7;
 }
 
 /* ============================================
    STYLES POUR LES BLOCS DE RÉPONSE
    ============================================ */
+
+
+.quiz {
+    background: #ffffff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.quiz h3 {
+    font-size: 1.25rem;
+    margin-top: 2rem;
+}
 
 /* Style de base pour les blocs de réponse */
 .answer-block {
@@ -257,6 +479,17 @@ body, .gradio-container {
 /* ============================================
    STYLES POUR LES OPTIONS DE RÉPONSE (RADIO)
    ============================================ */
+
+.quiz .quiz-radio .wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1rem;
+}
+
+.quiz .quiz-radio .wrap label {
+    padding: 16px 24px;
+    min-height: 64px;
+}
 
 /* Options radio sélectionnées - Réponse correcte */
 .quiz-radio.correct label.selected,
@@ -374,5 +607,236 @@ body, .gradio-container {
     font-size: 1.1rem !important;  /* Taille de police légèrement plus grande */
     line-height: 1.4 !important;  /* Hauteur de ligne */
     margin: 0 !important;  /* Pas de marge */
+}
+
+.answer-container {
+    padding: 1rem;
+    border-radius: 1rem;
+    border: 1px solid #fff;
+}
+
+.answer-container.wrong {
+    background-color: #FDE7E7;
+    border-color: #ED3B3C;
+}
+
+.answer-container.correct {
+    background-color: #E2F5EE;
+    border-color: #0FB076;
+}
+
+.answer-intro-bravo{
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem;
+    color: #0FB076;
+}
+
+.answer-intro-wrong{
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem;
+    color: #ED3B3C;
+}
+
+.answer-container .answer-explication-title {
+    font-weight: 700;
+}
+
+.answer-container .answer-long-text {
+    opacity: .7;
+}
+
+.answer-correction {
+    padding:1rem 1.25rem;
+    background-color: #E2F5EE;
+    border: 1px solid #0FB076;
+    color: 0FB076;
+    border-radius: 1rem;
+    margin-bottom: .5rem !important;
+    display: inline-block;
+    width: auto !important;
+}
+
+/* ============================================
+   STYLES POUR LA PAGE D'ACCUEIL
+   ============================================ */
+
+.home {
+    background: #ffffff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.home .main-title .title {
+    margin-bottom: .5rem;
+}
+
+.home .intro {
+    opacity: .7;
+    margin-top: 0;
+    margin-bottom: 2rem !important;
+}
+
+.home .col-block {
+    background-color: #F9F9F9;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    justify-content: space-between;
+}
+
+.home intro-right {
+    opacity:.7;
+}
+
+.home .col-block .intro {
+    margin-bottom: .5rem !important;
+}
+
+/*Loading page*/
+
+/* ============================================
+   STYLES POUR LA PAGE DE CHARGEMENT
+   ============================================ */
+
+.loading-page {
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    margin: 0 auto;
+    background: rgb(135, 4, 253);
+    height: calc(100vh - 32px);
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-component {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader {
+  position: relative;
+  width: 75px;
+  height: 100px;
+}
+
+.loading-page #component-14 .svelte-au1olv {
+    display: none !important;
+    opacity: 0 !important;
+}
+
+.loading-page p {
+    text-align: center;
+    color: white;
+    font-size: 1rem;
+    opacity: .8;
+}
+
+.loader__bar {
+  position: absolute;
+  bottom: 0;
+  width: 10px;
+  height: 50%;
+  background: #ffffff;
+  transform-origin: center bottom;
+  box-shadow: 1px 1px 0 rgba(0,0,0,.2);
+}
+
+/* On remplace la boucle SCSS @for par des règles manuelles */
+.loader__bar:nth-child(1) {
+  left: 0;
+  transform: scale(1, 0.2);
+  animation: barUp1 4s infinite;
+}
+
+.loader__bar:nth-child(2) {
+  left: 15px;
+  transform: scale(1, 0.4);
+  animation: barUp2 4s infinite;
+}
+
+.loader__bar:nth-child(3) {
+  left: 30px;
+  transform: scale(1, 0.6);
+  animation: barUp3 4s infinite;
+}
+
+.loader__bar:nth-child(4) {
+  left: 45px;
+  transform: scale(1, 0.8);
+  animation: barUp4 4s infinite;
+}
+
+.loader__bar:nth-child(5) {
+  left: 60px;
+  transform: scale(1, 1);
+  animation: barUp5 4s infinite;
+}
+
+.loader__ball {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  border-radius: 50%;
+  animation: ball 4s infinite;
+}
+
+/* Animations */
+
+@keyframes ball {
+  0%   { transform: translate(0, 0); }
+  5%   { transform: translate(8px, -14px); }
+  10%  { transform: translate(15px, -10px); }
+  17%  { transform: translate(23px, -24px); }
+  20%  { transform: translate(30px, -20px); }
+  27%  { transform: translate(38px, -34px); }
+  30%  { transform: translate(45px, -30px); }
+  37%  { transform: translate(53px, -44px); }
+  40%  { transform: translate(60px, -40px); }
+  50%  { transform: translate(60px, 0); }
+  57%  { transform: translate(53px, -14px); }
+  60%  { transform: translate(45px, -10px); }
+  67%  { transform: translate(37px, -24px); }
+  70%  { transform: translate(30px, -20px); }
+  77%  { transform: translate(22px, -34px); }
+  80%  { transform: translate(15px, -30px); }
+  87%  { transform: translate(7px, -44px); }
+  90%  { transform: translate(0, -40px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes barUp1 { 
+  0%,40%   { transform: scale(1, .2); }
+  50%,90%  { transform: scale(1, 1); }
+  100%     { transform: scale(1, .2); }
+}
+
+@keyframes barUp2 { 
+  0%,40%   { transform: scale(1, .4); }
+  50%,90%  { transform: scale(1, .8); }
+  100%     { transform: scale(1, .4); }
+}
+
+@keyframes barUp3 { 
+  0%,100%  { transform: scale(1, .6); }
+}
+
+@keyframes barUp4 { 
+  0%,40%   { transform: scale(1, .8); }
+  50%,90%  { transform: scale(1, .4); }
+  100%     { transform: scale(1, .8); }
+}
+
+@keyframes barUp5 { 
+  0%,40%   { transform: scale(1, 1); }
+  50%,90%  { transform: scale(1, .2); }
+  100%     { transform: scale(1, 1); }
 }
 """
