@@ -839,4 +839,101 @@ body, .gradio-container {
   50%,90%  { transform: scale(1, .2); }
   100%     { transform: scale(1, 1); }
 }
+
+/* ==========20251510=======
+   BILAN PAR THÈME — CARTES
+   ========================= */
+.bilan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: .75rem;
+  animation: fadeIn .6s ease;
+}
+
+.bilan-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 6px 14px rgba(0,0,0,.06);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.bilan-card:hover { transform: translateY(-3px); box-shadow: 0 10px 18px rgba(0,0,0,.08); }
+
+.bilan-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .5rem;
+}
+.bilan-header h4 {
+  font-size: 1rem; margin: 0; font-weight: 700; color: #1e293b;
+}
+.bilan-header span {
+  font-size: .95rem; font-weight: 700;
+}
+
+.bilan-progress {
+  background: #f1f5f9;
+  height: .5rem;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: .25rem 0 .5rem 0;
+}
+.bilan-progress .bar { height: 100%; width: 0; transition: width .5s ease; }
+
+/* Couleur de la barre selon niveau */
+.bilan-card.score-bad  .bar { background: #ef4444; }
+.bilan-card.score-bof  .bar { background: #f59e0b; }
+.bilan-card.score-good .bar { background: #3b82f6; }
+.bilan-card.score-top  .bar { background: #10b981; }
+
+.bilan-card p {
+  margin: 0; color: #475569; font-size: .95rem;
+}
+
+/* Résumé global au-dessus des cartes */
+.resume-summary {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: .75rem;
+  padding: 1rem 1.25rem;
+  margin: .5rem 0 1rem;
+  animation: fadeIn .6s ease;
+}
+.resume-summary h4 { margin: 0 0 .25rem 0; }
+
+/* Détails — tableau : zébrage et meilleure lisibilité */
+.dataframe table { width: 100%; border-collapse: collapse; }
+.dataframe tr:nth-child(even) { background-color: #f9fafb !important; }
+.dataframe th, .dataframe td { font-size: .95rem !important; }
+.dataframe td:last-child { text-align: center !important; font-weight: 700; } /* colonne "Résultat" */
+
+/* Apparitions douces */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dataframe { font-size: .85rem; }
+}
+
+/* Détails (table HTML) */
+.details-table-wrap { margin-top: .5rem; animation: fadeIn .5s ease; }
+.details-table-wrap table.details {
+  width: 100%; border-collapse: collapse; background: #fff; border-radius: .75rem;
+  overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,.04);
+}
+.details-table-wrap th, .details-table-wrap td {
+  padding: .75rem .85rem; border-bottom: 1px solid #f1f5f9; vertical-align: top; text-align: left;
+}
+.details-table-wrap thead th { background: #f8fafc; font-weight: 700; color: #1f2937; }
+.details-table-wrap tbody tr:nth-child(even) { background: #fafafa; }
+
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 999px; font-weight: 700; font-size: .85rem;
+}
+.badge.ok { background: #E2F5EE; color: #0FB076; }
+.badge.ko { background: #FDE7E7; color: #ED3B3C; }
+
 """

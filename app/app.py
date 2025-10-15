@@ -160,7 +160,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
         encouragement_display = gr.HTML(visible=False, elem_classes=["encouragement"])
         
         # Bilan par thème
-        bilan_theme_display = gr.Markdown(visible=False, elem_classes=["bilan-theme"])
+        bilan_theme_display = gr.HTML(visible=False, elem_classes=["bilan-theme"])
         
         # Tableau du bilan par thème
         bilan_theme_table = gr.Dataframe(
@@ -170,6 +170,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
         
         # Titre pour les détails
         details_title = gr.Markdown(visible=False)
+        details_html = gr.HTML(visible=False, elem_classes=["details-table"])
         
         # Tableau des résultats détaillés
         resume_table = gr.Dataframe(visible=False, label="Résultats détaillés", interactive=False, wrap=True,
@@ -201,7 +202,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
         question, progress_bar, choix, explain_md, script_injector, score_display,  # Éléments du quiz
         qs_state, idx_state, score_state, done_state, resume_state,  # États internes
         next_btn, score_final_display, encouragement_display, bilan_theme_display,  # Éléments de navigation
-        bilan_theme_table, details_title, resume_table, restart_btn, recap_block  # Éléments de récapitulatif
+        bilan_theme_table, details_title, details_html, resume_table, restart_btn, recap_block  # Éléments de récapitulatif
     ]
 
     # ============================================
