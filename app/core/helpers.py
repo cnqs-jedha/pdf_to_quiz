@@ -108,10 +108,3 @@ def load_questions(api_base_url, api_question_path, use_api, require_api, json_p
             f"[ERREUR] JSON local introuvable : {json_path}. "
             "Active REQUIRE_API=1 pour forcer l’API ou remets questions_llm.json."
         )
-    # return load_questions_from_json(json_path)
-
-# def question_chooser():
-#     all_chunks = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
-#     questions = random.sample(all_chunks, min(10, len(all_chunks)))
-
-#     return questions

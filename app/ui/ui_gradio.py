@@ -135,8 +135,6 @@ def update_ui(qs, index, score, finished, feedback_txt, resume):
         gr.update(value=question_md, visible=True),           # question (afficher la question)
         gr.update(value=progress_html, visible=True),           # progress (afficher la barre de progression)
         gr.update(choices=q["options"], value=None, interactive=True, visible=True, elem_classes=["quiz-radio"], elem_id="choices-radio"),  # choix (options de réponse)
-        # gr.update(value="", visible=False),            # feedback (masquer le feedback)
-        # gr.update(visible=False, value="Voir l'explication"),   # explain_btn (masquer le bouton d'explication)
         gr.update(value=q.get("long_answer", ""), visible=False), # explain_md (masquer l'explication)
         gr.update(value="", visible=False),                     # script_injector (masquer les scripts)
         gr.update(value=score_txt, visible=True),               # score_display (afficher le score)
@@ -192,10 +190,6 @@ def update_final_screen(qs, score, resume):
         </div>
     </div>
 """
-# <div class="{score_class}">
-#     <h3>🥇 Score final : {score}/{total_questions} ({pourcentage:.0f}%)</h3>
-#     <p>{encouragement}</p>
-# </div>
 
     per_theme, detailed = build_resume_tables(resume)
 
@@ -284,17 +278,7 @@ def update_final_screen(qs, score, resume):
 
                                             </div>
                                         </a>
-                                        """# TRANSFORMER EN LIEN CLICABLE VERS LE BON PDF 
-                                                # {f'<a href="{drive_link}" target="_blank" class="drive-link">{drive_id}</a>' if drive_id else ''}
-
-                    # cards_html += f"""
-                    # <div class="study-theme-container">
-                    #     <h4>{theme_name}</h4>
-                    #     <div class="study-card-container">
-                    #         {file_html}
-                    #     </div>
-                    # </div>
-                    # """
+                                        """
 
                     cards_html += f"""{file_html}"""
 
@@ -315,8 +299,6 @@ def update_final_screen(qs, score, resume):
         gr.update(value="<h3 class=\"quiz-finish-title\"> 🎯 Quiz terminé !</h3>", visible=True),   # question (titre final)
         gr.update(visible=False),                                  # progress_bar
         gr.update(visible=False),                                  # choix
-        # gr.update(visible=False),                                  # feedback teaser
-        # gr.update(visible=False),                                  # explain_btn
         gr.update(visible=False),                                  # explain_md
         gr.update(visible=False),                                  # script_injector
         gr.update(visible=False),                                  # score_display
@@ -388,7 +370,6 @@ def check_answer(reponse, qs, index, score, finished, resume):
         """
         choix_style = ["quiz-radio", "correct"]
     else:
-        # feedback_html = f"### ❌ Mauvaise réponse. <br>✅ Bonne réponse : **{correct}**"
         explain_html = f"""
         <div class="wrong-title-container">
             <h3 class="answer-intro-wrong">❌ Mauvaise réponse, la bonne réponse était :</h3>
@@ -407,7 +388,6 @@ def check_answer(reponse, qs, index, score, finished, resume):
         gr.update(),                       # question
         gr.update(),                       # progress bar
         gr.update(interactive=False, elem_classes=choix_style),  # désactiver radio
-        # gr.update(value=feedback_html, visible=True),            # feedback (affiché)
         gr.update(value=explain_html, visible=True),             # explain_md (affiché directement)
         gr.update(value="", visible=False),                      # script_injector
         gr.update(value=f"Score : {score:02d}", visible=True),   # score_display
@@ -467,14 +447,12 @@ def send_drive_link_to_api(drive_link: str):
 
     # 2️⃣ Envoi du lien à l’API
     try:
-        # print('try', flush=True)
         resp = requests.post(
             f"{API_BASE_URL}/run_pipeline",
             json={"drive_link": drive_link},
             timeout=15
         )
-        # print(f"Status code: {resp.status_code}", flush=True)
-        # print(f"Response text: {resp.text}", flush=True)
+
         if resp.status_code != 200:
             print('try code not 200')
             yield [
@@ -485,8 +463,6 @@ def send_drive_link_to_api(drive_link: str):
             ]
             return
     except Exception as e:
-        # print('except', flush=True)
-        # print(traceback.format_exc(), flush=True)
         yield [
             gr.update(visible=True),
             gr.update(visible=False),
@@ -496,7 +472,6 @@ def send_drive_link_to_api(drive_link: str):
         return
 
     # 3️⃣ Passage à la page de chargement
-    # print('loader here', flush=True)
     yield [
         gr.update(visible=False),  # page_erreur masquée
         gr.update(visible=True),   # page_loader affichée
@@ -505,8 +480,7 @@ def send_drive_link_to_api(drive_link: str):
     ]
 
     # 4️⃣ Boucle d’attente non bloquante
-    for i in range(240):  # 60 x 5s = 5 minutes max
-        # print('await function', flush=True)
+    for i in range(240):
         time.sleep(5)
         quiz_ready, quiz_data = check_ready_api()
         message = quiz_data.get("message", "Traitement en cours...")
@@ -519,7 +493,6 @@ def send_drive_link_to_api(drive_link: str):
         ]
 
         if quiz_ready:
-            # print('quiz ready', flush=True)
             time.sleep(2)
             yield [
                 gr.update(visible=False),  # cacher page erreur
@@ -529,8 +502,7 @@ def send_drive_link_to_api(drive_link: str):
             ]
             return
 
-    # 5️⃣ Timeout après 5 min
-    # print('time out', flush=True)
+    # 5️⃣ Timeout après les boucles
     yield [
         gr.update(visible=True),
         gr.update(visible=False),
