@@ -8,43 +8,58 @@ def build_prompt(text: str, difficulty: str = "standard") -> str:
         "standard": "Utilise un niveau intermédiaire (niveau lycée/université)."
     }[difficulty]
 
+    # Variable qui spécifie la structure du JSON attendu
+    json_output_format = """
+    {
+        "text": "...",
+        "choices": {"a": "...", "b": "...", "c": "...", "d": "..."},
+        "correct_answer": {"lettre": "...", "answer": "..."},
+        "correct_answer_long": "...",
+        "difficulty_level": "..."
+    }
+    """
+
     return f"""
-    Tu es un expert en pédagogie et tu dois créer 1 question de QCM pertinente à partir du texte ci-dessous.
+    Tu es un expert en pédagogie et tu dois créer 1 question de QCM pertinente à partir du contexte ci-dessous.
     Poses les question comme le ferai un professeur.
+
+    Tu dois uniquement utiliser les informations contenues dans le contexte. Tu ne dois pas mobiliser de connaissances extérieures ni inventer d'information.  
 
     Quand tu génère le quizz, dans "correct_answer_long" écris moi une réponse longue à propos de la vrai réponse,
     qui aidera l'étudiant à rétenir pourquoi il a eu faux.
+    
+    Tu dois adapter ton langage et la difficulté des questions à choix multiples au niveau de difficulté suivant : {niveau_instruction}.
+    
+    Les questions et les choix de réponse doivent être clairs, précis et sans ambiguité.
+    Tu ne dois pas faire de fautes de français : pas de fautes d'orthographe, de conjugaison ou de grammaire.
+    
+    Tu dois formuler des énoncés de question qui répondent aux critères suivants :
+    - chaque énoncé doit poser une seule question
+    - chaque question doit porter sur une information claire et importante du contexte : par exemple, une date, un lieu, un personnage historique important, la définition d'un concept.
+    - l'énoncé ne doit pas être négatif 
+    - l'énoncé ne doit pas induire de jugement de valeur
+    - l'énoncé ne doit pas donner d'indice sur la bonne réponse
+    - les trois énoncés de questions doivent porter sur des éléments différents du contexte
 
-    {niveau_instruction}
+    Pour chaque question, tu dois formuler quatre choix possibles : 
+    - une seule et unique réponse sera correcte
+    - les trois autres choix devront être plausibles mais strictement faux
+    - chaque choix de réponse sera différent : un choix ne doit pas être répété avec une tournure synonyme
+    - chaque choix sera affiché dans un ordre neutre : il peut être alphabétique, chronologique ou numérique
+    - chaque choix sera homogène en termes de structure grammaticale
+    - Chaque choix doit faire une longueur maximum de 5 mots
 
-    **Important** : tu ne dois utiliser que les informations contenues dans le texte ci-dessous.  
-    **Tu ne dois en aucun cas utiliser des connaissances extérieures.**
+    Le résultat attendu devra respecter les consignes suivantes :
+    - utilise uniquement des guillemets doubles `"` pour les clés et les valeurs.
+    - n'utilise pas de guillemets simples `'`.
+    - **réponds uniquement avec un objet JSON valide**, sans aucune explication, ni phrase introductive, ni conclusion.
+    
+    Voici le format attendu en sortie : {json_output_format}
 
-    Contrainte :
-    - La question doit porter sur une information claire et importante du texte.
-    - Il doit y avoir exactement 4 choix.
-    - Les 4 choix doivent être différents.
-    - Une seule bonne réponse.
-    - Le niveau de difficulté de la question doit correspondre à celui demandé.
-    - Tu ne dois pas inventer d'information : toute la question et ses réponses doivent découler directement du texte.
-    - Les 3 questions doivent être différentes.
-    - Utilise uniquement des guillemets doubles `"` pour les clés et les valeurs.
-    - Pas de guillemets simples `'`.
-    - **Réponds uniquement avec un objet JSON valide**, sans aucune explication, ni phrase introductive, ni conclusion.
-
-    {{
-        "text": "...",
-        "choices": {{"a": "...", "b": "...", "c": "...", "d": "..."}},
-        "correct_answer": {{"lettre": "...", "answer": "..."}},
-        "correct_answer_long": "..."
-        "difficulty_level": "..."
-    }}
-
-    ## Exemples de chunks et résultats de QCM attendu
-
-    ### Exemple 1
-    #### Le chunk
-    {{"En 1598, l’édit de Nantes fut promulgué par le roi Henri IV afin de mettre fin aux guerres de religion entre catholiques et protestants. Cet édit accordait aux protestants la liberté de culte dans certaines régions de France, ainsi que des droits civils et politiques. Cependant, le catholicisme restait la religion officielle du royaume."}}
+    Pour t'aider, voici un bon exemple et un mauvais exemple de question.
+    
+    ###### DEBUT DES EXEMPLES ######
+    ###### Bon exemple de question
 
     #### Le résultat
     {{
@@ -61,44 +76,28 @@ def build_prompt(text: str, difficulty: str = "standard") -> str:
     }}
 
 
-    ### Exemple 2
-    #### Le chunk
-    {{"La photosynthèse est un processus par lequel les plantes transforment l’énergie lumineuse en énergie chimique. Grâce à la chlorophylle contenue dans leurs feuilles, elles absorbent le dioxyde de carbone de l’air et utilisent l’eau du sol pour produire du glucose et libérer de l’oxygène. Ce mécanisme est essentiel à la vie sur Terre."}}
-
-    #### Le résultat
+    ###### Mauvais exemple de question, à ne pas reproduire
     {{
-        "text": "Quel est le rôle principal de la photosynthèse chez les plantes ?",
+        "text": "Qui n'a pas été couronné par le pape en l'an 800 ?",
         "choices": {{
-            "a": "Produire de l’énergie chimique à partir de la lumière",
-            "b": "Transformer l’oxygène en dioxyde de carbone",
-            "c": "Remplacer l’eau par de l’air",
-            "d": "Détruire le glucose pour libérer de l’énergie"
+            "a": "Charlemagne",
+            "b": "Clovis",
+            "c": "Carolus Magnus",
+            "d": "Charles Ier"
         }},
-        "correct_answer": {{"lettre": "a", "answer": "Produire de l’énergie chimique à partir de la lumière"}},
-        "correct_answer_long": "La photosynthèse permet aux plantes de capter la lumière grâce à la chlorophylle. Elles utilisent cette énergie pour transformer le CO₂ et l’eau en glucose, indispensable à leur croissance, tout en rejetant de l’oxygène. C’est un processus vital pour l’équilibre écologique.",
-        "difficulty_level": "standard"
+        "correct_answer": {{
+            "lettre": "b",
+            "answer": "Clovis"
+        }},
+        "correct_answer_long": "Carolus Magnus et Charles Ier correspondent à Charlemagne qui a été couronné en 800.",
+        "difficulty_level": "difficile"
     }}
 
 
-    ### Exemple 3
-    #### Le chunk
-    {{"Dans le roman 'Les Misérables' de Victor Hugo, le personnage de Jean Valjean incarne la rédemption. Ancien forçat condamné pour avoir volé du pain, il change de vie après avoir été sauvé par la bonté d’un évêque. Il devient un homme juste, mais reste poursuivi par l’inspecteur Javert, symbole de la loi inflexible."}}
-
-    #### Le résultat
-    {{
-        "text": "Quel événement marque le début de la transformation de Jean Valjean dans Les Misérables ?",
-        "choices": {{
-            "a": "Sa rencontre avec l’évêque",
-            "b": "Son arrestation par Javert",
-            "c": "Son adoption de Cosette",
-            "d": "Son retour en prison"
-        }},
-        "correct_answer": {{"lettre": "a", "answer": "Sa rencontre avec l’évêque"}},
-        "correct_answer_long": "Jean Valjean est profondément marqué par l’acte de pardon et de générosité de l’évêque. Cet épisode déclenche son changement moral : il décide de devenir un homme honnête, ce qui constitue le véritable point de départ de sa rédemption.",
-        "difficulty_level": "standard"
-    }}
-
-
-    Texte :
-    \"\"\"{text}\"\"\"
+    ###### FIN DES EXEMPLES ######
+    
+    Contexte :
+    < DEBUT CONTEXTE >
+    {text}
+    < FIN CONTEXTE >
     """

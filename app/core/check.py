@@ -11,7 +11,7 @@ def check_ready_api():
             return data.get("status") == "ok", data                           
     except Exception as e:
         print(f"[WARN] API non prête : {e}")
-    return False, {"status": "error", "reason": "Quiz vide"}
+    return False, {"status": "error", "quiz_count": "Quiz vide", "message": "Error with api ready"}
 
 # ok, info = check_ready()
 def check_ready_for_gradio():
