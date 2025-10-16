@@ -168,8 +168,30 @@ def start_quiz():
             "❌ Aucun quiz trouvé. Veuillez relancer la génération."
         ]
 
-    # Sélectionner aléatoirement 10 questions maximum
-    qs = random.sample(niveau, min(10, len(niveau)))
+    # Dédupliquer les questions basées sur le texte de la question et les options
+    seen_questions = set()
+    unique_questions = []
+    duplicates_count = 0
+    
+    for question in niveau:
+        question_text = question.get("question", "").strip().lower()
+        options = question.get("options", [])
+        # Créer une signature unique basée sur la question et les options triées
+        options_signature = "|".join(sorted([opt.strip().lower() for opt in options if opt.strip()]))
+        question_signature = f"{question_text}|{options_signature}"
+        
+        if question_text and question_signature not in seen_questions:
+            seen_questions.add(question_signature)
+            unique_questions.append(question)
+        else:
+            duplicates_count += 1
+    
+    # Informer sur les doublons détectés
+    if duplicates_count > 0:
+        print(f"🔄 {duplicates_count} questions en doublon détectées et supprimées", flush=True)
+    
+    # Sélectionner aléatoirement 10 questions maximum parmi les questions uniques
+    qs = random.sample(unique_questions, min(10, len(unique_questions)))
     resume = []  # Liste pour stocker les résultats de chaque question
     
     # Générer l'interface pour la première question
