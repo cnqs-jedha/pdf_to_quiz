@@ -65,7 +65,9 @@ pdf_to_quiz/
 |   +---core # Orchestration et mise en oeuvre du quiz
 |   |       
 |   \---ui # Composants interface utilisateur (UI)
-|           
+||       |
+|       \---img # images UI
+|          
 +---chroma_db # Base de données Chroma pour le stockage vectoriel/embeddins
 |           
 +---docker # Configuration des conteneurs Docker pour le pipeline, l'api, l'app, devlab
@@ -149,10 +151,12 @@ Le tableau ci-dessous décrit la séquence complète des échanges entre les dif
 
 |  Méthode           | Endpoint          | Description                |
 | ----------------- | ----------------- | -------------------------- |
-| POST              | `/send_quiz`    | Envoi d’un quiz au serveur|
+| POST | `/send_quiz`    | Envoi d’un quiz au serveur|
 | GET  |`/quiz`| Récupération du dernier quiz |
+| POST | `/run_pipeline` | Met à jour le pipeline |
 | GET | `/health` | Vérifie le bon fonctiionnement de l'API |
 | GET | `/ready` | Indique si un quiz est prêt à être lancé |
+| POST | `/ready` | Met à jour le message de progression envoyé par le pipeline |
 | POST | `/clear` | Réinitialise l'API et efface les quiz enregistrés |
 | GET | `/history` | Retourne l'historique des quiz récents |
 
@@ -197,7 +201,7 @@ cd pdf_to_quiz
 
 ### 2. Démarrer les conteneurs Docker
 
-* Vérifier que Docker fonctionne : 
+* Vérifier que Docker fonctionne :
 `docker ps`
 
 * Builder les images de l'api, de l'app et du pipeline :
@@ -270,9 +274,11 @@ cd pdf_to_quiz
 
 * [x] Déploiement en local du quiz interactif
 
-* [ ] Déploiement web  du quiz interactif
+* [ ] Améliorer la classification automatique des thèmes
 
-* [ ] Tableau de bord des performances des utilisateurs
+* [ ] Créer un processus d'identification
+
+* [ ] Améliorer l'expérience utilisateurs
 
 ## :busts_in_silhouette: Auteurs
 
