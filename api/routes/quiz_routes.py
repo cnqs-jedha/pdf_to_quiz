@@ -61,7 +61,7 @@ def get_quiz(request: Request):
     return get_last_quiz(request.app)
 
 # Contacter l'api pour lancer la pipeline
-@router.post("/run_pipeline", response_model=PipelineRequest)
+@router.post("/run_pipeline")
 def run_pipeline(req: PipelineRequest):
     """
     Déclenche l'exécution du pipeline d'analyse à partir d'un lien Google Drive.
@@ -78,7 +78,7 @@ def run_pipeline(req: PipelineRequest):
     Raises:
         HTTPException: Si le champ `drive_link` est manquant ou si le pipeline ne répond pas.
     """
-    drive_link = req.get("drive_link")
+    drive_link = req.drive_link
     if not drive_link:
         raise HTTPException(status_code=400, detail="drive_link manquant")
 
