@@ -62,6 +62,33 @@ body, .gradio-container {
     margin: 0 auto;
 }
 
+/* Espacement optimisé entre les sections du récapitulatif */
+.recap > * {
+    margin-bottom: 1.5rem;
+}
+
+.recap > *:last-child {
+    margin-bottom: 0;
+}
+
+/* Espacement spécifique pour les sections principales */
+.score-final {
+    margin-bottom: 2rem !important;
+}
+
+.encouragement {
+    margin-bottom: 2rem !important;
+}
+
+.bilan-theme {
+    margin-bottom: 2rem !important;
+}
+
+/* Supprimer les liserets de la section bilan-theme */
+.bilan-theme::before {
+    display: none;
+}
+
 .quiz-finish-title {
     margin-top: 0 !important;
     transform: translateY(-8px);
@@ -227,6 +254,9 @@ body, .gradio-container {
 .study-title {
     font-size: 1.5rem;
     text-align: center;
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 1rem;
 }
 
 .study-intro {
@@ -245,16 +275,17 @@ body, .gradio-container {
 }
 
 .study-card {
-    padding: .5rem;
+    padding: 1rem;
     border-radius: 1rem;
     background-color: #FFFFFF;
-    border: #px solid #DFDFDF;
+    border: 1px solid #e2e8f0;
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 1rem;
     align-items: center;
     text-decoration: none;
-    transition: ease .3s;
+    transition: all .2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
 }
 
 .study-card:hover {
@@ -263,19 +294,23 @@ body, .gradio-container {
 }
 
 .theme-tag {
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
     font-size: 0.75rem;
-    padding: 2px 6px;
-    background-color: rgb(240 227 252);
-    margin-bottom: 3px;
+    padding: 4px 8px;
+    background-color: rgba(135, 4, 253, 0.1);
+    color: #8704FD;
+    font-weight: 600;
+    margin-bottom: 6px;
     display: inline-block;
+    border: 1px solid rgba(135, 4, 253, 0.2);
 }
 
 .pdf-icon-container{
-    background-color: #fff2f2;
+    background-color: rgba(135, 4, 253, 0.05);
     padding: 1rem;
     border-radius: .75rem;
     height: 5rem;
+    border: 1px solid rgba(135, 4, 253, 0.1);
 }
 
 .pdf-icon-svg {
@@ -304,13 +339,21 @@ body, .gradio-container {
    STYLES POUR LES TABLEAUX ET BILANS
    ============================================ */
 
-/* Style pour le bloc de bilan par thème */
+/* Style pour le bloc de bilan par thème - même style que study-container */
 .bilan-theme { 
-    background: #fefefe !important;  /* Fond blanc cassé */
-    border: 1px solid #e2e8f0 !important;  /* Bordure grise */
-    border-radius: 8px !important;  /* Coins arrondis */
-    padding: 20px !important;  /* Espacement interne */
-    margin: 16px 0 !important;  /* Espacement vertical */
+    background: #F9F9F9 !important;  /* Même fond que study-container */
+    border-radius: 1rem !important;  /* Coins arrondis */
+    padding: 1.5rem !important;  /* Espacement interne */
+    margin: 1rem 0 !important;  /* Espacement vertical */
+}
+
+.bilan-theme h3 {
+    margin-top: 0 !important;
+    margin-bottom: 1rem !important;
+    color: #1e293b !important;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    text-align: center !important;
 }
 
 /* Style pour les tableaux de données */
@@ -845,49 +888,82 @@ body, .gradio-container {
    ========================= */
 .bilan-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1rem;
-  margin-top: .75rem;
+  margin-top: 1.5rem;
   animation: fadeIn .6s ease;
 }
 
 .bilan-card {
-  background: #fff;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   border-radius: 1rem;
-  padding: 1rem 1.25rem;
-  box-shadow: 0 6px 14px rgba(0,0,0,.06);
-  transition: transform .18s ease, box-shadow .18s ease;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 6px 16px rgba(0,0,0,.1), 0 2px 4px rgba(0,0,0,.06);
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #e2e8f0;
+  transition: all .2s ease;
+  position: relative;
 }
-.bilan-card:hover { transform: translateY(-3px); box-shadow: 0 10px 18px rgba(0,0,0,.08); }
+.bilan-card:hover { 
+  transform: scale(1.05); 
+  box-shadow: 8px 8px 20px 0 rgba(91, 0, 171, .2), 0 8px 24px rgba(0,0,0,.15);
+}
 
 .bilan-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: .5rem;
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between;
+  margin-bottom: .75rem;
 }
 .bilan-header h4 {
-  font-size: 1rem; margin: 0; font-weight: 700; color: #1e293b;
+  font-size: 1.1rem; 
+  margin: 0; 
+  font-weight: 700; 
+  color: #1e293b;
+  line-height: 1.3;
 }
 .bilan-header span {
-  font-size: .95rem; font-weight: 700;
+  font-size: 1rem; 
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(135, 4, 253, 0.1);
+  color: #8704FD;
 }
 
 .bilan-progress {
   background: #f1f5f9;
-  height: .5rem;
+  height: 6px;
   border-radius: 999px;
   overflow: hidden;
-  margin: .25rem 0 .5rem 0;
+  margin: .5rem 0 .75rem 0;
+  position: relative;
 }
-.bilan-progress .bar { height: 100%; width: 0; transition: width .5s ease; }
+.bilan-progress .bar { 
+  height: 100%; 
+  width: 0; 
+  transition: width .6s ease;
+  border-radius: 999px;
+}
 
 /* Couleur de la barre selon niveau */
-.bilan-card.score-bad  .bar { background: #ef4444; }
-.bilan-card.score-bof  .bar { background: #f59e0b; }
-.bilan-card.score-good .bar { background: #3b82f6; }
-.bilan-card.score-top  .bar { background: #10b981; }
+.bilan-card.score-bad  .bar { background: linear-gradient(90deg, #ef4444, #dc2626); }
+.bilan-card.score-bof  .bar { background: linear-gradient(90deg, #f59e0b, #d97706); }
+.bilan-card.score-good .bar { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+.bilan-card.score-top  .bar { background: linear-gradient(90deg, #10b981, #059669); }
+
+/* Couleur de la bordure gauche selon niveau */
+.bilan-card.score-bad { border-left-color: #ef4444; }
+.bilan-card.score-bof { border-left-color: #f59e0b; }
+.bilan-card.score-good { border-left-color: #3b82f6; }
+.bilan-card.score-top { border-left-color: #10b981; }
 
 .bilan-card p {
-  margin: 0; color: #475569; font-size: .95rem;
+  margin: 0; 
+  color: #64748b; 
+  font-size: .9rem;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 /* Résumé global au-dessus des cartes */
@@ -911,6 +987,25 @@ body, .gradio-container {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Animation d'apparition progressive pour les sections */
+.recap > * {
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.recap > *:nth-child(1) { animation-delay: 0.1s; }
+.recap > *:nth-child(2) { animation-delay: 0.2s; }
+.recap > *:nth-child(3) { animation-delay: 0.3s; }
+.recap > *:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive */
