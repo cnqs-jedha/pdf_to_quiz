@@ -25,8 +25,33 @@ from core.helpers import load_questions  # Pour charger les questions depuis l'A
 from core.check import check_ready_api  # Pour vérifier si l'API est prête
 
 # =========================
-# Utilitaires d’affichage HTML
+# Utilitaires d'affichage HTML
 # =========================
+
+def format_pages_text(pages_str: str) -> str:
+    """
+    Formate le texte des pages avec l'accord correct du mot 'page'.
+    
+    Args:
+        pages_str (str): Chaîne contenant les numéros de pages (ex: "1, 2, 4")
+    
+    Returns:
+        str: Texte formaté avec accord correct (ex: "page 1" ou "pages 1, 2, 4")
+    """
+    if not pages_str or pages_str.strip() == "":
+        return "page 1"
+    
+    # Nettoyer la chaîne et extraire les numéros de pages
+    pages_clean = pages_str.strip()
+    pages_list = [p.strip() for p in pages_clean.split(',') if p.strip()]
+    
+    # Compter le nombre de pages
+    num_pages = len(pages_list)
+    
+    if num_pages == 1:
+        return f"page {pages_clean}"
+    else:
+        return f"pages {pages_clean}"
 
 def render_details_table(detailed_df: pd.DataFrame) -> str:
     """
@@ -392,6 +417,7 @@ def update_final_screen(qs, score, resume):
                             # --- Extraire le nom du fichier et les pages ---
                             file_name, pages_part = file_part.split("(pages:")
                             pages_clean = pages_part.strip(") ").strip()
+                            pages_text = format_pages_text(pages_clean)
                             file_html += f"""
                                 <a href="{drive_link}" target="_blank" class="study-card">
                                     <div class="pdf-icon-container">
@@ -400,7 +426,7 @@ def update_final_screen(qs, score, resume):
                                     <div class="study-card-content">
                                         <span class="theme-tag">{theme_name}</span>
                                         <p>{file_name.strip('• ').strip()}</p>
-                                        <span class="pdf-pages">pages {pages_part.strip(') ')}</span>
+                                        <span class="pdf-pages">{pages_text}</span>
                                     </div>
                                 </a>
                             """
