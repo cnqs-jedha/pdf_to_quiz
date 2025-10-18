@@ -28,14 +28,21 @@ def find_best_chunk_to_prompt(vector_db, themes, k=10, fetch_k=50, lambda_mult=0
     for query in themes:
     
         retriever = vector_db.as_retriever(
-            #search_type="mmr",
-            #search_kwargs={"k": k, "fetch_k": fetch_k, "lambda_mult": lambda_mult}
-            search_type="similarity", 
-            search_kwargs={"k": k}
+            # MMR
+            search_type="mmr",
+            search_kwargs={"k": k, "fetch_k": fetch_k, "lambda_mult": lambda_mult}
+            
+            # Similarité
+            #search_type="similarity", 
+            #search_kwargs={"k": k}
+            
+            # Similarité avec seuil de score minimum
+            #search_type="similarity_score_threshold",
+            #search_kwargs={"k": k, "score_threshold": 0.4}
         )
 
         relevant_docs = retriever.invoke(query)
-        #print(f"[DEBUG] Total chunks collectés: {len(full_chunks_themes)}")
+        print(f"[DEBUG] Total chunks collectés: {len(full_chunks_themes)}")
         #print(f"[DEBUG]type de relevant_docs : {type(relevant_docs)}"")
         #print(f"[DEBUG]relevant_docs : {relevant_docs}")
         print(f"Nombre de chunks récupérés pour le thème -- {query} -- : {len(relevant_docs)}")

@@ -94,15 +94,15 @@ def main(difficulty="standard"):
 
     counts_themes.pop("other", None)
     list_themes_raw= list(counts_themes.keys())
-    list_themes_clean=normalize_list_keywords(list_themes_raw) # suppression des redondances dans les keywords si lemme commun
+    list_themes=normalize_list_keywords(list_themes_raw) # suppression des redondances dans les keywords si lemme commun
     print("Liste des thèmes bruts : ", list_themes_raw)
-    print("Liste des thèmes nettoyés : ", list_themes_clean)
+    print("Liste des thèmes nettoyés : ", list_themes)
 
     duration = time.time() - start
     timings.append({"Etape": "Thèmes créés", "Durée (sec)": duration})
     print(f"Avancement : {(6/nbr_steps)*100} %")
 
-    """
+    
     # 7. Stockage Chroma
     start = time.time()
 
@@ -132,7 +132,7 @@ def main(difficulty="standard"):
     timings.append({"Etape": "Création du quizz", "Durée (sec)": duration})
     
     # 10. Envoi à l'API 
-    start = time.time()    
+    """start = time.time()    
 
     response = requests.post(POST_TARGET_URL, json={"quiz":quiz})
 
