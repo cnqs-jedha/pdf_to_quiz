@@ -4,10 +4,13 @@ from src.utils.extractor import get_all_pdfs_data
 from src.pipeline.tokenizer import chunk_text, count_tokens, chunk_with_metadata
 from src.pipeline.embedder import get_embeddings
 from src.pipeline.chroma_handler import save_to_chroma
-from src.pipeline.clustering_theme import hdbscan_clustering, count_chunks_by_theme
+#from src.pipeline.clustering_latent_topics_simple import topic_detection
+#from src.pipeline.clustering_chunks_hdbscan import topic_detection, count_chunks_by_theme
+from src.pipeline.clustering_chunks_simple import topic_detection, count_chunks_by_theme
+#from src.pipeline.clustering_embedding import topic_detection, count_chunks_by_theme
 from src.pipeline.collect_best_chunks_to_prompt import find_best_chunk_to_prompt
 from src.pipeline.quiz_generator import generate_quiz_from_chunks
-from src.utils.normalizer import normalize_text
+from src.utils.normalizer import normalize_text, normalize_list_keywords
 from langchain_chroma import Chroma
 #from langchain_community.embeddings import HuggingFaceEmbeddings
 #from langchain_huggingface import HuggingFaceEmbeddings
@@ -71,18 +74,29 @@ def main(difficulty="standard"):
     timings.append({"Etape": "Chunk des données", "Durée (sec)": duration})
     print(f"Avancement : {(5/nbr_steps)*100} %")
     
-    # 6. Clustering
+    # 6. Détection des thèmes
     
     start = time.time()
-    data_with_theme = hdbscan_clustering(chunks)
-    # print(data_with_theme)
+    
+    # Clustering non sémantique, qui n'utilise pas les embeddings
+    target_topics = 6 # Nombre cible de topics à définir
+    themes = topic_detection(chunks, n_topics=target_topics)
 
-    counts_themes = count_chunks_by_theme(data_with_theme)
-    # print(counts_themes)
+    # Clustering sémantique qui utilise les embeddings 
+    '''
+    all_texts = [c["text"] for c in chunks]
+    embeddings = get_embeddings(all_texts, EMBEDDING_MODEL_NAME)
+    themes = topic_detection(chunks, embeddings)
+    '''
+    #print(themes)
+    counts_themes = count_chunks_by_theme(themes)
+    print(counts_themes)
 
     counts_themes.pop("other", None)
-    list_themes= list(counts_themes.keys())
-    print("Liste des thèmes : ", list_themes)
+    list_themes_raw= list(counts_themes.keys())
+    list_themes_clean=normalize_list_keywords(list_themes_raw) # suppression des redondances dans les keywords si lemme commun
+    print("Liste des thèmes bruts : ", list_themes_raw)
+    print("Liste des thèmes nettoyés : ", list_themes_clean)
 
     duration = time.time() - start
     timings.append({"Etape": "Thèmes créés", "Durée (sec)": duration})
@@ -92,7 +106,7 @@ def main(difficulty="standard"):
     # 7. Stockage Chroma
     start = time.time()
 
-    chroma_db = save_to_chroma(data_with_theme, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH)
+    chroma_db = save_to_chroma(chunks, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH)
 
     duration = time.time() - start
     timings.append({"Etape": "Création et stockage de la VectorDB", "Durée (sec)": duration})

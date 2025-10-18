@@ -17,6 +17,8 @@ SHORTCUT_MIME = "application/vnd.google-apps.shortcut"
 #     "/data/RA16_C3_HIGE_CM1_Th3_temps_Revolution_et_Empire_619871.pdf"
 # ]
 CHROMA_DB_PATH = "chroma_db"
-EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
-#EMBEDDING_MODEL_NAME = "OrdalieTech/Solon-embeddings-large-0.1"
+#EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2" # entraîné sur des textes en anglais 
+EMBEDDING_MODEL_NAME = "paraphrase-multilingual-MiniLM-L12-v2" # multilingue
+#EMBEDDING_MODEL_NAME = "dangvantuan/sentence-camembert-base" # adapté au français
+#EMBEDDING_MODEL_NAME = "OrdalieTech/Solon-embeddings-large-0.1" # adapté au français
 POST_TARGET_URL = "http://api:8000/send_quiz" #If local -> replace api by localhost else replace localhost by api

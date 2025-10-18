@@ -157,3 +157,33 @@ def normalize_text(text: str) -> str:
     text = re.sub(r"\s+", " ", text).strip()  # nettoie les espaces
 
     return text
+
+
+def normalize_keywords(keywords):
+    """
+    Supprime les redondances de mots, dans un groupe de mots, en fonction de leur forme lemmatisée
+    Input : keywords (string)
+    Ouput : set de keywords sans redondance
+    """
+    keywords_clean = {}
+    for word in keywords:
+        token = nlp(word)
+        lemma = token[0].lemma_  # la forme lemmatisée du token
+        if lemma not in keywords_clean:
+            keywords_clean[lemma] = word  # ajouter le mot si c'est la première fois qu'on rencontre sa forme lemmatisée
+    return set(keywords_clean.values())
+    
+
+def normalize_list_keywords(list_raw):
+    """
+    Supprime les redondances de mots, dans une liste de groupe de mots, en fonction de leur forme lemmatisée
+    Input : list_raw (liste): liste de groupe de mots
+    Output : liste de groupes de mots nettoyée
+    """
+    list_clean=[]
+    for group in list_raw:
+        words = [word.strip() for word in group.split(',')]
+        words_normalized = normalize_keywords(words)
+        words_chained = ", ".join(sorted(words_normalized))
+        list_clean.append(words_chained)
+    return list_clean

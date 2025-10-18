@@ -30,3 +30,7 @@ fastapi
 uvicorn
 hdbscan
 pypdf
+umap-learn
+keybert
+keyphrase-vectorizers
+bertopic[all]

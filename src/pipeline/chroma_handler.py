@@ -29,9 +29,7 @@ def save_to_chroma(chunks, model_name, db_path):
                     "chunk_id": chunk["chunk_id"],
                     "file_id": chunk["file_id"],
                     "file_name": chunk["file_name"],
-                    "page": chunk["page"],
-                    "theme": chunk.get("theme", "unknown"),
-                    "merged_cluster": chunk.get("merged_cluster", None)
+                    "page": chunk["page"]
                 }
             )
         )
