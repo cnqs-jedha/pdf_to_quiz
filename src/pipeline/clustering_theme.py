@@ -19,6 +19,8 @@ from sklearn.metrics import silhouette_score
 from sklearn.cluster import AgglomerativeClustering
 import hdbscan
 from sklearn.preprocessing import normalize
+
+from src.utils.normalizer import normalize_keywords
 from collections import Counter
 import re
 
@@ -184,6 +186,7 @@ def extract_top_keywords(df, cluster_col="hdb_cluster", text_col="nlp_ready", to
             words = vectorizer.get_feature_names_out()
             top_words = [w for w, _ in sorted(zip(words, scores), key=lambda x: x[1], reverse=True)[:top_n]]
             themes[cluster_id] = ", ".join(top_words) if top_words else "(empty)"
+            # themes[cluster_id] = themes[cluster_id].apply(lambda x: normalize_keywords(x))
         except ValueError:
             themes[cluster_id] = "(empty)"
 
@@ -324,6 +327,7 @@ def topic_detection(chunks, n_topics=3):
     else:
         theme_to_json = df_chunks.drop(columns=["hdb_cluster", "nlp_ready", 
                                             "desc_token_temp", "nlp_ready_temp", "string", "desc_token"]).to_dict(orient="records")
+
     return theme_to_json
 
 
