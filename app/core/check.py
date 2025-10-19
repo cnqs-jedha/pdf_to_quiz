@@ -2,7 +2,7 @@ import requests
 import gradio as gr
 from core.config import API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, BASE_DIR, json_path
 
-
+# Récupère les status de la génération d'un quiz
 def check_ready_api():
     try:
         r = requests.get(f"{API_BASE_URL}/ready", timeout=5)
@@ -13,7 +13,7 @@ def check_ready_api():
         print(f"[WARN] API non prête : {e}")
     return False, {"status": "error", "quiz_count": "Quiz vide", "message": "Error with api ready"}
 
-# ok, info = check_ready()
+# Donne les infos de l'api ready à gradio
 def check_ready_for_gradio():
     quiz_ready, info = check_ready_api()
     if quiz_ready:

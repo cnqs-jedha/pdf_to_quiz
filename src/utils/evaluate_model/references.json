@@ -1,10 +1,10 @@
 [
   {
     "id": 1,
-    "question": "Que s'est il passé au moment des Grandes Invasions ?",
+    "question": "Quand débute et quand se termine l'Antiquité?",
     "references": [
-      "Au Veme siècle, des peuples germaniques, les barbabres, venant de toutes l'Europe envahissent l'Empire Romain d'Occident, dont la Gaule fait partie.",
-      "Un seul de ces peuples, les Francs, s'installe et fait disparaître l'Empire-Romain."
+      "L'antiquité débute vers 3 000 av. Jésus-Christ et se termine à la chute de l'Empire romen en 476.",
+      "L'antiquité début avec l'apparation des premiers textes vers 3 000 av. Jésus-Christ. Elle est marqué par une période de domination par les Celtes et les Gaulois, qui tombe sous domination romaine en 52 av. Jésus-Christ. En 476, c'est la fin de l'Empire romain, qui marque la fin de l'Antiquité"
     ],
     "label": 1
   },
@@ -72,10 +72,10 @@
   },
   {
     "id": 8,
-    "question": " Qui sont les paysans?",
+    "question": " Quelles sont les grandes étapes du règne de Napoléon?",
     "references": [
-      "Les paysans vivent généralement dans des villages et sont soumis à un seigneur.",
-      "Il existe deux sortes de paysans : les serfs, et les vilains. Les serfs, appartiennent au seigneur, ainsi que la terre qu'ils travaillent et occupent. Ils n'ont aucune liberté. La plus grosse partie de leur récolte va au seigneur. Les vilains eux, peuvent changer de domaine, mais ils doivent payer des impôts au seigneur."
+      "Napoléon est couronnée empereur en 1804. Il a mené de grandes batailles dont les plus connues sont Austerlitz et Waterloo. Il a été exilé sur l'île d'Elbe et sur l'île Sainte-Hélène.",
+      "Napoléon est couronnée empereur en 1804 et devient Napoléon 1er. Il est à la tête de la plus grande armée d'Europe. Il domaine l'Europe de 1805 à 1811 avec des célèbres vistoires : Austerlitz en 1805 ou encore Iéna en 1806. Il crée le premier code civil. Napoléon abdique après de lourdes défaites et est exilé sur l'île d'Elbe, d'où il revient. Il mène une dernière bataille; qui sera sa dernière défaite : Waterloo. Il est de nouveau exilé et meurt sur l'île Sainte-Hélène en 1821."
     ],
     "label": 1
   },
@@ -123,10 +123,10 @@
   },
   {
     "id": 13,
-    "question": "Qu'est ce que la Réforme ?",
+    "question": "Qui sont les philospohes des Lumières ?. Citez au moins les noms de chacun d'entre eux",
     "references": [
-      "La Réforme commence en 1517 avec Martin Luther, un moine allemand qui critique l'Église catholique.",
-      "Il crée la première église protestante, l'Église luthérienne. Vers 1540, le français Jean Calvin fonde une autre église protestante, l'Église calviniste."
+      "Diderot, Montesqieu, Voltaire et Rousseau.",
+      "Denis Diderot (1713 - 1784), Montesquieu (1689 - 1755), François-Marie Arouet, dit Voltaire (1694 - 1778), Jean-Jacques Roussea (1712 - 1778)."
     ],
     "label": 1
   },

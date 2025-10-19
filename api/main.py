@@ -3,6 +3,26 @@ from api.routes.quiz_routes import router as quiz_router
 from api.routes.health_routes import router as health_router
 from api.routes.admin_routes import router as admin_router
 
+"""
+===========================================================
+FICHIER PRINCIPAL DE L’APPLICATION FASTAPI
+===========================================================
+
+Ce module initialise et configure l’application FastAPI servant d’API pour le projet de génération de quiz.
+
+Fonctionnalités :
+- Crée l’application FastAPI avec titre, version et contact.
+- Initialise l’état global de l’application (`last_received_quiz`, `quiz_history`).
+- Monte les différents routeurs :
+    * quiz_routes → routes principales pour gérer les quiz
+    * health_routes → vérification de l’état de l’API
+    * admin_routes → gestion de l’historique et réinitialisation
+
+Ce fichier sert de point d’entrée pour le serveur FastAPI.
+Exemple d’exécution :
+    uvicorn main:app --reload
+"""
+
 app = FastAPI(
     title="Quiz API",
     description="""

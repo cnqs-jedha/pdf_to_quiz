@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics import precision_score
-from scipy.stats import spearmanr
 import nltk
 from nltk.tokenize import sent_tokenize
 
@@ -28,7 +27,7 @@ with open(GEN_FILE, "r", encoding="utf-8") as f:
 # Paramètres du modèle d'embeddings
 MODEL_NAME = "all-MiniLM-L6-v2" # mini-BERT performant et rapide
 model = SentenceTransformer(MODEL_NAME)
-THRESHOLD = 0.63  # seuil de décision
+THRESHOLD = 0.75  # seuil de décision
 
 def chunk_and_compare(gen_resp, ref_texts, model):
     """Découpe une réponse générée en phrases et prend la meilleure similarité avec les références."""
