@@ -2,16 +2,25 @@ from src.pipeline.config import CHROMA_DB_PATH, EMBEDDING_MODEL_NAME, POST_TARGE
 from src.utils.drive_import import authenticate_google, get_pdfs_ids
 from src.utils.extractor import get_all_pdfs_data
 from src.pipeline.tokenizer import chunk_with_metadata
+# from src.pipeline.embedder import get_embeddings
 from src.pipeline.chroma_handler import save_to_chroma
-from src.pipeline.clustering_theme import hdbscan_clustering, count_chunks_by_theme
+#from src.pipeline.clustering_latent_topics_simple import topic_detection
+#from src.pipeline.clustering_chunks_hdbscan import topic_detection, count_chunks_by_theme
+from src.pipeline.clustering_theme import topic_detection, count_chunks_by_theme
+# from src.pipeline.clustering_theme import hdbscan_clustering, count_chunks_by_theme
+#from src.pipeline.clustering_embedding import topic_detection, count_chunks_by_theme
 from src.pipeline.collect_best_chunks_to_prompt import find_best_chunk_to_prompt
 from src.pipeline.quiz_generator import generate_quiz_from_chunks
-from src.utils.normalizer import normalize_text
+from src.utils.normalizer import normalize_text, normalize_list_keywords
+# from langchain_chroma import Chroma
+#from langchain_community.embeddings import HuggingFaceEmbeddings
+#from langchain_huggingface import HuggingFaceEmbeddings
 from src.utils.status_to_api import notify_stage
 
 import requests
 import time
 import argparse
+
 
 def main(drive_url, difficulty="standard"):
     
@@ -71,15 +80,28 @@ def main(drive_url, difficulty="standard"):
     timings.append({"Etape": "Chunk des données", "Durée (sec)": duration})
     print(f"Avancement : {(5/nbr_steps)*100} %")
     
-    # 6. Clustering
+    # 6. Détection des thèmes
     start = time.time()
-
+    
     notify_stage("Analyse des thèmes...")
-    data_with_theme = hdbscan_clustering(chunks)
-    counts_themes = count_chunks_by_theme(data_with_theme)
-    counts_themes.pop("other", None)
-    list_themes= list(counts_themes.keys())
-    print(list_themes)
+    # Clustering non sémantique, qui n'utilise pas les embeddings
+    target_topics = 5 # Nombre cible de topics à définir
+    themes = topic_detection(chunks, n_topics=target_topics)
+
+    # Clustering sémantique qui utilise les embeddings 
+    '''
+    all_texts = [c["text"] for c in chunks]
+    embeddings = get_embeddings(all_texts, EMBEDDING_MODEL_NAME)
+    themes = topic_detection(chunks, embeddings)
+    '''
+    #print(themes)
+    counts_themes = count_chunks_by_theme(themes)
+    print(counts_themes)
+
+    list_themes_raw= list(counts_themes.keys())
+    list_themes=normalize_list_keywords(list_themes_raw) # suppression des redondances dans les keywords si lemme commun
+    print("Liste des thèmes bruts : ", list_themes_raw)
+    print("Liste des thèmes nettoyés : ", list_themes)
 
     duration = time.time() - start
     timings.append({"Etape": "Thèmes créés", "Durée (sec)": duration})
@@ -88,7 +110,7 @@ def main(drive_url, difficulty="standard"):
     # 7. Stockage Chroma
     start = time.time()
 
-    chroma_db = save_to_chroma(data_with_theme, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH)
+    chroma_db = save_to_chroma(themes, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH)
 
     duration = time.time() - start
     timings.append({"Etape": "Création et stockage de la VectorDB", "Durée (sec)": duration})
