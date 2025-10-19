@@ -77,18 +77,19 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
                     """,
                     elem_classes=["right-col-title"]
                 )
+                # Bouton pour voir l'historique
+                view_history_btn = gr.Button(
+                    "Voir mes statistiques",
+                    # variant="secondary",
+                    elem_classes=["tertiary-btn"]
+                )
                 restart_quiz_home = gr.Button(
                     "Tester mes connaissances",
                     variant="secondary",
                     elem_classes=["secondary-btn"]
                 )
                 
-                # Bouton pour voir l'historique
-                view_history_btn = gr.Button(
-                    "📊 Voir mes statistiques",
-                    variant="secondary",
-                    elem_classes=["secondary-btn"]
-                )
+                
 
 
     # ============================================
@@ -164,7 +165,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     with gr.Column(elem_classes=["stats-page"], visible=False) as stats_page:
         gr.Markdown(
             """
-            <h1 class="stats-page-title">📊 Mes Statistiques</h1>
+            <h1 class="stats-page-title">Mes Statistiques</h1>
             <p class="stats-page-subtitle">Consulte tes performances et ton évolution</p>
             """,
             elem_classes=["stats-header"]
@@ -184,8 +185,8 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
         
         # Boutons de navigation
         with gr.Row():
-            back_to_home_btn = gr.Button("🏠 Retour à l'accueil", variant="secondary", elem_classes=["secondary-btn"])
-            new_quiz_from_stats_btn = gr.Button("🔄 Nouveau quiz", variant="primary", elem_classes=["primary-btn"])
+            back_to_home_btn = gr.Button("Retour à l'accueil", variant="secondary", elem_classes=["secondary-btn"])
+            new_quiz_from_stats_btn = gr.Button("Nouveau quiz", variant="primary", elem_classes=["primary-btn"])
 
     # ============================================
     # BLOC D'HISTORIQUE : STATISTIQUES UTILISATEUR (ANCIEN - À SUPPRIMER)
@@ -247,8 +248,8 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
         
         # Boutons pour rejouer et voir les statistiques
         with gr.Row():
-            restart_btn = gr.Button("🔄 Rejouer", visible=False, variant="primary", elem_classes=["primary-btn"])
-            view_stats_btn = gr.Button("📊 Voir mes statistiques", visible=False, variant="secondary", elem_classes=["secondary-btn"])
+            restart_btn = gr.Button("Rejouer", visible=False, variant="primary", elem_classes=["primary-btn"])
+            view_stats_btn = gr.Button("Voir mes statistiques", visible=False, variant="secondary", elem_classes=["secondary-btn"])
 
     # ============================================
     # ÉTATS INTERNES DE L'APPLICATION

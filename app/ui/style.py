@@ -19,7 +19,6 @@ custom_css = """
 
 .stats-header {
     text-align: center;
-    margin-bottom: 3rem;
     padding: 0;
     background: transparent;
     border-radius: 15px;
@@ -51,8 +50,6 @@ custom_css = """
     font-weight: 500;
 }
 
-
-
 /* ============================================
    STYLES POUR L'HISTORIQUE (ANCIEN)
    ============================================ */
@@ -63,10 +60,6 @@ custom_css = """
     margin: 0 auto;
 }
 
-.stats-container {
-    margin: 2rem 0;
-}
-
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -75,29 +68,31 @@ custom_css = """
 }
 
 .stat-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 2rem;
-    border-radius: 15px;
+    background: linear-gradient(166deg, #8704FD -1.28%, #33025F 99.96%); color: white;
+    padding: 1.25rem .75rem;
+    border-radius: 1rem;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    display: flex;
     transition: transform 0.3s ease;
 }
 
-.stat-card:hover {
-    transform: translateY(-5px);
+.stat-card > div {
+    align-self:center;
+    width: 100%;
 }
 
 .stat-card h3 {
     font-size: 2.5rem;
-    margin: 0 0 0.5rem 0;
+    margin: 0;
     font-weight: bold;
+    color: #FFFFFF;
 }
 
 .stat-card p {
     margin: 0;
     font-size: 1rem;
-    opacity: 0.9;
+    opacity: 0.7;
+    color: #FFFFFF;
 }
 
 .limit-info {
@@ -506,7 +501,7 @@ body, .gradio-container {
 }
 
 .score-card {
-    background-color: #F9F9F9;
+    background-color: #EFEDF2;
     padding: 1rem 1.5rem;
     border-radius: 1rem;
     display: flex;
@@ -601,7 +596,7 @@ body, .gradio-container {
 /* Study card */
 .study-container {
     padding: 1.5rem;
-    background-color: #F9F9F9;
+    background-color: #EFEDF2;
     border-radius: 1rem;
 }
 
@@ -610,7 +605,6 @@ body, .gradio-container {
     text-align: center;
     color: #1e293b;
     font-weight: 700;
-    margin-bottom: 1rem;
 }
 
 .study-intro {
@@ -632,14 +626,13 @@ body, .gradio-container {
     padding: 1rem;
     border-radius: 1rem;
     background-color: #FFFFFF;
-    border: 1px solid #e2e8f0;
+/*    border: 1px solid #e2e8f0;*/
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 1rem;
     align-items: center;
     text-decoration: none;
-    transition: all .2s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    transition: .3s ease;
 }
 
 .study-card:hover {
@@ -656,7 +649,6 @@ body, .gradio-container {
     font-weight: 600;
     margin-bottom: 6px;
     display: inline-block;
-    border: 1px solid rgba(135, 4, 253, 0.2);
 }
 
 .pdf-icon-container{
@@ -695,7 +687,7 @@ body, .gradio-container {
 
 /* Style pour le bloc de bilan par thème - même style que study-container */
 .bilan-theme { 
-    background: #F9F9F9 !important;  /* Même fond que study-container */
+    background: #EFEDF2 !important;  /* Même fond que study-container */
     border-radius: 1rem !important;  /* Coins arrondis */
     padding: 1.5rem !important;  /* Espacement interne */
     margin: 1rem 0 !important;  /* Espacement vertical */
@@ -750,7 +742,13 @@ body, .gradio-container {
 
 /* Effet de survol pour les boutons principaux */
 .primary-btn:hover { 
-    background-color: #590AA0;
+    background: #590AA0;
+}
+
+/* Effet de survol pour les boutons principaux */
+.primary-btn:hover { 
+    background: #590AA0;
+    color: white;
 }
 
 .secondary-btn { 
@@ -759,19 +757,34 @@ body, .gradio-container {
     border-radius: 8px !important;  /* Coins arrondis */
     padding: 11px 23px !important;  /* Espacement interne */
     font-weight: 600 !important;  /* Texte semi-gras */
-    transition: all 0.2s ease !important;  /* Animation fluide */
     color: #8704FD;
+    transition: all 0.3s ease !important;  /* Animation fluide */
 }
 
-/* Effet de survol pour les boutons principaux */
-.primary-btn:hover { 
-    background-color: #590AA0;
+.secondary-btn:hover {
+    background: #8704fd;
     color: white;
 }
 
+.tertiary-btn {
+    background: #FFFFFF;  /* Dégradé bleu */
+    border: 1px solid #E9E6EC;  /* Pas de bordure */
+    border-radius: 8px !important;  /* Coins arrondis */
+    padding: 11px 23px !important;  /* Espacement interne */
+    font-weight: 600 !important;  /* Texte semi-gras */
+    color: #21003F;
+    box-shadow: none;
+    transition: all 0.3s ease !important;  /* Animation fluide */
+}
+
+.tertiary-btn:hover {
+    background: #F3E6FF;
+    color: #8704FD;
+    border: 1px solid #FFFFFF;
+}
 
 /* ============================================
-   STYLES POUR LA BARRE DE PROGRESSION
+    STYLES POUR LA BARRE DE PROGRESSION
    ============================================ */
 /* Conteneur de la barre de progression */
 #quiz-progress {
@@ -1078,7 +1091,7 @@ body, .gradio-container {
 }
 
 .home .col-block {
-    background-color: #F9F9F9;
+    background-color: #EFEDF2;
     border-radius: 1rem;
     padding: 1.5rem;
     justify-content: space-between;

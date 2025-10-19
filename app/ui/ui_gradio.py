@@ -765,24 +765,33 @@ def show_user_history():
             stats_html = f"""
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h3>{total_sessions}</h3>
-                    <p>Quiz réalisés {sessions_indicator}</p>
-                    <small class="limit-info">{"⚠️ Limite atteinte" if total_sessions >= max_sessions else "✅ Dans la limite"}</small>
+                    <div>
+                        <h3>{total_sessions}</h3>
+                        <p>Quiz réalisés</p>
+                    </div>
                 </div>
                 <div class="stat-card">
-                    <h3>{total_questions}</h3>
-                    <p>Questions répondues</p>
+                    <div>
+                        <h3>{total_questions}</h3>
+                        <p>Questions répondues</p>
+                    </div>
                 </div>
                 <div class="stat-card">
-                    <h3>{overall_percentage:.1f}%</h3>
-                    <p>Taux de réussite</p>
+                    <div>
+                        <h3>{total_correct}</h3>
+                        <p>Bonnes réponses</p>
+                    </div>
                 </div>
                 <div class="stat-card">
-                    <h3>{total_correct}</h3>
-                    <p>Bonnes réponses</p>
+                    <div>
+                        <h3>{overall_percentage:.1f}%</h3>
+                        <p>Taux de réussite</p>
+                    </div>
                 </div>
             </div>
             """
+            #{sessions_indicator}
+            # <small class="limit-info">{"⚠️ Limite atteinte" if total_sessions >= max_sessions else "✅ Dans la limite"}</small>
             
             # Créer des cartes pour les sessions précédentes
             sessions_cards_html = ""
