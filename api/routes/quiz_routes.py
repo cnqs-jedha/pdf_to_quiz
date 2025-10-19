@@ -2,8 +2,9 @@ from fastapi import APIRouter, Request, HTTPException
 import os
 import subprocess
 import requests
+import logging
 from fastapi.responses import JSONResponse
-from api.models.quiz_models import Quiz, QuizResponse, PipelineRequest, PipelineRequest
+from api.models.quiz_models import Quiz, QuizResponse, PipelineRequest, UserAnswer, UserHistory, QuizSession
 from api.utils.quiz_manager import add_quiz, get_last_quiz, get_or_create_user_history
 from api.utils.quiz_logic import update_user_performance, compute_weighted_questions
 
@@ -29,6 +30,7 @@ Toutes les routes sont regroupées sous le tag "Quiz" pour la documentation Swag
 """
 
 router = APIRouter(tags=["Quiz"])
+
 
 # Envoie le quiz à l'api
 @router.post("/send_quiz", response_model=QuizResponse)
@@ -83,7 +85,7 @@ def run_pipeline(req: PipelineRequest):
     if not drive_link:
         raise HTTPException(status_code=400, detail="drive_link manquant")
 
-    print("🛰️ Appel du service pipeline...")
+    logging.info("🛰️ Appel du service pipeline...")
 
     try:
         # Appel rapide vers le conteneur pipeline
@@ -103,6 +105,7 @@ def run_pipeline(req: PipelineRequest):
 
 @router.post("/save_answer")
 async def save_user_answer(request: Request, answer: UserAnswer):
+    """Sauvegarde une réponse utilisateur et met à jour son historique."""
     user_history = get_or_create_user_history(request.app)
     update_user_performance(user_history, answer)
     return {"message": "Réponse sauvegardée avec succès"}
