@@ -17,6 +17,9 @@ from pathlib import Path  # Pour gérer les chemins de fichiers
 import gradio as gr  # Framework pour créer l'interface web
 import pandas as pd  # Pour manipuler les tableaux de données
 import requests  # Pour faire des requêtes HTTP vers l'API
+import matplotlib.pyplot as plt
+import io  # Pour la gestion des flux de données
+import base64  # Pour l'encodage des images
 
 # Imports des modules personnalisés
 from core.helpers import build_resume_tables  # Pour construire les tableaux de résultats
@@ -146,7 +149,7 @@ def start_quiz():
     
     Cette fonction :
     1. Charge les questions depuis l'API ou le fichier local
-    2. Sélectionne aléatoirement 10 questions maximum
+    2. Sélectionne aléatoirement 10 questions maximum avec système de poids
     3. Initialise l'interface avec la première question
     4. Retourne tous les éléments de l'interface mis à jour
     
@@ -155,9 +158,27 @@ def start_quiz():
     """
     print("⏳ Chargement des questions depuis l'API...", flush=True)
     
-    # Charger les questions depuis l'API ou le fichier local
-    niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
-    print(f"📋 {len(niveau)} questions récupérées", flush=True)
+    # Essayer d'abord de récupérer les questions pondérées
+    try:
+        response = requests.get(f"{API_BASE_URL}/weighted_questions?max_questions=10", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("questions"):
+                niveau = data["questions"]
+                print(f"📋 {len(niveau)} questions pondérées récupérées", flush=True)
+            else:
+                # Fallback vers l'ancien système
+                niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
+                print(f"📋 {len(niveau)} questions récupérées (mode fallback)", flush=True)
+        else:
+            # Fallback vers l'ancien système
+            niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
+            print(f"📋 {len(niveau)} questions récupérées (mode fallback)", flush=True)
+    except Exception as e:
+        print(f"⚠️ Erreur lors du chargement des questions pondérées: {e}", flush=True)
+        # Fallback vers l'ancien système
+        niveau = load_questions(API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, json_path)
+        print(f"📋 {len(niveau)} questions récupérées (mode fallback)", flush=True)
 
     # Vérifier qu'il y a des questions disponibles
     if not niveau:
@@ -174,8 +195,19 @@ def start_quiz():
     duplicates_count = 0
     
     for question in niveau:
-        question_text = question.get("question", "").strip().lower()
-        options = question.get("options", [])
+        # Adapter à la nouvelle structure des questions
+        if "question" in question and isinstance(question["question"], dict):
+            # Nouvelle structure : question.llm_response.text
+            text_value = question["question"].get("llm_response", {}).get("text", "")
+            question_text = str(text_value).strip().lower() if text_value else ""
+            options_dict = question["question"].get("llm_response", {}).get("choices", {})
+            options = list(options_dict.values()) if options_dict else []
+        else:
+            # Ancienne structure : question.question
+            text_value = question.get("question", "")
+            question_text = str(text_value).strip().lower() if text_value else ""
+            options = question.get("options", [])
+        
         # Créer une signature unique basée sur la question et les options triées
         options_signature = "|".join(sorted([opt.strip().lower() for opt in options if opt.strip()]))
         question_signature = f"{question_text}|{options_signature}"
@@ -191,7 +223,12 @@ def start_quiz():
         print(f"🔄 {duplicates_count} questions en doublon détectées et supprimées", flush=True)
     
     # Sélectionner aléatoirement 10 questions maximum parmi les questions uniques
-    qs = random.sample(unique_questions, min(10, len(unique_questions)))
+    # Si moins de 10 questions disponibles, prendre toutes les questions disponibles
+    max_questions = min(10, len(unique_questions))
+    if max_questions < 10:
+        print(f"⚠️ Seulement {max_questions} questions disponibles (moins que les 10 souhaitées)")
+    
+    qs = random.sample(unique_questions, max_questions)
     resume = []  # Liste pour stocker les résultats de chaque question
     
     # Générer l'interface pour la première question
@@ -211,16 +248,35 @@ def start_quiz():
         gr.update(visible=False),  # details_html (masquer le tableau des détails)
         gr.update(visible=False),  # resume_table (masquer le tableau de résumé)
         gr.update(visible=False),  # restart_btn (masquer le bouton rejouer)
+        gr.update(visible=False),  # view_stats_btn (masquer le bouton statistiques)
         gr.update(visible=False),  # recap_block (masquer le bloc de récapitulatif)
     ]
 
 def start_quiz_from_home():
-    """Démarre le quiz depuis la page d’accueil (cache home, montre quiz)."""
+    """Démarre le quiz depuis la page d'accueil (cache home, montre quiz)."""
     quiz_updates = start_quiz()
 
     return [gr.update(visible=False),  # home masqué
             gr.update(visible=False),  # loader masqué
             gr.update(visible=True)] + quiz_updates
+
+def start_quiz_from_history():
+    """Démarre le quiz depuis l'historique (cache history, montre quiz)."""
+    quiz_updates = start_quiz()
+
+    return [gr.update(visible=False),  # home masqué
+            gr.update(visible=False),  # loader masqué
+            gr.update(visible=True),   # quiz visible
+            gr.update(visible=False)] + quiz_updates  # history masqué
+
+def start_quiz_from_stats():
+    """Démarre le quiz depuis la page des statistiques (cache stats, montre quiz)."""
+    quiz_updates = start_quiz()
+
+    return [gr.update(visible=False),  # home masqué
+            gr.update(visible=False),  # loader masqué
+            gr.update(visible=True),   # quiz visible
+            gr.update(visible=False)] + quiz_updates  # stats_page masqué
 
 
 
@@ -254,8 +310,19 @@ def update_ui(qs, index, score, finished, feedback_txt, resume):
     # Formater le numéro de question (ex: "01/10")
     numero = f"{index+1:02d}/{total:02d}"
     
-    # Créer le HTML pour la question
-    question_md = f"### {q['question']}"
+    # Adapter à la nouvelle structure des questions
+    if "question" in q and isinstance(q["question"], dict):
+        # Nouvelle structure : question.llm_response.text
+        question_text = q["question"].get("llm_response", {}).get("text", "")
+        question_md = f"### {question_text}"
+        # Extraire les options de la nouvelle structure
+        choices_dict = q["question"].get("llm_response", {}).get("choices", {})
+        options = list(choices_dict.values()) if choices_dict else []
+    else:
+        # Ancienne structure : question.question
+        question_text = q.get("question", "")
+        question_md = f"### {question_text}"
+        options = q.get("options", [])
     
     # Créer la barre de progression
     progress_percentage = ((index+1)/total)*100
@@ -270,8 +337,8 @@ def update_ui(qs, index, score, finished, feedback_txt, resume):
     # Retourner les mises à jour pour tous les éléments
     return [
         gr.update(value=question_md, visible=True),           # question (afficher la question)
-        gr.update(value=progress_html, visible=True),           # progress (afficher la barre de progression)
-        gr.update(choices=q["options"], value=None, interactive=True, visible=True, elem_classes=["quiz-radio"], elem_id="choices-radio"),  # choix (options de réponse)
+        gr.update(value=progress_html, visible=True),           # progress (afficher l'indicateur de progression)
+        gr.update(choices=options, value=None, interactive=True, visible=True, elem_classes=["quiz-radio"], elem_id="choices-radio"),  # choix (options de réponse)
         gr.update(value=q.get("long_answer", ""), visible=False), # explain_md (masquer l'explication)
         gr.update(value="", visible=False),                     # script_injector (masquer les scripts)
         gr.update(value=score_txt, visible=True),               # score_display (afficher le score)
@@ -283,6 +350,30 @@ def update_final_screen(qs, score, resume):
     finished = True
     total_questions = len(qs)
     pourcentage = (score / total_questions) * 100 if total_questions else 0
+    
+    # Sauvegarder la session complète
+    try:
+        from datetime import datetime
+        import uuid
+        
+        session_id = str(uuid.uuid4())
+        themes_covered = list(set([r.get("Thème", "Sans thème") for r in resume]))
+        
+        session_data = {
+            "session_id": session_id,
+            "start_time": datetime.now().isoformat(),  # On pourrait améliorer cela
+            "end_time": datetime.now().isoformat(),
+            "total_questions": total_questions,
+            "correct_answers": score,
+            "score_percentage": pourcentage,
+            "themes_covered": themes_covered
+        }
+        
+        # Envoyer la session à l'API
+        requests.post(f"{API_BASE_URL}/save_quiz_session", json=session_data, timeout=5)
+        print(f"💾 Session sauvegardée: {session_id} - Score: {score}/{total_questions} ({pourcentage:.1f}%)")
+    except Exception as e:
+        print(f"⚠️ Erreur lors de la sauvegarde de la session: {e}")
 
     if pourcentage == 100:
         score_class = "score-top"; encouragement = "🎉 Parfait ! Tu as tout réussi !"
@@ -387,12 +478,12 @@ def update_final_screen(qs, score, resume):
             themes_details = []
             for theme in themes_a_travailler:
                 # Trouver les questions de ce thème dans le quiz
-                theme_questions = [q for q in qs if q.get("theme") == theme]
+                theme_questions = [q for q in qs if q.get("question", {}).get("metadata", {}).get("theme") == theme]
                 if theme_questions:
                     # Grouper par fichier et pages
                     file_pages = {}
                     for q in theme_questions:
-                        metadata = q.get("metadata", {})
+                        metadata = q.get("question", {}).get("metadata", {})
                         file_name = metadata.get("file_name", "Fichier inconnu")
                         page = metadata.get("page", "?")
                         drive_id = metadata.get("file_id", "")
@@ -486,6 +577,7 @@ def update_final_screen(qs, score, resume):
         gr.update(value=details_html_value, visible=True),         # details_html
         gr.update(value=detailed_copy, visible=False),              # resume_table
         gr.update(visible=True),                                   # restart_btn
+        gr.update(visible=True),                                   # view_stats_btn
         gr.update(visible=True),                                   # recap_block
     ]
 
@@ -500,8 +592,9 @@ def check_answer(reponse, qs, index, score, finished, resume):
     Cette fonction :
     1. Vérifie si la réponse est correcte
     2. Met à jour le score si nécessaire
-    3. Affiche le bouton d'explication avec le bon texte
-    4. Applique les styles visuels appropriés (vert pour correct, rouge pour incorrect)
+    3. Sauvegarde la réponse dans l'historique
+    4. Affiche le bouton d'explication avec le bon texte
+    5. Applique les styles visuels appropriés (vert pour correct, rouge pour incorrect)
     
     Args:
         reponse (str): La réponse sélectionnée par l'utilisateur
@@ -515,18 +608,52 @@ def check_answer(reponse, qs, index, score, finished, resume):
         list: Mises à jour pour tous les éléments de l'interface
     """
     if finished or reponse is None:
-        return [gr.update() for _ in range(22)]  # (moins d'éléments car explain_btn supprimé)
+        return [gr.update() for _ in range(23)]  # 23 éléments avec view_stats_btn
 
     current_q = qs[index]
-    correct = current_q.get("llm_response", {}).get("correct_answer", {}).get("answer") \
-              or current_q.get("réponse")
+    
+    # Adapter à la nouvelle structure des questions
+    if "question" in current_q and isinstance(current_q["question"], dict):
+        # Nouvelle structure : question.llm_response
+        llm_response = current_q["question"].get("llm_response", {})
+        correct = llm_response.get("correct_answer", {}).get("answer") or current_q.get("réponse")
+        metadata = current_q["question"].get("metadata", {})
+        question_text = llm_response.get("text", "")
+        long_answer = llm_response.get("correct_answer_long", "")
+    else:
+        # Ancienne structure
+        correct = current_q.get("llm_response", {}).get("correct_answer", {}).get("answer") or current_q.get("réponse")
+        metadata = current_q.get("metadata", {})
+        question_text = current_q.get("llm_response", {}).get("text", "")
+        long_answer = current_q.get("long_answer", "")
 
     is_correct = reponse == correct
     resultat = "✅" if is_correct else "❌"
 
+    # Sauvegarder la réponse dans l'historique
+    try:
+        from datetime import datetime
+        question_id = f"{metadata.get('theme', 'unknown')}_{question_text[:50]}"
+        
+        answer_data = {
+            "question_id": question_id,
+            "user_answer": reponse,
+            "correct_answer": correct,
+            "is_correct": is_correct,
+            "theme": metadata.get("theme", "Sans thème"),
+            "timestamp": datetime.now().isoformat(),
+            "quiz_session_id": "current_session"  # On peut améliorer cela plus tard
+        }
+        
+        # Envoyer la réponse à l'API
+        requests.post(f"{API_BASE_URL}/save_answer", json=answer_data, timeout=5)
+        print(f"💾 Réponse sauvegardée: {question_id[:30]}... - {'✅' if is_correct else '❌'}")
+    except Exception as e:
+        print(f"⚠️ Erreur lors de la sauvegarde de la réponse: {e}")
+
     resume.append({
-        "Thème": current_q.get("theme", "Sans thème"),
-        "Question": current_q["question"],
+        "Thème": metadata.get("theme", "Sans thème"),
+        "Question": question_text,
         "Ta réponse": reponse,
         "Bonne réponse": correct,
         "Résultat": resultat,
@@ -540,7 +667,7 @@ def check_answer(reponse, qs, index, score, finished, resume):
         <h3 class="answer-intro-bravo">✅ Bravo, c'est une bonne réponse !</h3>
         <div class="answer-container correct">
             <p class="answer-explication-title">Explication :</p>
-            <div class="answer-long-text">{current_q.get('long_answer', '')}</div>
+            <div class="answer-long-text">{long_answer}</div>
         </div>
         """
         choix_style = ["quiz-radio", "correct"]
@@ -552,7 +679,7 @@ def check_answer(reponse, qs, index, score, finished, resume):
         </div>
         <div class="answer-container wrong">
             <p class="answer-explication-title">Explication :</p>
-            <div class="answer-long-text">{current_q.get('long_answer', '')}</div>
+            <div class="answer-long-text">{long_answer}</div>
         </div>
         """
         choix_style = ["quiz-radio", "wrong"]
@@ -576,6 +703,7 @@ def check_answer(reponse, qs, index, score, finished, resume):
         gr.update(visible=False),          # details_html
         gr.update(visible=False),          # resume_table
         gr.update(visible=False),          # restart_btn
+        gr.update(visible=False),          # view_stats_btn
         gr.update(visible=False),          # recap_block
     ]
 
@@ -601,6 +729,7 @@ def next_question(qs, index, score, finished, resume):
             gr.update(visible=False),  # details_html
             gr.update(visible=False),  # resume_table
             gr.update(visible=False),  # restart_btn
+            gr.update(visible=False),  # view_stats_btn
             gr.update(visible=False),  # recap_block
         ])
         return result
@@ -609,9 +738,249 @@ def restart_quiz():
     """Relance complètement un quiz."""
     return start_quiz()
 
+def show_user_history():
+    """
+    Affiche l'historique des performances de l'utilisateur.
+    """
+    print("🔍 Début de show_user_history", flush=True)
+    try:
+        # Récupérer l'historique depuis l'API
+        print(f"📡 Appel API: {API_BASE_URL}/user_history", flush=True)
+        response = requests.get(f"{API_BASE_URL}/user_history", timeout=10)
+        print(f"📡 Réponse API: {response.status_code}", flush=True)
+        if response.status_code == 200:
+            history_data = response.json()
+            print(f"📊 Données reçues: {len(history_data.get('quiz_sessions', []))} sessions", flush=True)
+            
+            # Calculer les statistiques
+            total_sessions = len(history_data.get("quiz_sessions", []))
+            total_questions = sum(session.get("total_questions", 0) for session in history_data.get("quiz_sessions", []))
+            total_correct = sum(session.get("correct_answers", 0) for session in history_data.get("quiz_sessions", []))
+            overall_percentage = (total_correct / total_questions * 100) if total_questions > 0 else 0
+            
+            # Statistiques générales avec indicateur de limite
+            max_sessions = 5
+            sessions_indicator = f"({total_sessions}/{max_sessions})" if total_sessions >= max_sessions else f"({total_sessions}/{max_sessions})"
+            
+            stats_html = f"""
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>{total_sessions}</h3>
+                    <p>Quiz réalisés {sessions_indicator}</p>
+                    <small class="limit-info">{"⚠️ Limite atteinte" if total_sessions >= max_sessions else "✅ Dans la limite"}</small>
+                </div>
+                <div class="stat-card">
+                    <h3>{total_questions}</h3>
+                    <p>Questions répondues</p>
+                </div>
+                <div class="stat-card">
+                    <h3>{overall_percentage:.1f}%</h3>
+                    <p>Taux de réussite</p>
+                </div>
+                <div class="stat-card">
+                    <h3>{total_correct}</h3>
+                    <p>Bonnes réponses</p>
+                </div>
+            </div>
+            """
+            
+            # Créer des cartes pour les sessions précédentes
+            sessions_cards_html = ""
+            sessions_data = []
+            for session in history_data.get("quiz_sessions", []):
+                date = session.get("end_time", "Inconnue")[:10]
+                score = session.get("correct_answers", 0)
+                total = session.get("total_questions", 0)
+                percentage = session.get("score_percentage", 0)
+                themes = session.get("themes_covered", [])
+                
+                # Déterminer la classe de couleur basée sur le pourcentage
+                if percentage >= 90:
+                    card_class = "score-top"
+                elif percentage >= 75:
+                    card_class = "score-good"
+                elif percentage >= 50:
+                    card_class = "score-bof"
+                else:
+                    card_class = "score-bad"
+                
+                # Créer la carte HTML (même style que bilan-card)
+                sessions_cards_html += f"""
+                <div class="bilan-card {card_class}">
+                    <div class="bilan-header">
+                        <h4>{date}</h4>
+                        <span>{score}/{total}</span>
+                    </div>
+                    <div class="bilan-progress">
+                        <div class="bar" style="width: {percentage}%"></div>
+                    </div>
+                    <p>{percentage:.1f}% • {', '.join(themes[:3])}{'...' if len(themes) > 3 else ''}</p>
+                </div>
+                """
+                
+                # Garder aussi les données pour le tableau (au cas où)
+                sessions_data.append([
+                    date,  # Date
+                    f"{score}/{total}",  # Score
+                    total,  # Questions
+                    ", ".join(themes),  # Thèmes
+                    f"{percentage:.1f}%"  # Progression
+                ])
+            
+            # Créer un graphique simple des performances par thème
+            theme_performance = history_data.get("theme_performance", {})
+            if theme_performance:
+                
+                # Filtrer les thèmes de test et les thèmes vides
+                filtered_themes = {}
+                for theme, perf in theme_performance.items():
+                    # Exclure les thèmes de test et les thèmes vides
+                    if (theme and 
+                        not theme.startswith("test_") and 
+                        theme != "Sans thème" and 
+                        theme.strip() != "" and
+                        not theme.startswith("test_theme")):
+                        filtered_themes[theme] = perf
+                
+                if not filtered_themes:
+                    # Aucun thème valide trouvé
+                    fig, ax = plt.subplots(figsize=(10, 6))
+                    ax.text(0.5, 0.5, 'Aucune donnée de performance par thème disponible.', 
+                           ha='center', va='center', transform=ax.transAxes)
+                    ax.set_xlim(0, 1)
+                    ax.set_ylim(0, 1)
+                    ax.axis('off')
+                    chart_figure = fig
+                else:
+                    themes = list(filtered_themes.keys())
+                    success_rates = []
+                    
+                    for theme in themes:
+                        perf = filtered_themes[theme]
+                        total = perf.get("correct", 0) + perf.get("incorrect", 0)
+                        if total > 0:
+                            success_rates.append(perf.get("correct", 0) / total * 100)
+                        else:
+                            success_rates.append(0)
+                    
+                    # Créer un graphique moderne avec style professionnel
+                    plt.style.use('seaborn-v0_8-whitegrid')
+                    fig, ax = plt.subplots(figsize=(14, 8))
+                    
+                    # Fond et style moderne
+                    fig.patch.set_facecolor('#ffffff')
+                    ax.set_facecolor('#fafbfc')
+                    
+                    # Couleurs dégradées modernes
+                    colors = []
+                    for rate in success_rates:
+                        if rate >= 90:
+                            colors.append('#10b981')  # Vert émeraude
+                        elif rate >= 75:
+                            colors.append('#3b82f6')  # Bleu moderne
+                        elif rate >= 50:
+                            colors.append('#f59e0b')  # Orange ambré
+                        else:
+                            colors.append('#ef4444')  # Rouge moderne
+                    
+                    # Créer les barres avec effets
+                    bars = ax.bar(themes, success_rates, color=colors, 
+                                 edgecolor='#ffffff', linewidth=2, 
+                                 alpha=0.9)
+                    
+                    # Style du titre et des axes
+                    ax.set_title('Performances par thème', 
+                               fontsize=18, fontweight='bold', 
+                               color='#1e293b', pad=25)
+                    ax.set_xlabel('Thèmes', fontsize=14, color='#374151', fontweight='500')
+                    ax.set_ylabel('Taux de réussite (%)', fontsize=14, color='#374151', fontweight='500')
+                    
+                    # Style des axes
+                    ax.tick_params(axis='x', rotation=45, colors='#6b7280', labelsize=11)
+                    ax.tick_params(axis='y', colors='#6b7280', labelsize=11)
+                    ax.set_ylim(0, 105)
+                    
+                    # Grille subtile
+                    ax.grid(True, alpha=0.2, color='#e5e7eb', linestyle='-', linewidth=0.5)
+                    ax.set_axisbelow(True)
+                    
+                    # Ajouter les valeurs sur les barres avec style
+                    for bar, rate in zip(bars, success_rates):
+                        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 2, 
+                                f'{rate:.1f}%', ha='center', va='bottom',
+                                fontweight='bold', fontsize=10, color='#374151')
+                    
+                    # Ajouter une ligne de référence à 80%
+                    ax.axhline(y=80, color='#d1d5db', linestyle='--', alpha=0.7, linewidth=1)
+                    ax.text(len(themes)-0.5, 82, 'Objectif 80%', fontsize=10, 
+                           color='#6b7280', ha='right', va='bottom')
+                    
+                    # Ajuster l'espacement
+                    plt.tight_layout()
+                    chart_figure = fig
+            else:
+                # Créer un graphique vide
+                fig, ax = plt.subplots(figsize=(10, 6))
+                ax.text(0.5, 0.5, 'Aucune donnee de performance par theme disponible.', 
+                    ha='center', va='center', transform=ax.transAxes)
+                ax.set_xlim(0, 1)
+                ax.set_ylim(0, 1)
+                ax.axis('off')
+                chart_figure = fig
+            
+            # Créer le HTML pour les cartes de sessions (avec même structure que bilan-theme)
+            sessions_html = f"""
+            
+                <h3 class="study-title">Sessions précédentes</h3>
+                <div class="bilan-grid">
+                    {sessions_cards_html}
+                </div>
+            
+            """
+            
+            return [
+                gr.update(visible=False),  # home masqué
+                gr.update(visible=False),  # loader masqué
+                gr.update(visible=False),  # quiz masqué
+                gr.update(visible=True),   # stats_page visible
+                gr.update(value=stats_html, visible=True),  # stats_display
+                gr.update(value=chart_figure, visible=True),  # theme_performance_chart
+                gr.update(value=sessions_html, visible=True),  # sessions_table (maintenant HTML)
+                gr.update(visible=True),   # back_to_home_btn
+                gr.update(visible=True),   # new_quiz_from_stats_btn
+                gr.update(visible=False),  # recap_block masqué (résultat du quiz)
+            ]
+        else:
+            return [
+                gr.update(visible=False),  # home masqué
+                gr.update(visible=False),  # loader masqué
+                gr.update(visible=False),  # quiz masqué
+                gr.update(visible=True),   # stats_page visible
+                gr.update(value="<p>Erreur lors du chargement de l'historique.</p>", visible=True),
+                gr.update(visible=False),  # theme_performance_chart
+                gr.update(visible=False),  # sessions_table
+                gr.update(visible=True),   # back_to_home_btn
+                gr.update(visible=True),   # new_quiz_from_stats_btn
+                gr.update(visible=False),  # recap_block masqué (résultat du quiz)
+            ]
+    except Exception as e:
+        print(f"⚠️ Erreur lors du chargement de l'historique: {e}")
+        return [
+            gr.update(visible=False),  # home masqué
+            gr.update(visible=False),  # loader masqué
+            gr.update(visible=False),  # quiz masqué
+            gr.update(visible=True),   # stats_page visible
+            gr.update(value=f"<p>Erreur: {str(e)}</p>", visible=True),
+            gr.update(visible=False),  # theme_performance_chart
+            gr.update(visible=False),  # sessions_table
+            gr.update(visible=True),   # back_to_home_btn
+            gr.update(visible=True),   # new_quiz_from_stats_btn
+            gr.update(visible=False),  # recap_block masqué (résultat du quiz)
+        ]
+
 def send_drive_link_to_api(drive_link: str):
     """
-    Envoie le lien Google Drive à l’API, affiche un loader, puis montre le quiz quand prêt.
+    Envoie le lien Google Drive à l'API, affiche un loader, puis montre le quiz quand prêt.
     Fonction génératrice (yield) pour mises à jour progressives.
     """
 
@@ -654,7 +1023,7 @@ def send_drive_link_to_api(drive_link: str):
 
     # 3️⃣ Passage à la page de chargement
     yield [
-        gr.update(visible=False),  # page_erreur masquée
+        gr.update(visible=False),  # home masqué
         gr.update(visible=True),   # page_loader affichée
         gr.update(visible=False),  # page_quiz masquée
         "Pipeline lancée, génération du quiz en cours..."
@@ -667,7 +1036,7 @@ def send_drive_link_to_api(drive_link: str):
         message = quiz_data.get("message", "Traitement en cours...")
 
         yield [
-        gr.update(visible=False),  # page_erreur masquée
+        gr.update(visible=False),  # home masqué
         gr.update(visible=True),   # page_loader affichée
         gr.update(visible=False),  # page_quiz masquée
             f"{message}"
@@ -676,7 +1045,7 @@ def send_drive_link_to_api(drive_link: str):
         if quiz_ready:
             time.sleep(2)
             yield [
-                gr.update(visible=False),  # cacher page erreur
+                gr.update(visible=False),  # home masqué
                 gr.update(visible=False),  # cacher loader
                 gr.update(visible=True),   # afficher quiz
                 "✅ Quiz prêt !"
@@ -685,8 +1054,8 @@ def send_drive_link_to_api(drive_link: str):
 
     # 5️⃣ Timeout après les boucles
     yield [
-        gr.update(visible=True),
-        gr.update(visible=False),
-        gr.update(visible=False),
-        "❌ Temps d’attente dépassé. Le quiz n’a pas pu être généré."
+        gr.update(visible=True),   # home visible
+        gr.update(visible=False), # loader masqué
+        gr.update(visible=False), # quiz masqué
+        "❌ Temps d'attente dépassé. Le quiz n'a pas pu être généré."
     ]
