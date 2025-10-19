@@ -123,3 +123,32 @@ class PipelineRequest(BaseModel):
         description="URL du dossier Google Drive contenant les documents sources pour le quiz.",
         example="https://drive.google.com/drive/folders/1ABCdEfGhIJkLmNopQrStUvWxYZ"
     )
+    
+class UserAnswer(BaseModel):
+    question_id: str  # Identifiant unique de la question
+    user_answer: str  # Réponse de l'utilisateur
+    correct_answer: str  # Bonne réponse
+    is_correct: bool  # Si la réponse était correcte
+    theme: str  # Thème de la question
+    timestamp: str  # Date/heure de la réponse
+    quiz_session_id: str  # ID de la session de quiz
+
+class QuizSession(BaseModel):
+    session_id: str
+    start_time: str
+    end_time: Optional[str] = None
+    total_questions: int
+    correct_answers: int
+    score_percentage: float
+    themes_covered: List[str]
+
+class UserHistory(BaseModel):
+    user_id: str  # Pour l'instant, on peut utiliser un ID simple
+    quiz_sessions: List[QuizSession]
+    question_performance: Dict[str, Dict[str, int]]  # question_id -> {correct: int, incorrect: int}
+    theme_performance: Dict[str, Dict[str, int]]  # theme -> {correct: int, incorrect: int}
+
+class WeightedQuestion(BaseModel):
+    question: dict  # Question originale
+    weight: float  # Poids de la question (plus élevé = plus de chances d'être sélectionnée)
+    difficulty_score: float  # Score de difficulté basé sur l'historique
