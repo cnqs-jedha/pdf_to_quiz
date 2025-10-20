@@ -185,8 +185,8 @@ def extract_top_keywords(df, cluster_col="hdb_cluster", text_col="nlp_ready", to
             scores = X.mean(axis=0).A1
             words = vectorizer.get_feature_names_out()
             top_words = [w for w, _ in sorted(zip(words, scores), key=lambda x: x[1], reverse=True)[:top_n]]
-            themes[cluster_id] = ", ".join(top_words) if top_words else "(empty)"
-            # themes[cluster_id] = themes[cluster_id].apply(lambda x: normalize_keywords(x))
+            top_words_normalized = normalize_keywords(top_words)
+            themes[cluster_id] = ", ".join(sorted(top_words_normalized)) if top_words_normalized else "(empty)"
         except ValueError:
             themes[cluster_id] = "(empty)"
 
