@@ -94,14 +94,11 @@ def main(drive_url, difficulty="standard"):
     embeddings = get_embeddings(all_texts, EMBEDDING_MODEL_NAME)
     themes = topic_detection(chunks, embeddings)
     '''
-    #print(themes)
+    print(themes)
     counts_themes = count_chunks_by_theme(themes)
     print(counts_themes)
 
     list_themes= list(counts_themes.keys())
-    # list_themes=normalize_list_keywords(list_themes_raw) # suppression des redondances dans les keywords si lemme commun
-    # print("Liste des thèmes bruts : ", list_themes_raw)
-    # print("Liste des thèmes nettoyés : ", list_themes)
 
     duration = time.time() - start
     timings.append({"Etape": "Thèmes créés", "Durée (sec)": duration})
