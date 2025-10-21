@@ -11,7 +11,7 @@ from src.pipeline.clustering_theme import topic_detection, count_chunks_by_theme
 #from src.pipeline.clustering_embedding import topic_detection, count_chunks_by_theme
 from src.pipeline.collect_best_chunks_to_prompt import find_best_chunk_to_prompt
 from src.pipeline.quiz_generator import generate_quiz_from_chunks
-from src.utils.normalizer import normalize_text, normalize_list_keywords
+from src.utils.normalizer import normalize_text
 # from langchain_chroma import Chroma
 #from langchain_community.embeddings import HuggingFaceEmbeddings
 #from langchain_huggingface import HuggingFaceEmbeddings
