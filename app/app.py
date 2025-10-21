@@ -24,7 +24,7 @@ from core.config import API_BASE_URL, API_QUESTIONS_PATH, USE_API, REQUIRE_API, 
 from core.check import check_ready_for_gradio  # Pour vérifier si l'API est prête
 from core.helpers import load_questions  # Pour charger les questions
 from ui.style import custom_css  # Styles CSS personnalisés
-from ui.ui_gradio import start_quiz, start_quiz_from_home, check_answer, next_question, restart_quiz, send_drive_link_to_api  # Fonctions de l'interface
+from ui.ui_gradio import start_quiz, start_quiz_from_home, start_quiz_from_history, start_quiz_from_stats, check_answer, next_question, restart_quiz, send_drive_link_to_api, show_user_history  # Fonctions de l'interface
 
 # ============================================
 # CRÉATION DE L'INTERFACE PRINCIPALE
@@ -64,7 +64,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
                     lines=1
                 )
                 send_quiz_button = gr.Button(
-                    "Générer du quiz",
+                    "Générer le quiz",
                     variant="primary",
                     elem_classes=["primary-btn"]
                 )
@@ -77,11 +77,19 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
                     """,
                     elem_classes=["right-col-title"]
                 )
+                # Bouton pour voir l'historique
+                view_history_btn = gr.Button(
+                    "Voir mes statistiques",
+                    # variant="secondary",
+                    elem_classes=["tertiary-btn"]
+                )
                 restart_quiz_home = gr.Button(
                     "Tester mes connaissances",
                     variant="secondary",
                     elem_classes=["secondary-btn"]
                 )
+                
+                
 
 
     # ============================================
@@ -90,21 +98,25 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     
     # Page de chargement (masquée par défaut)
     with gr.Column(visible=False, elem_classes=["loading-page"]) as page_loader:
-        gr.HTML(
-            """
-            <div class="loader">
-            <div class="loader__bar"></div>
-            <div class="loader__bar"></div>
-            <div class="loader__bar"></div>
-            <div class="loader__bar"></div>
-            <div class="loader__bar"></div>
-            <div class="loader__ball"></div>
-            </div>
-            """,
-            elem_classes=["loader-component"]
-        )
-
-        loader_message = gr.Markdown("Merci de patienter pendant la création de votre quiz...")
+        with gr.Column(elem_classes=["loader-component"]):
+            gr.HTML(
+                """
+                <div class="loader">
+                    <div class="loader__bar"></div>
+                    <div class="loader__bar"></div>
+                    <div class="loader__bar"></div>
+                    <div class="loader__bar"></div>
+                    <div class="loader__bar"></div>
+                    <div class="loader__ball"></div>
+                </div>
+                """,
+                elem_id="loading-animation"
+            )
+            
+            loader_message = gr.Markdown(
+                "Merci de patienter pendant la création de votre quiz...",
+                elem_classes=["loading-text"]
+            )
 
     # ============================================
     # PAGE PRINCIPALE : INTERFACE DU QUIZ
@@ -146,6 +158,64 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
             
 
     # ============================================
+    # PAGE DÉDIÉE AUX STATISTIQUES
+    # ============================================
+    
+    # Page des statistiques (masquée par défaut)
+    with gr.Column(elem_classes=["stats-page"], visible=False) as stats_page:
+        gr.Markdown(
+            """
+            <h1 class="stats-page-title">Mes Statistiques</h1>
+            <p class="stats-page-subtitle">Consulte tes performances et ton évolution</p>
+            """,
+            elem_classes=["stats-header"]
+        )
+        
+        # Statistiques générales
+        stats_display = gr.HTML(visible=False, elem_classes=["stats-container"])
+        
+        # Graphique des performances par thème
+        theme_performance_chart = gr.Plot(visible=False, elem_classes=["chart-container"])
+        
+        # Tableau des sessions passées (maintenant en HTML)
+        sessions_table = gr.HTML(
+            visible=False, 
+            elem_classes=["sessions-table"]
+        )
+        
+        # Boutons de navigation
+        with gr.Row():
+            back_to_home_btn = gr.Button("Retour à l'accueil", variant="secondary", elem_classes=["secondary-btn"])
+            new_quiz_from_stats_btn = gr.Button("Nouveau quiz", variant="primary", elem_classes=["primary-btn"])
+
+    # ============================================
+    # BLOC D'HISTORIQUE : STATISTIQUES UTILISATEUR (ANCIEN - À SUPPRIMER)
+    # ============================================
+    
+    # Bloc d'historique (masqué par défaut) - CONSERVÉ POUR COMPATIBILITÉ
+    with gr.Column(elem_classes=["history"], visible=False) as history_block:
+        gr.Markdown("### 📊 Historique de tes performances")
+        
+        # Statistiques générales
+        stats_display_old = gr.HTML(visible=False, elem_classes=["stats-container"])
+        
+        # Graphique des performances par thème
+        theme_performance_chart_old = gr.Plot(visible=False, elem_classes=["chart-container"])
+        
+        # Tableau des sessions passées
+        sessions_table_old = gr.Dataframe(
+            visible=False, 
+            label="Sessions précédentes", 
+            interactive=False, 
+            wrap=True, 
+            elem_classes=["dataframe", "sessions-table"],
+            headers=["Date", "Score", "Questions", "Thèmes", "Progression"]
+        )
+        
+        # Bouton pour revenir au quiz
+        back_to_quiz_btn = gr.Button("🔄 Nouveau quiz", visible=False, variant="primary", elem_classes=["primary-btn"])
+
+    # ============================================
     # BLOC DE RÉCAPITULATIF : RÉSULTATS FINAUX
     # ============================================
     
@@ -160,7 +230,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
         encouragement_display = gr.HTML(visible=False, elem_classes=["encouragement"])
         
         # Bilan par thème
-        bilan_theme_display = gr.Markdown(visible=False, elem_classes=["bilan-theme"])
+        bilan_theme_display = gr.HTML(visible=False, elem_classes=["bilan-theme"])
         
         # Tableau du bilan par thème
         bilan_theme_table = gr.Dataframe(
@@ -170,14 +240,16 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
         
         # Titre pour les détails
         details_title = gr.Markdown(visible=False)
+        details_html = gr.HTML(visible=False, elem_classes=["details-table"])
         
         # Tableau des résultats détaillés
         resume_table = gr.Dataframe(visible=False, label="Résultats détaillés", interactive=False, wrap=True,
                                     elem_classes=["dataframe"])
         
-        # Bouton pour rejouer
+        # Boutons pour rejouer et voir les statistiques
         with gr.Row():
-            restart_btn = gr.Button("🔄 Rejouer", visible=False, variant="primary", elem_classes=["primary-btn"])
+            restart_btn = gr.Button("Rejouer", visible=False, variant="primary", elem_classes=["primary-btn"])
+            view_stats_btn = gr.Button("Voir mes statistiques", visible=False, variant="secondary", elem_classes=["secondary-btn"])
 
     # ============================================
     # ÉTATS INTERNES DE L'APPLICATION
@@ -201,7 +273,7 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
         question, progress_bar, choix, explain_md, script_injector, score_display,  # Éléments du quiz
         qs_state, idx_state, score_state, done_state, resume_state,  # États internes
         next_btn, score_final_display, encouragement_display, bilan_theme_display,  # Éléments de navigation
-        bilan_theme_table, details_title, resume_table, restart_btn, recap_block  # Éléments de récapitulatif
+        bilan_theme_table, details_title, details_html, resume_table, restart_btn, view_stats_btn, recap_block  # Éléments de récapitulatif
     ]
 
     # ============================================
@@ -236,11 +308,41 @@ with gr.Blocks(css=custom_css, title="Quiz App") as app:
     
     # Clic sur le bouton "Rejouer"
     restart_btn.click(fn=restart_quiz, outputs=outputs_common)
+    
+    # Clic sur le bouton "Voir mes statistiques" depuis l'écran final
+    view_stats_btn.click(
+        fn=show_user_history,
+        outputs=[home, page_loader, page_quiz, stats_page, stats_display, theme_performance_chart, sessions_table, back_to_home_btn, new_quiz_from_stats_btn, recap_block]
+    )
 
     # Clic sur le bouton "Rejouer" sur l'écran d'accueil
     restart_quiz_home.click(
         fn=start_quiz_from_home,
         outputs=[home, page_loader, page_quiz] + outputs_common
+    )
+    
+    # Clic sur le bouton "Voir mes statistiques"
+    view_history_btn.click(
+        fn=show_user_history,
+        outputs=[home, page_loader, page_quiz, stats_page, stats_display, theme_performance_chart, sessions_table, back_to_home_btn, new_quiz_from_stats_btn, recap_block]
+    )
+    
+    # Clic sur le bouton "Nouveau quiz" depuis l'historique
+    back_to_quiz_btn.click(
+        fn=start_quiz_from_history,
+        outputs=[home, page_loader, page_quiz, history_block] + outputs_common
+    )
+    
+    # Clic sur le bouton "Retour à l'accueil" depuis les statistiques
+    back_to_home_btn.click(
+        fn=lambda: [gr.update(visible=True), gr.update(visible=False), gr.update(visible=False), gr.update(visible=False)],
+        outputs=[home, page_loader, page_quiz, stats_page]
+    )
+    
+    # Clic sur le bouton "Nouveau quiz" depuis les statistiques
+    new_quiz_from_stats_btn.click(
+        fn=start_quiz_from_stats,
+        outputs=[home, page_loader, page_quiz, stats_page] + outputs_common
     )
 
     # ============================================
@@ -264,7 +366,7 @@ if __name__ == "__main__":
     Point d'entrée de l'application.
     Lance le serveur Gradio avec les paramètres de configuration.
     """
-    app.launch( 
+    app.launch(
         server_name=os.getenv("GRADIO_SERVER_NAME", "0.0.0.0"),  # Adresse du serveur (par défaut : toutes les interfaces)
         server_port=int(os.getenv("GRADIO_SERVER_PORT", "7860"))  # Port du serveur (par défaut : 7860)
     )

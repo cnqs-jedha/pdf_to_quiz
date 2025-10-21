@@ -21,12 +21,12 @@ def build_prompt(text: str, difficulty: str = "standard") -> str:
 
     return f"""
     Tu es un expert en pédagogie et tu dois créer 1 question de QCM pertinente à partir du contexte ci-dessous.
-    Poses les question comme le ferai un professeur.
+    Poses les questions comme le ferait un professeur.
 
     Tu dois uniquement utiliser les informations contenues dans le contexte. Tu ne dois pas mobiliser de connaissances extérieures ni inventer d'information.  
 
-    Quand tu génère le quizz, dans "correct_answer_long" écris moi une réponse longue à propos de la vrai réponse,
-    qui aidera l'étudiant à rétenir pourquoi il a eu faux.
+    Quand tu génères le quizz, dans "correct_answer_long" écris moi une réponse longue à propos de la vraie réponse,
+    qui aidera l'étudiant à retenir pourquoi il a eu faux.
     
     Tu dois adapter ton langage et la difficulté des questions à choix multiples au niveau de difficulté suivant : {niveau_instruction}.
     
@@ -39,7 +39,6 @@ def build_prompt(text: str, difficulty: str = "standard") -> str:
     - l'énoncé ne doit pas être négatif 
     - l'énoncé ne doit pas induire de jugement de valeur
     - l'énoncé ne doit pas donner d'indice sur la bonne réponse
-    - les trois énoncés de questions doivent porter sur des éléments différents du contexte
 
     Pour chaque question, tu dois formuler quatre choix possibles : 
     - une seule et unique réponse sera correcte

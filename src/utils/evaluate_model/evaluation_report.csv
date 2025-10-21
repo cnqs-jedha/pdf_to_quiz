@@ -1,11 +1,15 @@
 ﻿id,question,generated,best_chunk,cosine_score,correct_pred
-1,Que s'est il passé au moment des Grandes Invasions ?,"Bonjour les élèves ! Les Grandes Invasions se sont produites entre les années 406 et 410 après Jésus-Christ. C'est une période importante de l'histoire de l'Empire romain.
+1,Quand débute et quand se termine l'Antiquité?,"Bonjour les élèves !
 
-Au moment des Grandes Invasions, des tribus barbares comme les Vandales, les Alains et les Suèves ont traversé le Rhin et l'Empire romain a été envahi. Les Romains n'ont pas pu les arrêter et les barbares ont occupé une grande partie de l'Empire.
+L'Antiquité est une période de l'histoire qui commence vers 3000 avant Jésus-Christ (av. J.-C.) et se termine vers 500 après Jésus-Christ (ap. J.-C.).
 
-Cela a marqué la fin de la Pax Romana, une période de paix et de stabilité qui avait duré depuis longtemps. Les Grandes Invasions ont également marqué le début de la fin de l'Empire romain d'Occident.
+On peut la diviser en trois périodes principales :
 
-Voilà, c'est donc une période importante de l'histoire qui a eu des conséquences importantes pour l'Empire romain.",Les Romains n'ont pas pu les arrêter et les barbares ont occupé une grande partie de l'Empire.,0.701,1
+- L'Antiquité égyptienne (vers 3000 av. J.-C. à 332 av. J.-C.)
+- L'Antiquité grecque (vers 800 av. J.-C. à 146 av. J.-C.)
+- L'Antiquité romaine (vers 509 av. J.-C. à 476 ap. J.-C.)
+
+C'est une période riche en événements historiques, en cultures et en civilisations qui ont façonné notre monde actuel.",L'Antiquité est une période de l'histoire qui commence vers 3000 avant Jésus-Christ (av.,0.784,1
 2, Qui était Clovis ?,"Bonjour les élèves ! Aujourd'hui, nous allons parler d'un roi très important de l'histoire de la France : Clovis.
 
 Clovis, qui a vécu au Ve siècle, était le roi des Francs. Il est considéré comme l'un des plus grands rois de l'histoire de la France. Il a unifié les Francs et a créé un royaume puissant qui allait devenir la base de l'Empire carolingien.
@@ -31,7 +35,7 @@ Pépin le Bref est donc un roi très important qui a joué un rôle crucial dans
 
 Par exemple, la dynastie des pharaons d'Égypte ou la dynastie des rois de France. Chaque pharaon ou roi est le successeur de son père ou de son frère, et il règne sur le pays jusqu'à sa mort.
 
-La dynastie est comme une grande famille qui gouverne un pays, et cela peut durer des siècles.","Une dynastie est une famille qui règne sur un pays pendant une longue période de temps, souvent plusieurs générations.",0.733,1
+La dynastie est comme une grande famille qui gouverne un pays, et cela peut durer des siècles.","Une dynastie est une famille qui règne sur un pays pendant une longue période de temps, souvent plusieurs générations.",0.733,0
 5, Qui était Charlemagne ?,"Bonjour les élèves ! Charlemagne, également connu sous le nom de Charles le Grand, était un roi des Francs qui a vécu au VIIIe siècle. Il est considéré comme l'un des plus grands souverains de l'histoire de l'Europe.
 
 Charlemagne a été roi des Francs de 768 à 814 et a réussi à unifier de nombreux peuples et territoires, créant ainsi un empire vaste et puissant. Il a également promu l'éducation, la culture et la religion chrétienne.
@@ -45,13 +49,20 @@ En résumé, Charlemagne était un roi puissant et sage qui a laissé une emprei
 Ils construisaient également des murs épais, des portes solides et des tours pour défendre leur château. Certains châteaux avaient même des fossés profonds et des pont-levis pour empêcher les ennemis de s'approcher.
 
 Les seigneurs utilisaient également des armes et des stratégies pour se défendre, comme les archers, les arbalétriers et les soldats chevaliers. Mais leur principal moyen de protection était leur château fort, qui leur permettait de se retrancher en cas d'attaque.","Les seigneurs, qui étaient des nobles qui possédaient des terres et des châteaux, se protégeaient de la guerre en construisant des châteaux forts.",0.779,1
-8, Qui sont les paysans?,"Bonjour les élèves ! Les paysans sont des personnes qui travaillent sur les terres pour cultiver des plantes et élever des animaux pour produire de la nourriture. Ils sont souvent associés à la campagne et vivent dans des villages ou des fermes.
+8, Quelles sont les grandes étapes du règne de Napoléon?,"Bonjour les élèves ! Aujourd'hui, nous allons explorer le règne de Napoléon, un des empereurs les plus célèbres de l'histoire de France.
 
-Les paysans ont toujours joué un rôle important dans l'économie et la société, car ils fournissent la nourriture nécessaire pour la survie des gens. Mais ils ont également souvent été maltraités et exploités au fil des siècles.
+Voici les grandes étapes du règne de Napoléon :
 
-Aujourd'hui, les paysans continuent à travailler dur pour produire de la nourriture, mais leur rôle est souvent oublié. Nous devons les remercier pour leur travail acharné qui nous permet de manger chaque jour.
+1. **La Révolution française** (1789-1799) : Napoléon est un jeune officier qui se distingue pendant la Révolution française. Il devient un proche de Paul Barras, qui le nomme au Directoire.
+2. **Le coup d'État du 18 Brumaire** (1799) : Napoléon renverse le Directoire et devient le maître de la France. Il est nommé Consul à vie.
+3. **La conquête de l'Europe** (1800-1807) : Napoléon lance une série de campagnes militaires qui lui permettent de conquérir une grande partie de l'Europe. Il crée l'Empire français et se fait couronner empereur en 1804.
+4. **La guerre de la Quatrième Coalition** (1806-1807) : Napoléon bat les coalisés et signe le traité de Tilsit, qui le rend maître de l'Europe.
+5. **La guerre de la Sixième Coalition** (1812-1814) : Napoléon lance une campagne en Russie qui se solde par un échec cuisant. Les coalisés se réorganisent et attaquent la France.
+6. **L'exil à Elba** (1814) : Napoléon est déposé et exilé à l'île d'Elba.
+7. **La cent-jour** (1815) : Napoléon s'évade d'Elba et revient en France, où il est accueilli comme un héros. Il réorganise son armée et lance une campagne contre les coalisés.
+8. **La bataille de Waterloo** (1815) : Napoléon est défait par les coalisés menés par Wellington et Blücher. Il est exilé à l'île de Sainte-Hélène, où il meurt en 1821.
 
-Maintenant, qui peut me dire ce que sont les différentes tâches que les paysans effectuent ?","Maintenant, qui peut me dire ce que sont les différentes tâches que les paysans effectuent ?",0.711,1
+Voilà les grandes étapes du règne de Napoléon. J'espère que cela vous a aidé à comprendre cette période importante de l'histoire de France.",**La bataille de Waterloo** (1815) : Napoléon est défait par les coalisés menés par Wellington et Blücher.,0.701,0
 9, Qu'est ce que la guerre de Cent ans?,"Bonjour les élèves ! La guerre de Cent Ans est un conflit qui a eu lieu en Europe, principalement en France et en Angleterre, entre 1337 et 1453. Elle a duré presque 116 ans, ce qui explique son nom.
 
 Cette guerre a commencé en raison d'un désaccord entre le roi Édouard III d'Angleterre et le roi Philippe VI de France. Le roi Édouard III revendiquait le trône de France, car il pensait que son père, le roi Édouard II, avait été légitimement roi de France.
@@ -60,9 +71,9 @@ La guerre a été marquée par de nombreuses batailles sanglantes, notamment la 
 
 La guerre de Cent Ans a eu des conséquences importantes pour la France et l'Angleterre. La France a perdu plusieurs régions, notamment la Normandie, la Picardie et le Maine. La guerre a également entraîné la perte de la vie de nombreux soldats et la destruction de nombreuses villes et villages.
 
-Mais la guerre de Cent Ans a également eu des conséquences positives. Elle a permis à la France de se renforcer et de devenir une puissance européenne. Elle a également entraîné l'émergence de nouvelles idées et de nouvelles technologies.
+En 1453, la guerre de Cent Ans s'est terminée avec la bataille de Castillon, qui a vu la victoire des troupes françaises. La France a ainsi récupéré ses territoires perdus et a pu se reconstruire après cette longue période de conflit.
 
-Et vous, qu'est-ce que vous pensez de la guerre de Cent Ans ?","La guerre de Cent Ans est un conflit qui a eu lieu en Europe, principalement en France et en Angleterre, entre 1337 et 1453.",0.932,1
+Voilà, c'est une brève histoire de la guerre de Cent Ans. J'espère que cela vous a intéressé !","La guerre de Cent Ans est un conflit qui a eu lieu en Europe, principalement en France et en Angleterre, entre 1337 et 1453.",0.932,1
 10,Quelles sont les grandes inventions et découvertes du Moyen-Age ?,"Bonjour les élèves ! Le Moyen-Age, qui s'étend de l'an 500 à l'an 1500, a vu l'émergence de nombreuses inventions et découvertes importantes. Voici quelques-unes des plus grandes :
 
 1. **L'imprimerie** : inventée par Johannes Gutenberg en 1450, elle a permis de reproduire des textes de manière rapide et économique, contribuant à la diffusion de la connaissance.
@@ -74,15 +85,15 @@ Et vous, qu'est-ce que vous pensez de la guerre de Cent Ans ?","La guerre de Cen
 7. **La construction de cathédrales** : les architectes du Moyen-Age ont construit des cathédrales imposantes, comme la cathédrale de Notre-Dame de Paris.
 
 Ces inventions et découvertes ont eu un impact important sur la société, la technologie et la culture du Moyen-Age.","**La boussole** : inventée par les Chinois au VIIIe siècle, elle a permis aux navigateurs de trouver leur chemin et de découvrir de nouvelles terres.",0.752,1
-11,Qui sont les grands explorateurs ?,"Les grands explorateurs sont des personnes qui ont découvert de nouveaux pays, terres et océans. Voici quelques-uns des plus célèbres :
+11,Qui sont les grands explorateurs ?,"Bonjour les élèves ! Les grands explorateurs sont des personnes qui ont découvert de nouveaux pays, terres et océans. Voici quelques-uns des plus célèbres :
 
 - Christophe Colomb : Il a découvert l'Amérique en 1492.
-- Vasco de Gama : Il a découvert la route maritime entre l'Europe et l'Inde en 1498.
-- Fernand Magellan : Il a mené la première expédition à circumnaviguer la Terre en 1519-1522.
+- Vasco de Gama : Il a trouvé un chemin maritime pour aller en Inde en 1498.
+- Fernand Magellan : Il a mené la première expédition à circumnaviger la Terre en 1519-1522.
 - Jacques Cartier : Il a exploré le Canada et découvert le fleuve Saint-Laurent en 1534.
-- Samuel de Champlain : Il a fondé la ville de Québec au Canada en 1608.
+- James Cook : Il a cartographié de nombreux pays et découvert de nouvelles terres en Australie et en Océanie en 1768-1779.
 
-Ces explorateurs ont ouvert la voie à la découverte de nouveaux continents et à l'expansion des empires coloniaux.",- Fernand Magellan : Il a mené la première expédition à circumnaviguer la Terre en 1519-1522.,0.909,1
+Ces explorateurs ont changé la carte du monde et ont ouvert de nouvelles voies commerciales et culturelles.",- Fernand Magellan : Il a mené la première expédition à circumnaviger la Terre en 1519-1522.,0.91,1
 12,Qu'est ce que la Renaissance ?,"La Renaissance ! C'est une période très intéressante de l'histoire de l'Europe, qui a eu lieu entre le 14e et le 17e siècle.
 
 La Renaissance signifie ""re naissance"" en français. C'est pendant cette période que les gens ont recommencé à s'intéresser à l'art, à la littérature, à la philosophie et à la science de l'Antiquité grecque et romaine.
@@ -94,15 +105,20 @@ C'est pendant cette période que nous avons vu naître des artistes célèbres c
 La Renaissance a également vu l'émergence de penseurs comme Léonard de Vinci, qui a inventé des machines et des gadgets amusants, et de philosophes comme Machiavel, qui a écrit des livres sur la politique.
 
 En résumé, la Renaissance a été une période de grande créativité et de progrès, où les gens ont essayé de faire mieux que les anciens et de créer des choses nouvelles et amusantes.","C'est pendant cette période que nous avons vu naître des artistes célèbres comme Léonard de Vinci, Michel-Ange et Raphaël, qui ont créé des œuvres d'art incroyables.",0.779,1
-13,Qu'est ce que la Réforme ?,"La Réforme ! C'est un moment très important de l'histoire de France. La Réforme, c'est le mouvement qui a commencé au XVIe siècle, avec le roi François Ier, pour moderniser l'Église catholique et l'État français.
+13,Qui sont les philospohes des Lumières ?. Citez au moins les noms de chacun d'entre eux,"Bonjour les élèves !
 
-Imaginez que vous êtes dans une église, et que vous voyez des gens qui ne parlent pas la même langue que vous, qui ont des coutumes différentes, et qui ont des idées qui ne correspondent pas aux vôtres. C'est un peu comme ça que les gens vivaient à l'époque.
+Les philosophes des Lumières étaient des penseurs qui ont vécu au XVIIIe siècle et qui ont contribué à la réflexion philosophique, politique et sociale de l'époque. Voici quelques-uns des principaux philosophes des Lumières :
 
-La Réforme voulait changer cela. Elle voulait rendre l'Église plus proche du peuple, et plus en accord avec les besoins de la société. Mais cela a également créé des conflits avec l'Église catholique, qui ne voulait pas changer.
+1. **René Descartes** (1596-1650) : connu pour son célèbre slogan ""Je pense, donc je suis"".
+2. **John Locke** (1632-1704) : auteur de la théorie du contrat social et de l'idée de la liberté individuelle.
+3. **Voltaire** (1694-1778) : écrivain, philosophe et défenseur de la liberté d'expression.
+4. **Jean-Jacques Rousseau** (1712-1778) : auteur de ""Le Contrat social"" et de ""Émile"".
+5. **Immanuel Kant** (1724-1804) : philosophe allemand qui a développé la philosophie critique.
+6. **Montesquieu** (1689-1755) : auteur de ""L'Esprit des lois"" et défenseur de la séparation des pouvoirs.
+7. **Denis Diderot** (1713-1784) : écrivain, philosophe et encyclopédiste.
+8. **Jean d'Alembert** (1717-1783) : mathématicien, philosophe et encyclopédiste.
 
-La Réforme a également amené des réformateurs, comme Jean Calvin, qui ont créé des églises protestantes, comme la Réforme protestante. C'est un peu comme si vous aviez deux églises différentes, l'une catholique et l'autre protestante.
-
-En résumé, la Réforme est un moment important de l'histoire de France, qui a amené des changements dans l'Église et dans la société.","La Réforme, c'est le mouvement qui a commencé au XVIe siècle, avec le roi François Ier, pour moderniser l'Église catholique et l'État français.",0.664,1
+Ces philosophes ont contribué à la réflexion sur la liberté, l'égalité, la justice et la raison, et ont influencé la Révolution française et les idées modernes.","**Denis Diderot** (1713-1784) : écrivain, philosophe et encyclopédiste.",0.671,0
 14,Quelles sont les conséquences de la Réforme ?,"Bonjour les élèves ! La Réforme, c'est-à-dire la Réforme protestante menée par Martin Luther en 1517, a eu de nombreuses conséquences importantes.
 
 Voici quelques-unes des principales conséquences :
@@ -110,20 +126,20 @@ Voici quelques-unes des principales conséquences :
 1. **La scission de l'Église catholique** : La Réforme a conduit à la création de l'Église protestante, qui s'est séparée de l'Église catholique.
 2. **La liberté de conscience** : Les protestants ont obtenu la liberté de croire et de pratiquer leur foi de manière différente de celle de l'Église catholique.
 3. **La traduction de la Bible** : Les protestants ont traduit la Bible en langues vulgaires, ce qui a permis aux gens de lire et de comprendre la parole de Dieu directement.
-4. **La critique de l'Église catholique** : Les protestants ont critiqué certaines pratiques et doctrines de l'Église catholique, ce qui a conduit à des débats et des conflits.
-5. **Les guerres de religion** : Les conséquences de la Réforme ont également conduit à des guerres de religion en Europe, notamment en France, où les catholiques et les protestants se sont affrontés.
+4. **La critique de l'Église catholique** : Les protestants ont critiqué certaines pratiques et doctrines de l'Église catholique, ce qui a conduit à des conflits et à des guerres de religion.
+5. **L'émergence de nouveaux mouvements** : La Réforme a donné naissance à de nouveaux mouvements religieux, tels que le calvinisme et l'anabaptisme.
 
-Ces conséquences ont eu un impact profond sur l'histoire de l'Europe et de la chrétienté.","**Les guerres de religion** : Les conséquences de la Réforme ont également conduit à des guerres de religion en Europe, notamment en France, où les catholiques et les protestants se sont affrontés.",0.772,1
-15,Qu'est ce qu'un concile ?,"Un concile est une réunion importante de personnes, généralement des évêques ou des chefs religieux, qui se rassemblent pour discuter et décider de questions importantes liées à leur religion ou à leur église.
+Ces conséquences ont eu un impact profond sur l'histoire de l'Europe et du monde, et ont contribué à façonner la société et la culture que nous connaissons aujourd'hui.","**La scission de l'Église catholique** : La Réforme a conduit à la création de l'Église protestante, qui s'est séparée de l'Église catholique.",0.768,1
+15,Qu'est ce qu'un concile ?,"Un concile est une réunion importante de personnes, souvent des évêques ou des ecclésiastiques, qui se rassemblent pour discuter et décider de questions importantes concernant la religion ou l'Eglise.
 
-Imaginez une grande assemblée où les chefs de l'église se réunissent pour discuter et prendre des décisions ensemble. C'est un peu comme une réunion de classe, mais pour des questions plus importantes !
+Imaginez une grande assemblée où les gens discutent et débattent pour trouver une solution commune. C'est un peu comme une réunion de classe, mais pour des questions plus importantes.
 
-Dans l'histoire, il y a eu de nombreux conciles importants, comme le concile de Nicée, qui a décidé de la doctrine chrétienne. C'est un peu comme si vous aviez discuté et décidé ensemble de ce que vous croyez en classe !
+Dans l'histoire, les conciles ont joué un rôle important pour définir les croyances et les pratiques de l'Eglise. Par exemple, le concile de Nicée en 325 a décidé que Jésus était Dieu et homme à la fois.
 
-Alors, est-ce que vous avez des questions sur les conciles ?","Un concile est une réunion importante de personnes, généralement des évêques ou des chefs religieux, qui se rassemblent pour discuter et décider de questions importantes liées à leur religion ou à leur église.",0.779,1
+Alors, un concile c'est comme une grande réunion pour discuter et décider de choses importantes !","Un concile est une réunion importante de personnes, souvent des évêques ou des ecclésiastiques, qui se rassemblent pour discuter et décider de questions importantes concernant la religion ou l'Eglise.",0.814,1
 16, Qu'est ce que la Monarchie absolue ? Citez un exemple.,"Bonjour les élèves ! La monarchie absolue est un système de gouvernement où le roi ou la reine a tous les pouvoirs et décisions sont prises sans consulter les autres. C'est comme si le monarque était le seul maître.
 
-Un exemple classique de monarchie absolue est la France sous le règne de Louis XIV, qui a régné de 1643 à 1715. Il était connu sous le nom de ""Roi Soleil"" et avait le pouvoir absolu sur le pays. Il a créé l'Académie française, a construit le château de Versailles et a imposé la centralisation de l'État. Les décisions de Louis XIV étaient sans appel et les sujets devaient obéir sans discuter.",La monarchie absolue est un système de gouvernement où le roi ou la reine a tous les pouvoirs et décisions sont prises sans consulter les autres.,0.871,1
+Un exemple classique de monarchie absolue est la France sous le règne de Louis XIV, qui a régné de 1643 à 1715. Il a créé l'expression ""L'État, c'est moi"" pour montrer qu'il était le seul maître de la France. Il a également créé la cour de Versailles, qui était un symbole de la puissance royale.",La monarchie absolue est un système de gouvernement où le roi ou la reine a tous les pouvoirs et décisions sont prises sans consulter les autres.,0.871,1
 17,Citez moi 3 personnages de la Monarchie absolue ?,"Bien sûr ! Les trois personnages de la Monarchie absolue que je vais vous citer sont :
 
 1. Louis XIV, également connu sous le nom de ""Roi Soleil"", qui a régné de 1643 à 1715.
@@ -136,21 +152,18 @@ Ces rois ont tous exercé un pouvoir absolu sur la France pendant leur règne.",
 
 Les grands scientifiques de la Monarchie absolue sont :
 
-- Galilée (1564-1642) : un astronome et physicien italien qui a découvert les lois du mouvement et a prouvé que la Terre tourne autour du Soleil.
-- René Descartes (1596-1650) : un philosophe et mathématicien français qui a développé la méthode de la doute et a découvert les lois de la géométrie.
-- Blaise Pascal (1623-1662) : un mathématicien et physicien français qui a découvert la pression atmosphérique et a inventé la machine à calculer.
-- Pierre Perrault (1611-1680) : un mathématicien et physicien français qui a découvert la relation entre la hauteur d'un objet et la distance à laquelle il est projeté.
+- Galilée (1564-1642) : physicien et astronome italien qui a découvert les lois du mouvement et a prouvé que la Terre tourne autour du Soleil.
+- René Descartes (1596-1650) : philosophe et mathématicien français qui a développé la méthode de la doute et a découvert les lois de la géométrie.
+- Blaise Pascal (1623-1662) : mathématicien et physicien français qui a découvert la pression atmosphérique et a inventé la machine à calculer.
+- Christiaan Huygens (1629-1695) : physicien et astronome néerlandais qui a découvert la rotation de Saturne et a inventé la lunette astronomique.
 
-Ces scientifiques ont contribué à l'avancement des connaissances scientifiques pendant la Monarchie absolue, malgré les difficultés et les contraintes de l'époque.",- Blaise Pascal (1623-1662) : un mathématicien et physicien français qui a découvert la pression atmosphérique et a inventé la machine à calculer.,0.796,1
+Ces scientifiques ont contribué à l'avancement des connaissances scientifiques et ont ouvert la voie à de nouvelles découvertes et inventions.",- Blaise Pascal (1623-1662) : mathématicien et physicien français qui a découvert la pression atmosphérique et a inventé la machine à calculer.,0.788,1
 20,Qu'est ce que la Révolution française ?,"Bonjour les élèves ! La Révolution française est un événement historique qui a eu lieu en France entre 1789 et 1799. C'est une période de changements politiques, sociaux et économiques importants qui ont marqué la fin de la monarchie absolue et l'avènement de la République.
 
-Imaginez que vous êtes un enfant en 1789, et que vous voyez les gens se rassembler pour demander des changements. Ils veulent plus de liberté, d'égalité et de fraternité. C'est ce que les Français ont appelé la Révolution française.
+Imaginez que vous êtes un enfant en 1789, et que vous voyez les gens se rassembler pour demander des changements. Les Français étaient mécontents de la monarchie, qui était considérée comme injuste et corrompue. Ils voulaient plus de liberté, d'égalité et de fraternité.
 
-Les principaux événements de la Révolution française sont :
+La Révolution française a commencé avec la prise de la Bastille, un château qui symbolisait la tyrannie de la monarchie. Les gens se sont révoltés et ont demandé des réformes. Les députés ont été élus pour représenter le peuple, et ils ont créé la Déclaration des droits de l'homme et du citoyen, qui est encore aujourd'hui un document important pour la démocratie.
 
-- La prise de la Bastille en 1789, qui symbolise la fin de la monarchie absolue.
-- La création de la Déclaration des droits de l'homme et du citoyen en 1789, qui énonce les principes de liberté, d'égalité et de fraternité.
-- La chute de la monarchie en 1792, et l'avènement de la République.
-- Les guerres de la Révolution française, qui ont duré de 1792 à 1802.
+La Révolution française a été une période de grands changements, mais aussi de violences et de conflits. Elle a fini par aboutir à la chute de la monarchie et à l'avènement de la République.
 
-La Révolution française a eu un impact important sur l'histoire de France et du monde. Elle a inspiré d'autres mouvements révolutionnaires et a contribué à la création de la démocratie moderne.",La Révolution française est un événement historique qui a eu lieu en France entre 1789 et 1799.,0.954,1
+Voilà, c'est une brève introduction à la Révolution française. Nous allons en apprendre plus sur cette période importante de l'histoire de France.",La Révolution française est un événement historique qui a eu lieu en France entre 1789 et 1799.,0.954,1

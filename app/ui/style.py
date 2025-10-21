@@ -6,6 +6,355 @@
 
 custom_css = """
 /* ============================================
+   STYLES POUR LA PAGE DES STATISTIQUES
+   ============================================ */
+
+.stats-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+.stats-header {
+    text-align: center;
+    padding: 0;
+    background: transparent;
+    border-radius: 15px;
+    box-shadow: none;
+}
+
+/*
+.stats-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+*/
+
+.stats-page-title {
+    font-size: 2.5rem;
+    color: #1e293b;
+    margin: 0 0 1rem 0;
+    font-weight: bold;
+}
+
+.stats-page-subtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* ============================================
+   STYLES POUR L'HISTORIQUE (ANCIEN)
+   ============================================ */
+
+.history {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.stat-card {
+    background: linear-gradient(166deg, #8704FD -1.28%, #33025F 99.96%); color: white;
+    padding: 1.25rem .75rem;
+    border-radius: 1rem;
+    text-align: center;
+    display: flex;
+    transition: transform 0.3s ease;
+}
+
+.stat-card > div {
+    align-self:center;
+    width: 100%;
+}
+
+.stat-card h3 {
+    font-size: 2.5rem;
+    margin: 0;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.stat-card p {
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.7;
+    color: #FFFFFF;
+}
+
+.limit-info {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.stat-card .limit-info {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.stat-card:has(.limit-info:contains("⚠️")) .limit-info {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.chart-container {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+/* Amélioration du graphique matplotlib */
+.chart-container .matplotlib {
+    background: white !important;
+    border-radius: 8px !important;
+}
+
+.chart-container svg {
+    border-radius: 8px !important;
+}
+
+/* ============================================
+   STYLES POUR LE TABLEAU DES SESSIONS
+   ============================================ */
+
+.sessions-table {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.sessions-table .dataframe {
+    border: none !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+}
+
+.sessions-table .dataframe table {
+    border-collapse: collapse;
+    width: 100%;
+    border: none !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.sessions-table .dataframe thead th {
+    background: #f8fafc !important;
+    color: #374151 !important;
+    padding: 1rem 0.75rem !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    border: none !important;
+    text-align: left !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.sessions-table .dataframe tbody tr {
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.sessions-table .dataframe tbody tr:hover {
+    background: #f8fafc !important;
+}
+
+.sessions-table .dataframe tbody tr:nth-child(even) {
+    background: #fafbfc !important;
+}
+
+.sessions-table .dataframe tbody td {
+    padding: 0.875rem 0.75rem !important;
+    border: none !important;
+    text-align: left !important;
+    font-size: 0.875rem !important;
+    color: #374151 !important;
+    vertical-align: middle;
+}
+
+.sessions-table .dataframe tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+/* ============================================
+   STYLES POUR LES CARTES DE SESSIONS
+   ============================================ */
+
+.sessions-cards-container {
+    margin: 2rem 0;
+}
+
+.sessions-title {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.sessions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 1rem 0;
+}
+
+.session-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.session-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 12px 12px 0 0;
+}
+
+.session-card.score-top::before {
+    background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.session-card.score-good::before {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+.session-card.score-bof::before {
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.session-card.score-bad::before {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.session-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.session-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.session-score {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    color: white;
+}
+
+.session-card.score-top .session-score {
+    background: #10b981;
+}
+
+.session-card.score-good .session-score {
+    background: #3b82f6;
+}
+
+.session-card.score-bof .session-score {
+    background: #f59e0b;
+}
+
+.session-card.score-bad .session-score {
+    background: #ef4444;
+}
+
+.session-progress {
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.session-card.score-top .progress-fill {
+    background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.session-card.score-good .progress-fill {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+.session-card.score-bof .progress-fill {
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.session-card.score-bad .progress-fill {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.progress-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.session-themes {
+    margin-top: 0.5rem;
+}
+
+.session-themes p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+/* ============================================
    STYLES GÉNÉRAUX DE L'APPLICATION
    ============================================ */
 
@@ -60,6 +409,33 @@ body, .gradio-container {
     box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, 0.1);
     max-width: 1000px;
     margin: 0 auto;
+}
+
+/* Espacement optimisé entre les sections du récapitulatif */
+.recap > * {
+    margin-bottom: 1.5rem;
+}
+
+.recap > *:last-child {
+    margin-bottom: 0;
+}
+
+/* Espacement spécifique pour les sections principales */
+.score-final {
+    margin-bottom: 2rem !important;
+}
+
+.encouragement {
+    margin-bottom: 2rem !important;
+}
+
+.bilan-theme {
+    margin-bottom: 2rem !important;
+}
+
+/* Supprimer les liserets de la section bilan-theme */
+.bilan-theme::before {
+    display: none;
 }
 
 .quiz-finish-title {
@@ -125,7 +501,7 @@ body, .gradio-container {
 }
 
 .score-card {
-    background-color: #F9F9F9;
+    background-color: #EFEDF2;
     padding: 1rem 1.5rem;
     border-radius: 1rem;
     display: flex;
@@ -220,13 +596,15 @@ body, .gradio-container {
 /* Study card */
 .study-container {
     padding: 1.5rem;
-    background-color: #F9F9F9;
+    background-color: #EFEDF2;
     border-radius: 1rem;
 }
 
 .study-title {
     font-size: 1.5rem;
     text-align: center;
+    color: #1e293b;
+    font-weight: 700;
 }
 
 .study-intro {
@@ -245,16 +623,16 @@ body, .gradio-container {
 }
 
 .study-card {
-    padding: .5rem;
+    padding: 1rem;
     border-radius: 1rem;
     background-color: #FFFFFF;
-    border: #px solid #DFDFDF;
+/*    border: 1px solid #e2e8f0;*/
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 1rem;
     align-items: center;
     text-decoration: none;
-    transition: ease .3s;
+    transition: .3s ease;
 }
 
 .study-card:hover {
@@ -263,19 +641,22 @@ body, .gradio-container {
 }
 
 .theme-tag {
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
     font-size: 0.75rem;
-    padding: 2px 6px;
-    background-color: rgb(240 227 252);
-    margin-bottom: 3px;
+    padding: 4px 8px;
+    background-color: rgba(135, 4, 253, 0.1);
+    color: #8704FD;
+    font-weight: 600;
+    margin-bottom: 6px;
     display: inline-block;
 }
 
 .pdf-icon-container{
-    background-color: #fff2f2;
+    background-color: rgba(135, 4, 253, 0.05);
     padding: 1rem;
     border-radius: .75rem;
     height: 5rem;
+    border: 1px solid rgba(135, 4, 253, 0.1);
 }
 
 .pdf-icon-svg {
@@ -304,13 +685,21 @@ body, .gradio-container {
    STYLES POUR LES TABLEAUX ET BILANS
    ============================================ */
 
-/* Style pour le bloc de bilan par thème */
+/* Style pour le bloc de bilan par thème - même style que study-container */
 .bilan-theme { 
-    background: #fefefe !important;  /* Fond blanc cassé */
-    border: 1px solid #e2e8f0 !important;  /* Bordure grise */
-    border-radius: 8px !important;  /* Coins arrondis */
-    padding: 20px !important;  /* Espacement interne */
-    margin: 16px 0 !important;  /* Espacement vertical */
+    background: #EFEDF2 !important;  /* Même fond que study-container */
+    border-radius: 1rem !important;  /* Coins arrondis */
+    padding: 1.5rem !important;  /* Espacement interne */
+    margin: 1rem 0 !important;  /* Espacement vertical */
+}
+
+.bilan-theme h3 {
+    margin-top: 0 !important;
+    margin-bottom: 1rem !important;
+    color: #1e293b !important;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    text-align: center !important;
 }
 
 /* Style pour les tableaux de données */
@@ -353,7 +742,13 @@ body, .gradio-container {
 
 /* Effet de survol pour les boutons principaux */
 .primary-btn:hover { 
-    background-color: #590AA0;
+    background: #590AA0;
+}
+
+/* Effet de survol pour les boutons principaux */
+.primary-btn:hover { 
+    background: #590AA0;
+    color: white;
 }
 
 .secondary-btn { 
@@ -362,19 +757,34 @@ body, .gradio-container {
     border-radius: 8px !important;  /* Coins arrondis */
     padding: 11px 23px !important;  /* Espacement interne */
     font-weight: 600 !important;  /* Texte semi-gras */
-    transition: all 0.2s ease !important;  /* Animation fluide */
     color: #8704FD;
+    transition: all 0.3s ease !important;  /* Animation fluide */
 }
 
-/* Effet de survol pour les boutons principaux */
-.primary-btn:hover { 
-    background-color: #590AA0;
+.secondary-btn:hover {
+    background: #8704fd;
     color: white;
 }
 
+.tertiary-btn {
+    background: #FFFFFF;  /* Dégradé bleu */
+    border: 1px solid #E9E6EC;  /* Pas de bordure */
+    border-radius: 8px !important;  /* Coins arrondis */
+    padding: 11px 23px !important;  /* Espacement interne */
+    font-weight: 600 !important;  /* Texte semi-gras */
+    color: #21003F;
+    box-shadow: none;
+    transition: all 0.3s ease !important;  /* Animation fluide */
+}
+
+.tertiary-btn:hover {
+    background: #F3E6FF;
+    color: #8704FD;
+    border: 1px solid #FFFFFF;
+}
 
 /* ============================================
-   STYLES POUR LA BARRE DE PROGRESSION
+    STYLES POUR LA BARRE DE PROGRESSION
    ============================================ */
 /* Conteneur de la barre de progression */
 #quiz-progress {
@@ -681,7 +1091,7 @@ body, .gradio-container {
 }
 
 .home .col-block {
-    background-color: #F9F9F9;
+    background-color: #EFEDF2;
     border-radius: 1rem;
     padding: 1.5rem;
     justify-content: space-between;
@@ -722,6 +1132,7 @@ body, .gradio-container {
   position: relative;
   width: 75px;
   height: 100px;
+  margin:0 auto;
 }
 
 .loading-page #component-14 .svelte-au1olv {
@@ -839,4 +1250,192 @@ body, .gradio-container {
   50%,90%  { transform: scale(1, .2); }
   100%     { transform: scale(1, 1); }
 }
+
+/* ==========20251510=======
+   BILAN PAR THÈME — CARTES
+   ========================= */
+.bilan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+  animation: fadeIn .6s ease;
+}
+
+.bilan-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 6px 16px rgba(0,0,0,.1), 0 2px 4px rgba(0,0,0,.06);
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #e2e8f0;
+  transition: all .2s ease;
+  position: relative;
+}
+.bilan-card:hover { 
+  transform: scale(1.05); 
+  box-shadow: 8px 8px 20px 0 rgba(91, 0, 171, .2), 0 8px 24px rgba(0,0,0,.15);
+}
+
+.bilan-header {
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between;
+  margin-bottom: .75rem;
+}
+.bilan-header h4 {
+  font-size: 1.1rem; 
+  margin: 0; 
+  font-weight: 700; 
+  color: #1e293b;
+  line-height: 1.3;
+}
+.bilan-header span {
+  font-size: 1rem; 
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(135, 4, 253, 0.1);
+  color: #8704FD;
+}
+
+.bilan-progress {
+  background: #f1f5f9;
+  height: 6px;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: .5rem 0 .75rem 0;
+  position: relative;
+}
+.bilan-progress .bar { 
+  height: 100%; 
+  width: 0; 
+  transition: width .6s ease;
+  border-radius: 999px;
+}
+
+/* Couleur de la barre selon niveau */
+.bilan-card.score-bad  .bar { background: linear-gradient(90deg, #ef4444, #dc2626); }
+.bilan-card.score-bof  .bar { background: linear-gradient(90deg, #f59e0b, #d97706); }
+.bilan-card.score-good .bar { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+.bilan-card.score-top  .bar { background: linear-gradient(90deg, #10b981, #059669); }
+
+/* Couleur de la bordure gauche selon niveau */
+.bilan-card.score-bad { border-left-color: #ef4444; }
+.bilan-card.score-bof { border-left-color: #f59e0b; }
+.bilan-card.score-good { border-left-color: #3b82f6; }
+.bilan-card.score-top { border-left-color: #10b981; }
+
+.bilan-card p {
+  margin: 0; 
+  color: #64748b; 
+  font-size: .9rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Résumé global au-dessus des cartes */
+.resume-summary {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: .75rem;
+  padding: 1rem 1.25rem;
+  margin: .5rem 0 1rem;
+  animation: fadeIn .6s ease;
+}
+.resume-summary h4 { margin: 0 0 .25rem 0; }
+
+/* Détails — tableau : zébrage et meilleure lisibilité */
+.dataframe table { width: 100%; border-collapse: collapse; }
+.dataframe tr:nth-child(even) { background-color: #f9fafb !important; }
+.dataframe th, .dataframe td { font-size: .95rem !important; }
+.dataframe td:last-child { text-align: center !important; font-weight: 700; } /* colonne "Résultat" */
+
+/* Apparitions douces */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Animation d'apparition progressive pour les sections */
+.recap > * {
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.recap > *:nth-child(1) { animation-delay: 0.1s; }
+.recap > *:nth-child(2) { animation-delay: 0.2s; }
+.recap > *:nth-child(3) { animation-delay: 0.3s; }
+.recap > *:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dataframe { font-size: .85rem; }
+}
+
+/* Détails (table HTML) */
+.details-table-wrap { margin-top: .5rem; animation: fadeIn .5s ease; }
+.details-table-wrap table.details {
+  width: 100%; border-collapse: collapse; background: #fff; border-radius: .75rem;
+  overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,.04);
+}
+.details-table-wrap th, .details-table-wrap td {
+  padding: .75rem .85rem; border-bottom: 1px solid #f1f5f9; vertical-align: top; text-align: left;
+}
+.details-table-wrap thead th { background: #f8fafc; font-weight: 700; color: #1f2937; }
+.details-table-wrap tbody tr:nth-child(even) { background: #fafafa; }
+
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 999px; font-weight: 700; font-size: .85rem;
+}
+.badge.ok { background: #E2F5EE; color: #0FB076; }
+.badge.ko { background: #FDE7E7; color: #ED3B3C; }
+
+/* === Unifier l'aspect "grand panneau" : Sessions = Bilan === */
+
+/* Panneau pour la section Sessions */
+.stats-page .sessions-cards-container {
+  background: #f8fafc !important;      /* même fond que le bilan */
+  border: 1px solid #e2e8f0 !important; /* fine bordure grise */
+  border-radius: 16px !important;       /* coins arrondis */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; /* ombre douce */
+  padding: 1.5rem 2rem !important;      /* respiration interne */
+  margin: 0 0 1.5rem 0 !important;      /* écart sous le panneau */
+}
+
+/* Titre au centre, même hiérarchie visuelle que le bilan */
+.stats-page .sessions-cards-container .sessions-title {
+  text-align: center !important;
+  margin: 0 0 1.5rem 0 !important;
+  font-weight: 700 !important;
+  font-size: 1.5rem !important;
+}
+
+/* La grille de cartes ne doit pas recréer d'espaces parasites */
+.stats-page .sessions-cards-container .sessions-grid {
+  margin: 0 !important;
+}
+
+/* (Si on avait neutralisé les wrappers Gradio avant, on s'assure qu'ils 
+   ne réintroduisent pas de cadres intermédiaires dans la section) */
+.stats-page .sessions-cards-container .gr-box,
+.stats-page .sessions-cards-container .gr-group,
+.stats-page .sessions-cards-container .gr-panel,
+.stats-page .sessions-cards-container .block-container {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+
 """
