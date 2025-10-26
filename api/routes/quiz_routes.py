@@ -90,7 +90,7 @@ def run_pipeline(req: PipelineRequest):
     try:
         # Appel rapide vers le conteneur pipeline
         r = requests.post(
-            "http://pipeline:8001/execute",
+            "https://cnsq-quiz-pipeline.hf.space/execute",
             json={"drive_link": drive_link},
             timeout=10  # on limite le temps d’attente à 10s max
         )

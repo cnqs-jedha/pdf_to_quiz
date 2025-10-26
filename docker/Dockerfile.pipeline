@@ -11,11 +11,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY requirements/pipeline.txt /tmp/requirements.txt
+COPY requirements.txt /tmp/requirements.txt
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r /tmp/requirements.txt
 
-COPY src/ /app/src/
+COPY .. /app/src/
 
 # ENTRYPOINT ["python", "-m", "src.pipeline.run"]
-CMD ["uvicorn", "src.pipeline.server:app", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["uvicorn", "pipeline.server:app", "--host", "0.0.0.0", "--port", "7860"]

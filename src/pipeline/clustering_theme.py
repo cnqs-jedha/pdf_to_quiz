@@ -145,20 +145,6 @@ def auto_svd_dim(X, target_var=0.7):
     print(f"Nombre de composantes après réduction de dimension : {k}")
     print(f"Variance expliquée cumulée associée au nombre de composantes k: {cumvar[k]}")
     #print(f"Variance expliquée cumulée associée à chaque nombre de composantes : {cumvar}")
-    
-    # Nom complet du fichier PNG à enregistrer
-    file_path = os.path.join('/app/data', 'truncatedsvd_variance_cumulee.png')
-
-    # Création et sauvegarde du graphique représentant la variance expliquée cumulée
-    plt.plot(cumvar, marker='o')
-    plt.axhline(0.7, color='r', linestyle='--', label='70% variance cumulée')
-    plt.xlabel('Nombre de composantes')
-    plt.ylabel('Variance expliquée cumulée')
-    plt.title('Variance cumulée expliquée en fonction du nombre de composantes')
-    plt.legend()
-    plt.grid(True)
-    plt.savefig(file_path, dpi=300)
-    plt.close()
 
     return k
 

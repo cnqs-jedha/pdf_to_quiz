@@ -5,13 +5,19 @@ import subprocess
 app = FastAPI(title="Pipeline Service")
 
 def run_pipeline_task(drive_link: str):
-    """Fonction exécutée en arrière-plan pour lancer le vrai pipeline"""
     print(f"🚀 Exécution du pipeline pour : {drive_link}", flush=True)
-    subprocess.run(
-        ["python", "-m", "src.pipeline.run", "--drive_link", drive_link],
-        check=True
-    )
-    print("✅ Pipeline terminé", flush=True)
+    try:
+        result = subprocess.run(
+            ["python", "-m", "src.pipeline.run", "--drive_link", drive_link],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        print("✅ Pipeline terminé", flush=True)
+        print(result.stdout, flush=True)
+    except subprocess.CalledProcessError as e:
+        print("❌ Erreur pendant l'exécution du pipeline :", flush=True)
+        print(e.stderr or e.stdout, flush=True)
 
 
 @app.post("/execute")

@@ -11,26 +11,29 @@ from urllib.parse import urlparse, parse_qs
 from googleapiclient.errors import HttpError
 import json
 
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+import os
+
+SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]
+
 def authenticate_google():
-    creds = None
-    if os.path.exists("token"):
-        with open("token", "rb") as token:
-            creds = pickle.load(token)
+    """Authentifie l'accès à Google Drive via un compte de service (clé JSON)."""
+    cred_json = os.getenv("GDRIVE_SERVICE")
+    if not cred_json:
+        raise RuntimeError("Variable d'environnement GDRIVE_SERVICE absente ou vide.")
 
-    if not creds or not creds.valid:
-        cred_json = os.getenv("DRIVE_CREDENTIALS")
-        if not cred_json:
-            raise RuntimeError("Variable d'environnement DRIVE_CREDENTIALS absente")
-        client_config = json.loads(cred_json)
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
-            creds = flow.run_local_server(open_browser=False)
-        with open("token", "wb") as token:
-            pickle.dump(creds, token)
+    # Charger la clé JSON depuis l'environnement
+    creds_json = json.loads(cred_json)
 
-    return build("drive", "v3", credentials=creds)
+    # Créer les credentials à partir de la clé de service
+    creds = service_account.Credentials.from_service_account_info(
+        creds_json, scopes=SCOPES
+    )
+
+    # Créer le client Google Drive
+    service = build("drive", "v3", credentials=creds)
+    return service
 
 id_re = re.compile(r"[A-Za-z0-9_-]{10,}")
 
