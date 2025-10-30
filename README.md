@@ -65,7 +65,9 @@ pdf_to_quiz/
 |   +---core # Orchestration et mise en oeuvre du quiz
 |   |       
 |   \---ui # Composants interface utilisateur (UI)
-|           
+|        |
+|       \---img # Images rattachées à l'UI
+|          
 +---chroma_db # Base de données Chroma pour le stockage vectoriel/embeddins
 |           
 +---docker # Configuration des conteneurs Docker pour le pipeline, l'api, l'app, devlab
@@ -197,7 +199,7 @@ cd pdf_to_quiz
 
 ### 2. Démarrer les conteneurs Docker
 
-* Vérifier que Docker fonctionne : 
+* Vérifier que Docker fonctionne :
 `docker ps`
 
 * Builder les images de l'api, de l'app et du pipeline :
@@ -270,9 +272,11 @@ cd pdf_to_quiz
 
 * [x] Déploiement en local du quiz interactif
 
-* [ ] Déploiement web  du quiz interactif
+* [ ] Améliorer la classification automatique des thèmes
 
-* [ ] Tableau de bord des performances des utilisateurs
+* [ ] Créer un processus d'identification
+
+* [ ] Améliorer l'expérience utilisateur
 
 ## :busts_in_silhouette: Auteurs
 
